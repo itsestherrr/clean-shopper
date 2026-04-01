@@ -19,7 +19,7 @@ Clean Shopper feels focused, calm, and trustworthy — like a well-designed pers
 
 ### Surfaces
 | Token Name | Hex Value | Usage Rule |
-|---|---|---|
+| --- | --- | --- |
 | surface-bg | #FAF7F2 | App background — always the outermost surface |
 | surface-card | #FFFFFF | Cards, modals, search result containers, inputs |
 | surface-muted | #F0ECE6 | Sidebar, secondary panels, inactive areas |
@@ -27,14 +27,14 @@ Clean Shopper feels focused, calm, and trustworthy — like a well-designed pers
 
 ### Primary Colors
 | Token Name | Hex Value | Usage Rule |
-|---|---|---|
+| --- | --- | --- |
 | primary | #5A8384 | Primary buttons, active nav item, single key CTA per view. Not for decoration or secondary actions. |
 | primary-dark | #4A7273 | Hover and pressed states on primary interactive elements only |
 | primary-light | #DDEAEB | Selected state backgrounds, tinted surfaces when primary color context is needed |
 
 ### Semantic Colors — Clean / Caution / Avoid
 | Token Name | Hex Value | Usage Rule |
-|---|---|---|
+| --- | --- | --- |
 | clean | #6A8362 | Text and icon color for clean-rated products. Not used for any other purpose. |
 | clean-bg | #DCE6D8 | Background of clean rating pills, badges, and tinted summary cards |
 | clean-tint | #E6EDE2 | Light tinted surface for clean-category sections or card backgrounds |
@@ -47,7 +47,7 @@ Clean Shopper feels focused, calm, and trustworthy — like a well-designed pers
 
 ### Text Colors
 | Token Name | Hex Value | Usage Rule |
-|---|---|---|
+| --- | --- | --- |
 | text-primary | #1D1D1D | Headings, card titles, nav items, all primary readable content |
 | text-secondary | #6B6B6B | Body copy, product descriptions, supporting content |
 | text-tertiary | #9B9B9B | Timestamps, metadata, counts, less critical labels |
@@ -55,7 +55,7 @@ Clean Shopper feels focused, calm, and trustworthy — like a well-designed pers
 
 ### Accent Colors — Category & UI Tints
 | Token Name | Hex Value | Usage Rule |
-|---|---|---|
+| --- | --- | --- |
 | accent-lavender | #7A6A8A | AI analysis states, Claude processing indicators |
 | accent-taupe | #8A7060 | Category labels, product type indicators |
 | accent-moss | #6A8362 | Shopping list, saved items, library indicators |
@@ -67,11 +67,11 @@ Clean Shopper feels focused, calm, and trustworthy — like a well-designed pers
 
 **Font Family:** Inter — neutral, highly legible, disappears into the UI to let the content lead
 **Source:** Google Fonts
-**Import:** `https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap`
+**Import:** `https://fonts.googleapis.com/css2?family=Inter:wght@300``;400;500;600;700&display=swap`
 
 ### Type Scale
 | Token Name | Size | Weight | Letter Spacing | Line Height | Usage Rule |
-|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- |
 | display | 36px | 700 | −0.03em | 1.1 | App name, hero moments only |
 | h1 | 28px | 600 | −0.025em | 1.2 | Page titles |
 | h2 | 22px | 600 | −0.02em | 1.25 | Section headers |
@@ -89,7 +89,7 @@ Clean Shopper feels focused, calm, and trustworthy — like a well-designed pers
 Base unit: 4px
 
 | Token Name | Value | Usage Rule |
-|---|---|---|
+| --- | --- | --- |
 | space-xs | 4px | Icon gaps, tight inline spacing between adjacent small elements |
 | space-sm | 8px | Gap between tags/badges, compact internal padding |
 | space-md | 16px | Standard internal component padding, between inline elements |
@@ -103,7 +103,7 @@ Base unit: 4px
 ## Border Radius
 
 | Token Name | Value | Usage Rule |
-|---|---|---|
+| --- | --- | --- |
 | radius-badge | 6px | Ingredient tags, EWG labels, status badges — structured data feel |
 | radius-card | 16px | Product cards, modals, containers, summary panels |
 | radius-full | 999px | Buttons, filter chips, rating pills, search input — all interactive pill elements |
@@ -113,10 +113,56 @@ Base unit: 4px
 ## Shadows
 
 | Token Name | Value | Usage Rule |
-|---|---|---|
+| --- | --- | --- |
 | shadow-none | none | Cards and surfaces at rest — no shadow by default |
 | shadow-hover | 0 4px 16px rgba(100,80,50,0.10) | Card hover state — warm tinted lift. Apply via CSS transition: box-shadow 0.15s ease |
 | shadow-modal | 0 8px 32px rgba(100,80,50,0.14) | Modals, drawers, overlays — deeper warm lift |
+
+---
+
+## Motion
+
+| Token Name | Value | Usage Rule |
+| --- | --- | --- |
+| duration-fast | 100ms | Micro-interactions, button state changes |
+| duration-base | 150ms | Default transition — hover shadows, color changes |
+| duration-slow | 250ms | Larger element transitions, panel slides |
+| duration-slower | 350ms | Modal enter/exit, drawer open/close |
+| ease-default | cubic-bezier(0.4, 0, 0.2, 1) | Standard ease-in-out for most transitions |
+| ease-enter | cubic-bezier(0, 0, 0.2, 1) | Elements entering the screen (ease-out) |
+| ease-exit | cubic-bezier(0.4, 0, 1, 1) | Elements leaving the screen (ease-in) |
+
+Card hover shadow uses: `transition: box-shadow duration-base ease-default`
+
+---
+
+## Z-Index Scale
+
+| Token Name | Value | Usage Rule |
+| --- | --- | --- |
+| z-base | 0 | Default document flow |
+| z-raised | 10 | Hovered cards, sticky elements within content |
+| z-dropdown | 100 | Dropdown menus, autocomplete suggestions |
+| z-sticky | 200 | Sticky headers, pinned nav |
+| z-overlay | 300 | Background overlay behind modals |
+| z-modal | 400 | Modal dialogs, drawers |
+| z-toast | 500 | Toast notifications — always on top |
+
+---
+
+## Breakpoints
+
+| Token Name | Value | Usage Rule |
+| --- | --- | --- |
+| sm | 640px | Large phone landscape |
+| md | 768px | Tablet — sidebar becomes visible |
+| lg | 1024px | Desktop — primary layout target |
+| xl | 1280px | Wide desktop — max content width applies |
+
+**Layout behavior:**
+- Below `md`: single column, no sidebar, stacked layout
+- `md` and above: sidebar (240px) + main content column
+- Max content width: 1280px, centered
 
 ---
 
