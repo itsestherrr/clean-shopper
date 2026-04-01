@@ -35,13 +35,13 @@ Clean Shopper feels focused, calm, and trustworthy — like a well-designed pers
 ### Semantic Colors — Clean / Caution / Avoid
 | Token Name | Hex Value | Usage Rule |
 | --- | --- | --- |
-| clean | #6A8362 | Text and icon color for clean-rated products. Not used for any other purpose. |
+| clean | #3A5C35 | Text and icon color for clean-rated products. Not used for any other purpose. WCAG AA: 5.9:1 on clean-bg. |
 | clean-bg | #DCE6D8 | Background of clean rating pills, badges, and tinted summary cards |
 | clean-tint | #E6EDE2 | Light tinted surface for clean-category sections or card backgrounds |
-| caution | #B8943D | Text and icon color for caution-rated products. Not used for generic warnings. |
+| caution | #6B5020 | Text and icon color for caution-rated products. Not used for generic warnings. WCAG AA: 5.9:1 on caution-bg. |
 | caution-bg | #F0E4C8 | Background of caution rating pills, badges, and tinted summary cards |
 | caution-tint | #F5EDD8 | Light tinted surface for caution-category sections |
-| avoid | #9A6A6A | Text and icon color for avoid-rated products. Not used for generic errors. |
+| avoid | #6B3535 | Text and icon color for avoid-rated products. Not used for generic errors. WCAG AA: 7.2:1 on avoid-bg. |
 | avoid-bg | #ECDCDC | Background of avoid rating pills, badges, and tinted summary cards |
 | avoid-tint | #F2E6E6 | Light tinted surface for avoid-category sections |
 
@@ -50,7 +50,7 @@ Clean Shopper feels focused, calm, and trustworthy — like a well-designed pers
 | --- | --- | --- |
 | text-primary | #1D1D1D | Headings, card titles, nav items, all primary readable content |
 | text-secondary | #6B6B6B | Body copy, product descriptions, supporting content |
-| text-tertiary | #9B9B9B | Timestamps, metadata, counts, less critical labels |
+| text-tertiary | #767676 | Timestamps, metadata, counts, less critical labels. WCAG AA: 4.5:1 on white. |
 | text-placeholder | #B5B0A8 | Input placeholders, disabled element text |
 
 ### Accent Colors — Category & UI Tints
