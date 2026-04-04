@@ -20,6 +20,7 @@ Single-user app. No authentication in V1. Local state plus Supabase for data per
 - Styling: Tailwind only. No inline styles. No CSS modules. Use Tailwind theme classes for all design token values. Never hardcode hex colors, pixel font sizes, or spacing values in components. If a needed token does not exist in the Tailwind config, add it there rather than hardcoding the value. This means bg-primary not #2D7B5E, text-h3 not text-lg, p-lg not p-4.
 - State: React useState and useContext only. No Redux, no Zustand.
 - File naming: kebab-case for all non-component files
+- Components: Always check /docs/component-spec.md before building any UI element. If an existing component covers the use case, use it. Only create a new component if no spec covers the pattern, and add the new component to component-spec.md before moving on.
 
 ## Tailwind v4 — Known Gotchas
 - We use Tailwind v4 with `@theme` in `src/styles/globals.css`. All design tokens (colors, spacing, radius, shadows, motion) are defined there — not in `tailwind.config.js`.
@@ -33,7 +34,7 @@ Single-user app. No authentication in V1. Local state plus Supabase for data per
 - Do not use any AI model other than claude-sonnet-4-20250514
 
 ## References
-- Component library: See /docs/component-spec.md -- use existing components before creating new ones
+- Component spec: See /docs/component-spec.md — use existing components before creating new ones. Follow the spec for props, states, and visual structure.
 - Build plan: See /docs/build-plan.md -- build phase by phase, do not jump ahead
 - Project context: See /docs/project-context.md -- full project intake and design decisions
 - Design system: See /docs/design-system.md -- follow these visual specifications for all UI work. Do not hardcode colors, font sizes, spacing, or shadows.

@@ -120,6 +120,14 @@ Base unit: 4px
 
 ---
 
+## Backdrop
+
+| Token Name | Value | Usage Rule |
+| --- | --- | --- |
+| backdrop | rgba(100,80,50,0.40) | Modal and drawer overlay. Warm-tinted to match shadow system. Never use pure black. |
+
+---
+
 ## Motion
 
 | Token Name | Value | Usage Rule |
