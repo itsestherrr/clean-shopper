@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Clean Shopper — Design System</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: #f0f0f0; color: #1D1D1D; }
+
+  /* Page layout */
+  .page { max-width: 1000px; margin: 0 auto; padding: 64px 48px; background: #fff; min-height: 100vh; }
+  .page-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: #9B9B9B; margin-bottom: 8px; }
+  .page-title { font-size: 32px; font-weight: 600; letter-spacing: -0.025em; margin-bottom: 6px; }
+  .page-sub { font-size: 15px; color: #6B6B6B; margin-bottom: 72px; line-height: 1.5; }
+
+  /* Sections */
+  .section { margin-bottom: 72px; }
+  .section-title { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #9B9B9B; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid #ebe7e0; }
+
+  /* Swatch grid */
+  .swatch-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+  .swatch { border-radius: 12px; overflow: hidden; width: 140px; border: 1px solid #e8e4de; }
+  .swatch-color { height: 72px; }
+  .swatch-info { background: #fff; padding: 10px 12px; }
+  .swatch-name { font-size: 11px; font-weight: 500; color: #1D1D1D; margin-bottom: 2px; }
+  .swatch-hex { font-size: 10px; font-family: monospace; color: #9B9B9B; }
+  .swatch-use { font-size: 10px; color: #b5b0a8; margin-top: 3px; line-height: 1.4; }
+
+  /* Semantic swatch — larger with usage */
+  .sem-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .sem-swatch { border-radius: 12px; overflow: hidden; flex: 1; min-width: 180px; border: 1px solid #e8e4de; }
+  .sem-color { height: 56px; }
+  .sem-info { padding: 12px 14px; }
+  .sem-name { font-size: 12px; font-weight: 600; margin-bottom: 2px; }
+  .sem-hex { font-size: 10px; font-family: monospace; opacity: 0.6; }
+  .sem-use { font-size: 11px; margin-top: 6px; line-height: 1.5; opacity: 0.75; }
+
+  /* Type scale */
+  .type-row { display: flex; align-items: baseline; gap: 24px; padding: 14px 0; border-bottom: 1px solid #ebe7e0; }
+  .type-label { font-size: 10px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #b5b0a8; width: 60px; flex-shrink: 0; }
+  .type-meta { font-size: 10px; color: #b5b0a8; width: 120px; flex-shrink: 0; }
+
+  /* Spacing scale */
+  .space-row { display: flex; align-items: center; gap: 16px; padding: 8px 0; border-bottom: 1px solid #ebe7e0; }
+  .space-block { background: #5a8384; border-radius: 3px; height: 12px; flex-shrink: 0; }
+  .space-label { font-size: 11px; font-weight: 500; width: 80px; flex-shrink: 0; }
+  .space-value { font-size: 11px; font-family: monospace; color: #9B9B9B; width: 50px; }
+  .space-use { font-size: 11px; color: #b5b0a8; }
+
+  /* Radius examples */
+  .radius-row { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+  .radius-demo { background: #fff; padding: 14px 20px; box-shadow: 0 2px 8px rgba(100,80,50,0.07); }
+  .radius-label { font-size: 10px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #9B9B9B; text-align: center; margin-top: 8px; }
+
+  /* Shadow examples */
+  .shadow-row { display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start; }
+  .shadow-demo { background: #fff; border-radius: 16px; padding: 20px 24px; width: 200px; }
+  .shadow-demo-label { font-size: 11px; font-weight: 500; margin-bottom: 4px; }
+  .shadow-demo-sub { font-size: 11px; color: #6B6B6B; }
+  .shadow-note { font-size: 10px; font-family: monospace; color: #b5b0a8; margin-top: 10px; }
+
+  /* Component examples */
+  .component-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 20px; }
+  .component-label { font-size: 10px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #b5b0a8; width: 100%; margin-bottom: 4px; }
+
+  .btn { padding: 10px 20px; border: none; border-radius: 999px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; cursor: default; }
+  .btn-primary { background: #5a8384; color: #fff; }
+  .btn-secondary { background: #fff; color: #1D1D1D; box-shadow: inset 0 0 0 1.5px #e0dbd4; }
+  .btn-ghost { background: transparent; color: #5a8384; }
+
+  .chip { font-size: 11px; font-weight: 500; padding: 5px 14px; border-radius: 999px; border: none; font-family: 'Inter', sans-serif; cursor: default; }
+  .chip-active { background: #1D1D1D; color: #fff; }
+  .chip-clean { background: #dce6d8; color: #4a6e44; }
+  .chip-caution { background: #f0e4c8; color: #96782e; }
+  .chip-avoid { background: #ecdcdc; color: #8a5a5a; }
+  .chip-neutral { background: #edeae5; color: #6B6B6B; }
+
+  .badge { font-size: 10px; font-weight: 500; padding: 3px 8px; border-radius: 6px; }
+  .badge-clean { background: #dce6d8; color: #4a6e44; }
+  .badge-caution { background: #f0e4c8; color: #96782e; }
+  .badge-avoid { background: #ecdcdc; color: #8a5a5a; }
+
+  .rating { font-size: 11px; font-weight: 500; padding: 4px 12px; border-radius: 999px; }
+  .rating-clean { background: #dce6d8; color: #4a6e44; }
+  .rating-caution { background: #f0e4c8; color: #96782e; }
+  .rating-avoid { background: #ecdcdc; color: #8a5a5a; }
+
+  /* Card */
+  .card-demo { background: #fff; border-radius: 16px; padding: 20px 24px; max-width: 480px; transition: box-shadow 0.15s ease; }
+  .card-demo:hover { box-shadow: 0 4px 16px rgba(100,80,50,0.10); }
+  .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+  .card-title { font-size: 14px; font-weight: 500; }
+  .card-brand { font-size: 12px; color: #6B6B6B; margin-top: 2px; }
+  .card-body { font-size: 13px; color: #6B6B6B; line-height: 1.6; }
+  .card-tags { display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap; }
+
+  /* Input */
+  .input-demo { padding: 10px 16px; border: none; border-radius: 999px; background: #fff; font-family: 'Inter', sans-serif; font-size: 13px; color: #1D1D1D; outline: none; width: 280px; box-shadow: inset 0 0 0 1.5px #e0dbd4; }
+  .input-demo::placeholder { color: #b5b0a8; }
+
+  /* Text hierarchy */
+  .text-block { background: #fff; border-radius: 16px; padding: 28px 32px; max-width: 560px; }
+  .text-row { margin-bottom: 14px; }
+  .text-role { font-size: 10px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #b5b0a8; margin-bottom: 3px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="page-eyebrow">Clean Shopper</div>
+  <div class="page-title">Design System</div>
+  <div class="page-sub">Version 1.0 · Generated March 2026 · Warm neutral palette, Inter, generous whitespace, vintage muted semantics</div>
+
+  <!-- ===== COLORS: SURFACES ===== -->
+  <div class="section">
+    <div class="section-title">Surfaces</div>
+    <div class="swatch-row">
+      <div class="swatch">
+        <div class="swatch-color" style="background:#faf7f2; outline: 1px solid #ebe7e0;"></div>
+        <div class="swatch-info"><div class="swatch-name">Page Background</div><div class="swatch-hex">#FAF7F2</div><div class="swatch-use">App background, always</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#ffffff; outline: 1px solid #ebe7e0;"></div>
+        <div class="swatch-info"><div class="swatch-name">Card Surface</div><div class="swatch-hex">#FFFFFF</div><div class="swatch-use">Cards, modals, search results</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#f0ece6;"></div>
+        <div class="swatch-info"><div class="swatch-name">Muted Surface</div><div class="swatch-hex">#F0ECE6</div><div class="swatch-use">Sidebar, secondary panels</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#ebe7e0;"></div>
+        <div class="swatch-info"><div class="swatch-name">Divider</div><div class="swatch-hex">#EBE7E0</div><div class="swatch-use">Horizontal rules, subtle borders on inputs</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== COLORS: PRIMARY ===== -->
+  <div class="section">
+    <div class="section-title">Primary — Sage</div>
+    <div class="swatch-row">
+      <div class="swatch">
+        <div class="swatch-color" style="background:#5a8384;"></div>
+        <div class="swatch-info"><div class="swatch-name">Sage</div><div class="swatch-hex">#5A8384</div><div class="swatch-use">Primary buttons, active nav, key CTAs only</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#4a7273;"></div>
+        <div class="swatch-info"><div class="swatch-name">Sage Dark</div><div class="swatch-hex">#4A7273</div><div class="swatch-use">Hover and pressed states on primary elements</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#ddeaeb;"></div>
+        <div class="swatch-info"><div class="swatch-name">Sage Light</div><div class="swatch-hex">#DDEAEB</div><div class="swatch-use">Selected states, tinted backgrounds</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== COLORS: SEMANTIC ===== -->
+  <div class="section">
+    <div class="section-title">Semantic — Vintage Muted Palette</div>
+    <div class="sem-row">
+      <div class="sem-swatch" style="background:#e6ede2;">
+        <div class="sem-color" style="background:#6a8362;"></div>
+        <div class="sem-info">
+          <div class="sem-name" style="color:#4a6e44;">Clean — Moss</div>
+          <div class="sem-hex" style="color:#4a6e44;">#6A8362 · bg #DCE6D8 · tint #E6EDE2</div>
+          <div class="sem-use" style="color:#4a6e44;">All-clear ingredient rating. Used only for confirmed clean products. Not used for UI decoration.</div>
+        </div>
+      </div>
+      <div class="sem-swatch" style="background:#f5edd8;">
+        <div class="sem-color" style="background:#b8943d;"></div>
+        <div class="sem-info">
+          <div class="sem-name" style="color:#96782e;">Caution — Gold</div>
+          <div class="sem-hex" style="color:#96782e;">#B8943D · bg #F0E4C8 · tint #F5EDD8</div>
+          <div class="sem-use" style="color:#96782e;">Mixed or uncertain rating. Some ingredients of moderate concern. Needs user review.</div>
+        </div>
+      </div>
+      <div class="sem-swatch" style="background:#f2e6e6;">
+        <div class="sem-color" style="background:#9a6a6a;"></div>
+        <div class="sem-info">
+          <div class="sem-name" style="color:#8a5a5a;">Avoid — Rose</div>
+          <div class="sem-hex" style="color:#8a5a5a;">#9A6A6A · bg #ECDCDC · tint #F2E6E6</div>
+          <div class="sem-use" style="color:#8a5a5a;">High-concern ingredients present. Avoid this product. Not used for generic errors.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== COLORS: TEXT ===== -->
+  <div class="section">
+    <div class="section-title">Text Colors</div>
+    <div class="swatch-row">
+      <div class="swatch">
+        <div class="swatch-color" style="background:#1D1D1D;"></div>
+        <div class="swatch-info"><div class="swatch-name">Primary Text</div><div class="swatch-hex">#1D1D1D</div><div class="swatch-use">Headings, card titles, all primary content</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#6B6B6B;"></div>
+        <div class="swatch-info"><div class="swatch-name">Secondary Text</div><div class="swatch-hex">#6B6B6B</div><div class="swatch-use">Body copy, descriptions, supporting content</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#9B9B9B;"></div>
+        <div class="swatch-info"><div class="swatch-name">Tertiary Text</div><div class="swatch-hex">#9B9B9B</div><div class="swatch-use">Timestamps, metadata, less important labels</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#b5b0a8;"></div>
+        <div class="swatch-info"><div class="swatch-name">Placeholder</div><div class="swatch-hex">#B5B0A8</div><div class="swatch-use">Input placeholders, disabled states</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== COLORS: ACCENT ===== -->
+  <div class="section">
+    <div class="section-title">Accent Palette — Category & UI Tints</div>
+    <div class="swatch-row">
+      <div class="swatch">
+        <div class="swatch-color" style="background:#7a6a8a;"></div>
+        <div class="swatch-info"><div class="swatch-name">Lavender</div><div class="swatch-hex">#7A6A8A</div><div class="swatch-use">AI analysis states</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#8a7060;"></div>
+        <div class="swatch-info"><div class="swatch-name">Taupe</div><div class="swatch-hex">#8A7060</div><div class="swatch-use">Category labels</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#6a8362;"></div>
+        <div class="swatch-info"><div class="swatch-name">Moss</div><div class="swatch-hex">#6A8362</div><div class="swatch-use">Shopping list, saved items</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#5a6a7a;"></div>
+        <div class="swatch-info"><div class="swatch-name">Slate</div><div class="swatch-hex">#5A6A7A</div><div class="swatch-use">Info states, neutral data</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TYPOGRAPHY ===== -->
+  <div class="section">
+    <div class="section-title">Typography — Inter (Google Fonts)</div>
+    <div style="background:#fff; border-radius:16px; padding:32px; max-width:720px;">
+      <div class="type-row" style="border-bottom: 1px solid #ebe7e0;">
+        <div class="type-label">Display</div>
+        <div class="type-meta">700 · 36px · −0.03em</div>
+        <div style="font-size:36px; font-weight:700; letter-spacing:-0.03em;">Clean Shopper</div>
+      </div>
+      <div class="type-row">
+        <div class="type-label">H1</div>
+        <div class="type-meta">600 · 28px · −0.025em</div>
+        <div style="font-size:28px; font-weight:600; letter-spacing:-0.025em;">Search Products</div>
+      </div>
+      <div class="type-row">
+        <div class="type-label">H2</div>
+        <div class="type-meta">600 · 22px · −0.02em</div>
+        <div style="font-size:22px; font-weight:600; letter-spacing:-0.02em;">Your Product Library</div>
+      </div>
+      <div class="type-row">
+        <div class="type-label">H3</div>
+        <div class="type-meta">500 · 16px · −0.01em</div>
+        <div style="font-size:16px; font-weight:500; letter-spacing:-0.01em;">Search Results</div>
+      </div>
+      <div class="type-row">
+        <div class="type-label">H4</div>
+        <div class="type-meta">500 · 14px · 0em</div>
+        <div style="font-size:14px; font-weight:500;">Everyday Shea Body Wash</div>
+      </div>
+      <div class="type-row">
+        <div class="type-label">Body</div>
+        <div class="type-meta">400 · 14px · lh 1.65</div>
+        <div style="font-size:14px; font-weight:400; color:#6B6B6B; line-height:1.65;">Plant-based surfactants with no synthetic fragrance. All ingredients rated low-concern by EWG Skin Deep database.</div>
+      </div>
+      <div class="type-row">
+        <div class="type-label">Small</div>
+        <div class="type-meta">400 · 12px · lh 1.5</div>
+        <div style="font-size:12px; font-weight:400; color:#9B9B9B; line-height:1.5;">Updated 3 days ago · 14 ingredients analyzed</div>
+      </div>
+      <div class="type-row" style="border-bottom:none;">
+        <div class="type-label">Label</div>
+        <div class="type-meta">500 · 11px · +0.06em</div>
+        <div style="font-size:11px; font-weight:500; letter-spacing:0.06em; text-transform:uppercase; color:#9B9B9B;">Category</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SPACING ===== -->
+  <div class="section">
+    <div class="section-title">Spacing Scale — Base 4px</div>
+    <div style="max-width:600px;">
+      <div class="space-row"><span class="space-label">space-xs</span><div class="space-block" style="width:4px;"></div><span class="space-value">4px</span><span class="space-use">Icon gaps, tight inline spacing</span></div>
+      <div class="space-row"><span class="space-label">space-sm</span><div class="space-block" style="width:8px;"></div><span class="space-value">8px</span><span class="space-use">Tag gaps, compact internal padding</span></div>
+      <div class="space-row"><span class="space-label">space-md</span><div class="space-block" style="width:16px;"></div><span class="space-value">16px</span><span class="space-use">Standard component padding</span></div>
+      <div class="space-row"><span class="space-label">space-lg</span><div class="space-block" style="width:24px;"></div><span class="space-value">24px</span><span class="space-use">Card padding, section internals</span></div>
+      <div class="space-row"><span class="space-label">space-xl</span><div class="space-block" style="width:32px;"></div><span class="space-value">32px</span><span class="space-use">Between cards, between components</span></div>
+      <div class="space-row"><span class="space-label">space-2xl</span><div class="space-block" style="width:48px;"></div><span class="space-value">48px</span><span class="space-use">Between page sections</span></div>
+      <div class="space-row"><span class="space-label">space-3xl</span><div class="space-block" style="width:64px;"></div><span class="space-value">64px</span><span class="space-use">Page-level margins, hero spacing</span></div>
+    </div>
+  </div>
+
+  <!-- ===== BORDER RADIUS ===== -->
+  <div class="section">
+    <div class="section-title">Border Radius</div>
+    <div style="display:flex; gap:24px; flex-wrap:wrap; align-items:flex-end;">
+      <div>
+        <div class="radius-demo" style="border-radius:6px; width:80px; height:40px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:500; color:#6B6B6B;">Badge</div>
+        <div class="radius-label">6px<br>Badges</div>
+      </div>
+      <div>
+        <div class="radius-demo" style="border-radius:16px; width:100px; height:56px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:500; color:#6B6B6B;">Card</div>
+        <div class="radius-label">16px<br>Cards & Modals</div>
+      </div>
+      <div>
+        <div class="radius-demo" style="border-radius:999px; width:120px; height:40px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:500; color:#fff; background:#5a8384;">Button</div>
+        <div class="radius-label">Pill (999px)<br>Buttons & Chips</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SHADOWS ===== -->
+  <div class="section">
+    <div class="section-title">Shadows</div>
+    <div class="shadow-row">
+      <div>
+        <div class="shadow-demo" style="box-shadow:none;">
+          <div class="shadow-demo-label">Resting state</div>
+          <div class="shadow-demo-sub">Cards at rest have no shadow</div>
+        </div>
+        <div class="shadow-note" style="margin-top:10px;">box-shadow: none</div>
+      </div>
+      <div>
+        <div class="shadow-demo" style="box-shadow: 0 4px 16px rgba(100,80,50,0.10);">
+          <div class="shadow-demo-label">Hover / elevated</div>
+          <div class="shadow-demo-sub">Cards lift on hover with warm shadow</div>
+        </div>
+        <div class="shadow-note" style="margin-top:10px;">0 4px 16px rgba(100,80,50,0.10)</div>
+      </div>
+      <div>
+        <div class="shadow-demo" style="box-shadow: 0 8px 32px rgba(100,80,50,0.14);">
+          <div class="shadow-demo-label">Modal / overlay</div>
+          <div class="shadow-demo-sub">Modals and drawers use deeper shadow</div>
+        </div>
+        <div class="shadow-note" style="margin-top:10px;">0 8px 32px rgba(100,80,50,0.14)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== COMPONENTS ===== -->
+  <div class="section">
+    <div class="section-title">Components</div>
+
+    <div style="margin-bottom:32px;">
+      <div class="component-label">Buttons</div>
+      <div class="component-row">
+        <button class="btn btn-primary">Search</button>
+        <button class="btn btn-secondary">Save Product</button>
+        <button class="btn btn-ghost">View Details</button>
+      </div>
+    </div>
+
+    <div style="margin-bottom:32px;">
+      <div class="component-label">Filter Chips (pill)</div>
+      <div class="component-row">
+        <span class="chip chip-active">All</span>
+        <span class="chip chip-clean">Clean</span>
+        <span class="chip chip-caution">Caution</span>
+        <span class="chip chip-avoid">Avoid</span>
+        <span class="chip chip-neutral">Unsorted</span>
+      </div>
+    </div>
+
+    <div style="margin-bottom:32px;">
+      <div class="component-label">Rating Pills (on cards)</div>
+      <div class="component-row">
+        <span class="rating rating-clean">Clean</span>
+        <span class="rating rating-caution">Caution</span>
+        <span class="rating rating-avoid">Avoid</span>
+      </div>
+    </div>
+
+    <div style="margin-bottom:32px;">
+      <div class="component-label">Badges — 6px (ingredient tags, EWG labels)</div>
+      <div class="component-row">
+        <span class="badge badge-clean">EWG Verified</span>
+        <span class="badge badge-clean">No Fragrance</span>
+        <span class="badge badge-caution">Preservative</span>
+        <span class="badge badge-caution">Fragrance Blend</span>
+        <span class="badge badge-avoid">Phthalates</span>
+        <span class="badge badge-avoid">Synthetic Musk</span>
+      </div>
+    </div>
+
+    <div style="margin-bottom:32px;">
+      <div class="component-label">Search Input</div>
+      <div class="component-row">
+        <input class="input-demo" placeholder="Search for a product or brand..." />
+      </div>
+    </div>
+
+    <div>
+      <div class="component-label">Product Card (hover to see shadow lift)</div>
+      <div class="card-demo">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Everyday Shea Body Wash — Lavender</div>
+            <div class="card-brand">Alaffia · Body Care</div>
+          </div>
+          <span class="rating rating-clean">Clean</span>
+        </div>
+        <div class="card-body">All ingredients rated low-concern by EWG. Plant-based surfactants, no parabens, no synthetic fragrance. Fair-trade shea butter sourced from Togo.</div>
+        <div class="card-tags">
+          <span class="badge badge-clean">EWG Verified</span>
+          <span class="badge badge-clean">No Fragrance</span>
+          <span class="badge badge-clean">No Parabens</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MOTION ===== -->
+  <div class="section">
+    <div class="section-title">Motion</div>
+    <div style="max-width:720px; background:#fff; border-radius:16px; padding:32px; border:1px solid #e8e4de;">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:32px;">
+        <div>
+          <div style="font-size:10px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:#9B9B9B; margin-bottom:16px;">Duration</div>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <div style="display:flex; align-items:center; gap:12px;"><span style="width:60px; font-size:11px; font-weight:500;">fast</span><div style="flex:1; height:5px; background:#ebe7e0; border-radius:3px;"><div style="height:100%; width:20%; background:#5a8384; border-radius:3px;"></div></div><span style="font-size:10px; font-family:monospace; color:#9B9B9B; width:40px;">100ms</span><span style="font-size:11px; color:#6B6B6B;">Button states</span></div>
+            <div style="display:flex; align-items:center; gap:12px;"><span style="width:60px; font-size:11px; font-weight:500;">base</span><div style="flex:1; height:5px; background:#ebe7e0; border-radius:3px;"><div style="height:100%; width:30%; background:#5a8384; border-radius:3px;"></div></div><span style="font-size:10px; font-family:monospace; color:#9B9B9B; width:40px;">150ms</span><span style="font-size:11px; color:#6B6B6B;">Hover shadows</span></div>
+            <div style="display:flex; align-items:center; gap:12px;"><span style="width:60px; font-size:11px; font-weight:500;">slow</span><div style="flex:1; height:5px; background:#ebe7e0; border-radius:3px;"><div style="height:100%; width:50%; background:#5a8384; border-radius:3px;"></div></div><span style="font-size:10px; font-family:monospace; color:#9B9B9B; width:40px;">250ms</span><span style="font-size:11px; color:#6B6B6B;">Panel slides</span></div>
+            <div style="display:flex; align-items:center; gap:12px;"><span style="width:60px; font-size:11px; font-weight:500;">slower</span><div style="flex:1; height:5px; background:#ebe7e0; border-radius:3px;"><div style="height:100%; width:70%; background:#5a8384; border-radius:3px;"></div></div><span style="font-size:10px; font-family:monospace; color:#9B9B9B; width:40px;">350ms</span><span style="font-size:11px; color:#6B6B6B;">Modal open/close</span></div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:10px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:#9B9B9B; margin-bottom:16px;">Easing</div>
+          <div style="display:flex; flex-direction:column; gap:14px;">
+            <div><div style="font-size:11px; font-weight:500; margin-bottom:2px;">ease-default</div><div style="font-size:10px; font-family:monospace; color:#9B9B9B;">cubic-bezier(0.4, 0, 0.2, 1)</div><div style="font-size:11px; color:#6B6B6B; margin-top:2px;">Most transitions</div></div>
+            <div><div style="font-size:11px; font-weight:500; margin-bottom:2px;">ease-enter</div><div style="font-size:10px; font-family:monospace; color:#9B9B9B;">cubic-bezier(0, 0, 0.2, 1)</div><div style="font-size:11px; color:#6B6B6B; margin-top:2px;">Elements entering screen</div></div>
+            <div><div style="font-size:11px; font-weight:500; margin-bottom:2px;">ease-exit</div><div style="font-size:10px; font-family:monospace; color:#9B9B9B;">cubic-bezier(0.4, 0, 1, 1)</div><div style="font-size:11px; color:#6B6B6B; margin-top:2px;">Elements leaving screen</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Z-INDEX ===== -->
+  <div class="section">
+    <div class="section-title">Z-Index Scale</div>
+    <div style="max-width:480px; background:#fff; border-radius:16px; overflow:hidden; border:1px solid #e8e4de;">
+      <div style="display:grid; grid-template-columns:120px 60px 1fr; background:#faf7f2; padding:10px 16px; border-bottom:1px solid #ebe7e0;">
+        <div style="font-size:10px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:#9B9B9B;">Token</div>
+        <div style="font-size:10px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:#9B9B9B;">Value</div>
+        <div style="font-size:10px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:#9B9B9B;">Usage</div>
+      </div>
+      <div style="display:grid; grid-template-columns:120px 60px 1fr; padding:10px 16px; border-bottom:1px solid #ebe7e0;"><span style="font-size:11px; font-weight:500;">z-base</span><span style="font-size:11px; font-family:monospace; color:#9B9B9B;">0</span><span style="font-size:11px; color:#6B6B6B;">Document flow</span></div>
+      <div style="display:grid; grid-template-columns:120px 60px 1fr; padding:10px 16px; border-bottom:1px solid #ebe7e0;"><span style="font-size:11px; font-weight:500;">z-raised</span><span style="font-size:11px; font-family:monospace; color:#9B9B9B;">10</span><span style="font-size:11px; color:#6B6B6B;">Hovered, sticky elements</span></div>
+      <div style="display:grid; grid-template-columns:120px 60px 1fr; padding:10px 16px; border-bottom:1px solid #ebe7e0;"><span style="font-size:11px; font-weight:500;">z-dropdown</span><span style="font-size:11px; font-family:monospace; color:#9B9B9B;">100</span><span style="font-size:11px; color:#6B6B6B;">Dropdown menus</span></div>
+      <div style="display:grid; grid-template-columns:120px 60px 1fr; padding:10px 16px; border-bottom:1px solid #ebe7e0;"><span style="font-size:11px; font-weight:500;">z-sticky</span><span style="font-size:11px; font-family:monospace; color:#9B9B9B;">200</span><span style="font-size:11px; color:#6B6B6B;">Sticky headers, nav</span></div>
+      <div style="display:grid; grid-template-columns:120px 60px 1fr; padding:10px 16px; border-bottom:1px solid #ebe7e0;"><span style="font-size:11px; font-weight:500;">z-overlay</span><span style="font-size:11px; font-family:monospace; color:#9B9B9B;">300</span><span style="font-size:11px; color:#6B6B6B;">Modal backdrop</span></div>
+      <div style="display:grid; grid-template-columns:120px 60px 1fr; padding:10px 16px; border-bottom:1px solid #ebe7e0;"><span style="font-size:11px; font-weight:500;">z-modal</span><span style="font-size:11px; font-family:monospace; color:#9B9B9B;">400</span><span style="font-size:11px; color:#6B6B6B;">Modal dialogs, drawers</span></div>
+      <div style="display:grid; grid-template-columns:120px 60px 1fr; padding:10px 16px;"><span style="font-size:11px; font-weight:500;">z-toast</span><span style="font-size:11px; font-family:monospace; color:#9B9B9B;">500</span><span style="font-size:11px; color:#6B6B6B;">Toast notifications</span></div>
+    </div>
+  </div>
+
+  <!-- ===== BREAKPOINTS ===== -->
+  <div class="section">
+    <div class="section-title">Breakpoints & Layout</div>
+    <div style="max-width:720px;">
+      <div style="background:#fff; border-radius:16px; padding:28px 32px; border:1px solid #e8e4de; margin-bottom:16px;">
+        <div style="display:flex; gap:2px; margin-bottom:20px; align-items:center;">
+          <div style="flex:640; height:6px; background:#ebe7e0; border-radius:4px 0 0 4px;"></div>
+          <div style="flex:128; height:6px; background:#b5d4d5;"></div>
+          <div style="flex:256; height:6px; background:#7aacad;"></div>
+          <div style="flex:256; height:6px; background:#5a8384; border-radius:0 4px 4px 0;"></div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:16px;">
+          <div><div style="font-size:11px; font-weight:600; margin-bottom:2px;">sm</div><div style="font-size:11px; font-family:monospace; color:#9B9B9B; margin-bottom:4px;">640px</div><div style="font-size:11px; color:#6B6B6B;">Large phone landscape</div></div>
+          <div><div style="font-size:11px; font-weight:600; margin-bottom:2px;">md</div><div style="font-size:11px; font-family:monospace; color:#9B9B9B; margin-bottom:4px;">768px</div><div style="font-size:11px; color:#6B6B6B;">Sidebar becomes visible</div></div>
+          <div><div style="font-size:11px; font-weight:600; margin-bottom:2px;">lg</div><div style="font-size:11px; font-family:monospace; color:#9B9B9B; margin-bottom:4px;">1024px</div><div style="font-size:11px; color:#6B6B6B;">Primary layout target</div></div>
+          <div><div style="font-size:11px; font-weight:600; margin-bottom:2px;">xl</div><div style="font-size:11px; font-family:monospace; color:#9B9B9B; margin-bottom:4px;">1280px</div><div style="font-size:11px; color:#6B6B6B;">Max content width</div></div>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+        <div style="background:#fff; border-radius:12px; padding:20px; border:1px solid #e8e4de;">
+          <div style="font-size:10px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:#9B9B9B; margin-bottom:12px;">Below md — Mobile</div>
+          <div style="background:#faf7f2; border-radius:8px; padding:12px; font-size:11px; color:#6B6B6B; line-height:1.8;">Single column<br>No sidebar<br>Stacked layout</div>
+        </div>
+        <div style="background:#fff; border-radius:12px; padding:20px; border:1px solid #e8e4de;">
+          <div style="font-size:10px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:#9B9B9B; margin-bottom:12px;">md and above — Desktop</div>
+          <div style="background:#faf7f2; border-radius:8px; padding:12px; display:flex; gap:8px; align-items:stretch; min-height:60px;">
+            <div style="width:48px; background:#ddeaeb; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:9px; color:#5a8384; text-align:center; line-height:1.3;">240px</div>
+            <div style="flex:1; background:#fff; border-radius:4px; border:1px solid #ebe7e0; display:flex; align-items:center; justify-content:center; font-size:11px; color:#6B6B6B;">Main content</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TEXT HIERARCHY ===== -->
+  <div class="section">
+    <div class="section-title">Text Hierarchy</div>
+    <div class="text-block">
+      <div class="text-row">
+        <div class="text-role">Primary — #1D1D1D · 500–600</div>
+        <div style="font-size:15px; font-weight:500; color:#1D1D1D;">Everyday Shea Body Wash by Alaffia</div>
+      </div>
+      <div class="text-row">
+        <div class="text-role">Secondary — #6B6B6B · 400</div>
+        <div style="font-size:14px; color:#6B6B6B; line-height:1.6;">All ingredients rated low-concern by EWG. Plant-based surfactants, no synthetic fragrance.</div>
+      </div>
+      <div class="text-row">
+        <div class="text-role">Tertiary — #9B9B9B · 400</div>
+        <div style="font-size:12px; color:#9B9B9B;">Updated 3 days ago · 14 ingredients</div>
+      </div>
+      <div class="text-row" style="margin-bottom:0;">
+        <div class="text-role">Placeholder — #B5B0A8 · 400</div>
+        <div style="font-size:13px; color:#b5b0a8;">Search for a product...</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

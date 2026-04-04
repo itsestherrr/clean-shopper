@@ -17,9 +17,13 @@ Single-user app. No authentication in V1. Local state plus Supabase for data per
 - Components: PascalCase filenames, one component per file, lives in /src/components/
 - Utility functions: camelCase, lives in /src/lib/
 - API calls: all external API calls through /src/lib/api/, never inline in components
-- Styling: Tailwind only. No inline styles. No CSS modules.
+- Styling: Tailwind only. No inline styles. No CSS modules. Use Tailwind theme classes for all design token values. Never hardcode hex colors, pixel font sizes, or spacing values in components. If a needed token does not exist in the Tailwind config, add it there rather than hardcoding the value. This means bg-primary not #2D7B5E, text-h3 not text-lg, p-lg not p-4.
 - State: React useState and useContext only. No Redux, no Zustand.
 - File naming: kebab-case for all non-component files
+
+## Tailwind v4 — Known Gotchas
+- We use Tailwind v4 with `@theme` in `src/styles/globals.css`. All design tokens (colors, spacing, radius, shadows, motion) are defined there — not in `tailwind.config.js`.
+- Our spacing token names (`xs`, `sm`, `md`, `lg`, `xl`, `2xl`, `3xl`) collide with Tailwind's default named sizes for `max-w-*`. Do NOT use `max-w-xs`, `max-w-sm`, `max-w-lg`, `max-w-xl` etc. for layout widths — they will resolve to our spacing values (e.g. `max-w-xl` = 32px). Use arbitrary values instead: `max-w-[600px]` or screen-based: `max-w-screen-md`.
 
 ## Do Not
 - Do not add user authentication or account features -- V1 is single-user only
@@ -32,3 +36,5 @@ Single-user app. No authentication in V1. Local state plus Supabase for data per
 - Component library: See /docs/component-spec.md -- use existing components before creating new ones
 - Build plan: See /docs/build-plan.md -- build phase by phase, do not jump ahead
 - Project context: See /docs/project-context.md -- full project intake and design decisions
+- Design system: See /docs/design-system.md -- follow these visual specifications for all UI work. Do not hardcode colors, font sizes, spacing, or shadows.
+- Tailwind config: See tailwind.config.js for design tokens as Tailwind theme extensions. Always use theme classes, never hardcode values.
