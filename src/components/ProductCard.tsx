@@ -1,3 +1,7 @@
+import RatingBadge from './RatingBadge'
+import Badge from './Badge'
+import IconButton from './IconButton'
+
 type Rating = 'clean' | 'caution' | 'avoid'
 
 interface ProductCardProps {
@@ -6,24 +10,11 @@ interface ProductCardProps {
   rating: Rating
   category: string
   description: string
-}
-
-const ratingConfig: Record<Rating, { label: string; badge: string; text: string }> = {
-  clean: {
-    label: 'Clean',
-    badge: 'bg-clean-bg',
-    text: 'text-clean',
-  },
-  caution: {
-    label: 'Caution',
-    badge: 'bg-caution-bg',
-    text: 'text-caution',
-  },
-  avoid: {
-    label: 'Avoid',
-    badge: 'bg-avoid-bg',
-    text: 'text-avoid',
-  },
+  onSave?: () => void
+  onAddToList?: () => void
+  saved?: boolean
+  onClick?: () => void
+  loading?: boolean
 }
 
 export default function ProductCard({
@@ -32,52 +23,61 @@ export default function ProductCard({
   rating,
   category,
   description,
+  onSave,
+  onAddToList,
+  saved = false,
+  onClick,
+  loading = false,
 }: ProductCardProps) {
-  const { label, badge, text } = ratingConfig[rating]
+  if (loading) {
+    return (
+      <div className="bg-surface-muted rounded-card animate-pulse h-[180px]" />
+    )
+  }
 
   return (
-    <div className="
-      bg-surface-card
-      rounded-card
-      p-lg
-      transition-shadow duration-base ease-default
-      hover:shadow-hover
-    ">
+    <div
+      className="bg-surface-card rounded-card p-lg transition-shadow duration-base ease-default hover:shadow-hover cursor-pointer"
+      onClick={onClick}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={onClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') onClick() } : undefined}
+    >
       {/* Header */}
       <div className="flex justify-between items-start gap-sm mb-sm">
         <div>
           <h4 className="text-h4 text-text-primary">{name}</h4>
           <p className="text-small text-text-tertiary mt-xs">{brand}</p>
         </div>
-
-        {/* Rating badge */}
-        <span className={`
-          ${badge} ${text}
-          text-label uppercase tracking-wide
-          px-sm py-xs
-          rounded-badge
-          whitespace-nowrap
-          flex-shrink-0
-        `}>
-          {label}
-        </span>
+        <RatingBadge rating={rating} />
       </div>
 
       {/* Description */}
-      <p className="text-body text-text-secondary leading-relaxed mb-md">
-        {description}
-      </p>
+      <p className="text-body text-text-secondary mb-md">{description}</p>
 
-      {/* Category tag */}
-      <span className="
-        bg-surface-muted
-        text-text-tertiary
-        text-label uppercase tracking-wide
-        px-sm py-xs
-        rounded-badge
-      ">
-        {category}
-      </span>
+      {/* Footer */}
+      <div className="flex justify-between items-center">
+        <Badge variant="neutral">{category}</Badge>
+        <div className="flex items-center gap-xs">
+          {onSave && (
+            <IconButton
+              icon={saved ? '♥' : '♡'}
+              onClick={(e) => { e.stopPropagation(); onSave() }}
+              variant="ghost"
+              active={saved}
+              ariaLabel={saved ? 'Remove from library' : 'Save to library'}
+            />
+          )}
+          {onAddToList && (
+            <IconButton
+              icon="＋"
+              onClick={(e) => { e.stopPropagation(); onAddToList() }}
+              variant="ghost"
+              ariaLabel="Add to shopping list"
+            />
+          )}
+        </div>
+      </div>
     </div>
   )
 }
