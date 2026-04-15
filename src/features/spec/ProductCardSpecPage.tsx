@@ -98,6 +98,38 @@ function DoDontPair({
   )
 }
 
+function AccessSubSection({ title, rows }: { title: string; rows: [string, string][] }) {
+  return (
+    <div>
+      <h3 className="text-h4 text-text-primary mb-sm">{title}</h3>
+      <dl className="space-y-xs">
+        {rows.map(([k, v]) => (
+          <div key={k} className="grid grid-cols-[160px_1fr] gap-md">
+            <dt className="text-small text-text-tertiary">{k}</dt>
+            <dd className="text-body text-text-secondary">{v}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  )
+}
+
+function TokenGroup({ label, tokens }: { label: string; tokens: [string, string][] }) {
+  return (
+    <div>
+      <p className="text-label text-text-tertiary uppercase mb-sm">{label}</p>
+      <dl className="space-y-xs">
+        {tokens.map(([name, value]) => (
+          <div key={name} className="grid grid-cols-[180px_1fr] gap-sm">
+            <dt><code className="text-small">{name}</code></dt>
+            <dd className="text-small text-text-secondary">{value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  )
+}
+
 const SECTIONS = [
   { id: 'overview', label: 'Overview' },
   { id: 'variants', label: 'Variants' },
@@ -382,6 +414,181 @@ export default function ProductCardSpecPage() {
               why="Users see the filled heart, click it to unsave, nothing happens, they file a bug."
             />
           </div>
+        </section>
+
+        {/* Accessibility */}
+        <section id="accessibility" className="mb-3xl">
+          <h2 className="text-h2 text-text-primary mb-md">Accessibility</h2>
+          <div className="space-y-lg max-w-[720px]">
+            <AccessSubSection
+              title="Keyboard"
+              rows={[
+                ['Default variant', 'role="button", tabIndex 0, Enter/Space activates onClick'],
+                ['Selectable variant', 'role="checkbox" with aria-checked, Enter/Space toggles selection'],
+                ['Disabled', 'Removed from tab order (tabIndex -1), aria-disabled="true"'],
+                ['Inner buttons', 'Save and add-to-list have their own tab stops'],
+              ]}
+            />
+            <AccessSubSection
+              title="Focus"
+              rows={[
+                ['Ring', '2px primary outline with 2px offset'],
+                ['Trigger', 'focus-visible only — keyboard nav, not mouse click'],
+              ]}
+            />
+            <AccessSubSection
+              title="Screen readers"
+              rows={[
+                ['Default announces', '"{name}, by {brand}, rated {rating}, category {category}. Button."'],
+                ['Selectable announces', '"{name}, by {brand}, rated {rating}. Checkbox, {checked|not checked}."'],
+                ['RatingBadge', 'Speaks its rating word ("Clean", "Caution", "Avoid"), not just color'],
+                ['Save button', 'aria-label="Save to library" or "Remove from library"'],
+              ]}
+            />
+            <AccessSubSection
+              title="Color contrast"
+              rows={[
+                ['Body text', 'Meets WCAG AA'],
+                ['Focus ring', 'Meets 3:1 against surface-bg'],
+                ['Rating pills', 'Meet AA via the design tokens'],
+              ]}
+            />
+            <AccessSubSection
+              title="Motion"
+              rows={[
+                ['Reduced motion', 'Respects prefers-reduced-motion: reduce'],
+                ['Effect', 'Hover shadow transition and pressed scale disabled for users who prefer no motion'],
+              ]}
+            />
+          </div>
+        </section>
+
+        {/* Tokens */}
+        <section id="tokens" className="mb-3xl">
+          <h2 className="text-h2 text-text-primary mb-md">Tokens used</h2>
+          <p className="text-body text-text-secondary mb-lg max-w-[640px]">
+            Every design token ProductCard consumes, grouped by category. Values come from{' '}
+            <code>src/styles/globals.css</code>.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-lg">
+            <TokenGroup
+              label="Color"
+              tokens={[
+                ['bg-surface-card', '#FFFFFF'],
+                ['bg-surface-muted', '#F0ECE6'],
+                ['border-surface-divider', '#EBE7E0'],
+                ['border-primary', '#5A8384'],
+                ['text-text-primary', '#1D1D1D'],
+                ['text-text-secondary', '#666'],
+                ['text-text-tertiary', '#9a9a9a'],
+              ]}
+            />
+            <TokenGroup
+              label="Spacing"
+              tokens={[
+                ['p-md', '16px'],
+                ['p-lg', '24px'],
+                ['gap-sm', '8px'],
+                ['gap-xs', '4px'],
+                ['mb-md', '16px'],
+              ]}
+            />
+            <TokenGroup
+              label="Radius"
+              tokens={[['rounded-card', '16px']]}
+            />
+            <TokenGroup
+              label="Shadow"
+              tokens={[['shadow-hover', 'see globals.css']]}
+            />
+            <TokenGroup
+              label="Motion"
+              tokens={[
+                ['duration-base', 'see globals.css'],
+                ['ease-default', 'see globals.css'],
+              ]}
+            />
+          </div>
+        </section>
+
+        {/* Composition */}
+        <section id="composition" className="mb-3xl">
+          <h2 className="text-h2 text-text-primary mb-md">Composition</h2>
+          <p className="text-body text-text-secondary mb-lg max-w-[640px]">
+            ProductCard is a compound component. It renders three design-system components inside its
+            own layout.
+          </p>
+          <pre className="bg-surface-card border border-surface-divider rounded-card p-md text-small overflow-x-auto">
+{`ProductCard
+├── RatingBadge       (rating pill, top-right of header)
+├── Badge             (category label, footer, default variant only)
+└── IconButton × 2    (save + add-to-list, footer, non-selectable only)`}
+          </pre>
+        </section>
+
+        {/* Props */}
+        <section id="props" className="mb-3xl">
+          <h2 className="text-h2 text-text-primary mb-md">Props</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full text-small">
+              <thead>
+                <tr className="border-b border-surface-divider">
+                  <th className="text-left py-sm pr-md text-text-tertiary font-normal">Prop</th>
+                  <th className="text-left py-sm pr-md text-text-tertiary font-normal">Type</th>
+                  <th className="text-left py-sm pr-md text-text-tertiary font-normal">Default</th>
+                  <th className="text-left py-sm text-text-tertiary font-normal">Description</th>
+                </tr>
+              </thead>
+              <tbody className="text-text-secondary">
+                {[
+                  ['name', 'string', '—', 'Product name'],
+                  ['brand', 'string', '—', 'Brand name'],
+                  ['rating', "'clean' | 'caution' | 'avoid'", '—', 'Product safety rating'],
+                  ['category', 'string', '—', 'Category label'],
+                  ['description', 'string', '—', 'Short description (hidden in compact)'],
+                  ['size', "'default' | 'compact'", "'default'", 'Layout density'],
+                  ['variant', "'default' | 'selectable'", "'default'", 'Interaction mode'],
+                  ['disabled', 'boolean', 'false', 'Disables interaction'],
+                  ['selected', 'boolean', 'false', 'Selection state for selectable variant'],
+                  ['onSelectChange', '(selected: boolean) => void', '—', 'Selection toggle handler'],
+                  ['onSave', '() => void', '—', 'Save to library handler'],
+                  ['onAddToList', '() => void', '—', 'Add to shopping list handler'],
+                  ['saved', 'boolean', 'false', 'Saved state for the heart icon'],
+                  ['onClick', '() => void', '—', 'Click handler (default variant only)'],
+                  ['loading', 'boolean', 'false', 'Renders skeleton placeholder'],
+                ].map(([prop, type, def, desc]) => (
+                  <tr key={prop} className="border-b border-surface-divider">
+                    <td className="py-sm pr-md"><code>{prop}</code></td>
+                    <td className="py-sm pr-md"><code>{type}</code></td>
+                    <td className="py-sm pr-md"><code>{def}</code></td>
+                    <td className="py-sm">{desc}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* Changelog */}
+        <section id="changelog" className="mb-3xl">
+          <h2 className="text-h2 text-text-primary mb-md">Changelog</h2>
+          <ul className="space-y-sm max-w-[640px]">
+            <li className="flex gap-md">
+              <span className="text-small text-text-tertiary w-[92px] shrink-0">2026-04-14</span>
+              <span className="text-body text-text-secondary">
+                Added <code>size="compact"</code>, <code>variant="selectable"</code>,{' '}
+                <code>disabled</code>, pressed and focus-visible states, and{' '}
+                <code>prefers-reduced-motion</code> support. First Primer-depth deep spec.
+              </span>
+            </li>
+            <li className="flex gap-md">
+              <span className="text-small text-text-tertiary w-[92px] shrink-0">earlier</span>
+              <span className="text-body text-text-secondary">
+                Initial implementation: name, brand, rating, category, description, save and
+                add-to-list actions, hover shadow, loading skeleton.
+              </span>
+            </li>
+          </ul>
         </section>
       </div>
     </div>
