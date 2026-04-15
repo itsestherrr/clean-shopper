@@ -72,6 +72,32 @@ function StatesRow({
   )
 }
 
+function DoDontPair({
+  doLabel,
+  dontLabel,
+  why,
+}: {
+  doLabel: string
+  dontLabel: string
+  why: string
+}) {
+  return (
+    <div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-md mb-sm">
+        <div className="border-l-4 border-clean bg-clean-tint rounded-card p-md">
+          <p className="text-label text-clean uppercase mb-xs">✓ Do</p>
+          <p className="text-body text-text-primary">{doLabel}</p>
+        </div>
+        <div className="border-l-4 border-avoid bg-avoid-tint rounded-card p-md">
+          <p className="text-label text-avoid uppercase mb-xs">✗ Don't</p>
+          <p className="text-body text-text-primary">{dontLabel}</p>
+        </div>
+      </div>
+      <p className="text-small text-text-tertiary italic">Why: {why}</p>
+    </div>
+  )
+}
+
 const SECTIONS = [
   { id: 'overview', label: 'Overview' },
   { id: 'variants', label: 'Variants' },
@@ -276,6 +302,85 @@ export default function ProductCardSpecPage() {
             </div>
             <StatesRow size="default" variant="selectable" />
             <StatesRow size="compact" variant="selectable" />
+          </div>
+        </section>
+
+        {/* Loading */}
+        <section id="loading" className="mb-3xl">
+          <h2 className="text-h2 text-text-primary mb-md">Loading</h2>
+          <p className="text-body text-text-secondary mb-lg max-w-[640px]">
+            Skeleton placeholder shown while AI search results stream in. Not a "state" of the rendered
+            card — the component returns a different element when <code>loading</code> is true.
+          </p>
+          <div className="max-w-[360px]">
+            <ProductCard
+              loading
+              name=""
+              brand=""
+              rating="clean"
+              category=""
+              description=""
+            />
+          </div>
+        </section>
+
+        {/* Interaction patterns */}
+        <section id="interaction" className="mb-3xl">
+          <h2 className="text-h2 text-text-primary mb-md">Interaction patterns</h2>
+          <div className="space-y-lg max-w-[720px]">
+            <div>
+              <h3 className="text-h4 text-text-primary mb-xs">Default variant — click to open</h3>
+              <p className="text-body text-text-secondary">
+                Clicking the card (or pressing Enter/Space when focused) fires <code>onClick</code>,
+                which typically opens a detail modal or navigates to a detail view. The inner save
+                and add-to-list icon buttons have their own click handlers and use{' '}
+                <code>stopPropagation</code> so clicking them doesn't also open the detail.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-h4 text-text-primary mb-xs">Selectable variant — click to toggle</h3>
+              <p className="text-body text-text-secondary">
+                Clicking the card fires <code>onSelectChange(!selected)</code> instead of{' '}
+                <code>onClick</code>. <code>onClick</code> is ignored when <code>variant</code> is{' '}
+                <code>selectable</code>. Save and add-to-list icons are hidden because the card itself
+                is the interactive control.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-h4 text-text-primary mb-xs">Keyboard</h3>
+              <p className="text-body text-text-secondary">
+                Tab to focus (focus-visible outline appears on keyboard focus only, not mouse click).
+                Enter or Space activates the primary action (open for default, toggle for selectable).
+                Inner icon buttons have their own tab stops — always reachable from the card.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Do/Don't */}
+        <section id="do-dont" className="mb-3xl">
+          <h2 className="text-h2 text-text-primary mb-md">Do / Don't</h2>
+          <div className="space-y-xl">
+            <DoDontPair
+              doLabel="Use default size in search result grids and product library"
+              dontLabel="Use default in a narrow sidebar list — use compact"
+              why="Default's 3-line description needs horizontal room; in a narrow column it wraps to 6 lines and collapses visually."
+            />
+            <DoDontPair
+              doLabel="Use selectable variant for comparison pickers"
+              dontLabel="Wrap a default ProductCard in your own checkbox layout"
+              why="Click targets fight each other — the card's onClick and your outer checkbox click both fire. Use the native variant."
+            />
+            <DoDontPair
+              doLabel="Let compact drop the description"
+              dontLabel="Override compact to force description back in"
+              why="Compact is a deliberate density decision for scanning, not a size fallback. If you need description, use default."
+            />
+            <DoDontPair
+              doLabel="Pair saved={true} with an onSave callback"
+              dontLabel="Render a saved-state card without a handler"
+              why="Users see the filled heart, click it to unsave, nothing happens, they file a bug."
+            />
           </div>
         </section>
       </div>
