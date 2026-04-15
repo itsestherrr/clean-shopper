@@ -1,4 +1,76 @@
+import type { ReactNode } from 'react'
 import ProductCard from '../../components/ProductCard'
+
+type LockedState = 'default' | 'hover' | 'pressed' | 'focus' | 'disabled'
+
+function StateFrame({
+  state,
+  children,
+}: {
+  state: LockedState
+  children: ReactNode
+}) {
+  if (state === 'default') {
+    return <>{children}</>
+  }
+
+  if (state === 'disabled') {
+    // Disabled is a real prop on ProductCard, not a visual override.
+    // The parent passes disabled through on the child card directly.
+    return <>{children}</>
+  }
+
+  const stateClass = {
+    hover: 'spec-force-hover',
+    pressed: 'spec-force-pressed',
+    focus: 'spec-force-focus',
+  }[state]
+
+  return <div className={stateClass}>{children}</div>
+}
+
+const DEMO_PRODUCT = {
+  name: "Dr. Bronner's Castile Soap",
+  brand: "Dr. Bronner's",
+  rating: 'clean' as const,
+  category: 'Personal Care',
+  description: 'Organic, fair trade, no synthetic preservatives or detergents.',
+}
+
+const STATE_COLUMNS: LockedState[] = ['default', 'hover', 'pressed', 'focus', 'disabled']
+
+function StatesRow({
+  size,
+  variant,
+}: {
+  size: 'default' | 'compact'
+  variant: 'default' | 'selectable'
+}) {
+  return (
+    <div className="grid grid-cols-[60px_repeat(5,1fr)] gap-sm items-center mb-md">
+      <p className="text-label text-text-tertiary uppercase text-right pr-sm">
+        {size === 'default' ? 'MD' : 'SM'}
+      </p>
+      {STATE_COLUMNS.map((state) => (
+        <div key={state} className="bg-surface-muted rounded-card p-sm flex items-center justify-center min-h-[180px]">
+          <StateFrame state={state}>
+            <ProductCard
+              {...DEMO_PRODUCT}
+              size={size}
+              variant={variant}
+              selected={variant === 'selectable'}
+              disabled={state === 'disabled'}
+              onClick={() => {}}
+              onSelectChange={() => {}}
+              onSave={() => {}}
+              onAddToList={() => {}}
+            />
+          </StateFrame>
+        </div>
+      ))}
+    </div>
+  )
+}
 
 const SECTIONS = [
   { id: 'overview', label: 'Overview' },
@@ -166,6 +238,44 @@ export default function ProductCardSpecPage() {
                 />
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* States */}
+        <section id="states" className="mb-3xl">
+          <h2 className="text-h2 text-text-primary mb-md">States</h2>
+          <p className="text-body text-text-secondary mb-lg max-w-[640px]">
+            All variants across all sizes and interactive states. The cells in the Default column are
+            real live ProductCards — hover them with your mouse, tab to them with the keyboard. The
+            other columns are visually locked into one state for comparison.
+          </p>
+
+          <div className="mb-xl">
+            <p className="text-label text-primary uppercase mb-sm">Default variant</p>
+            <div className="grid grid-cols-[60px_repeat(5,1fr)] gap-sm mb-sm">
+              <div />
+              {STATE_COLUMNS.map((s) => (
+                <p key={s} className="text-label text-text-tertiary uppercase text-center">
+                  {s}
+                </p>
+              ))}
+            </div>
+            <StatesRow size="default" variant="default" />
+            <StatesRow size="compact" variant="default" />
+          </div>
+
+          <div className="mb-xl">
+            <p className="text-label text-primary uppercase mb-sm">Selectable variant</p>
+            <div className="grid grid-cols-[60px_repeat(5,1fr)] gap-sm mb-sm">
+              <div />
+              {STATE_COLUMNS.map((s) => (
+                <p key={s} className="text-label text-text-tertiary uppercase text-center">
+                  {s}
+                </p>
+              ))}
+            </div>
+            <StatesRow size="default" variant="selectable" />
+            <StatesRow size="compact" variant="selectable" />
           </div>
         </section>
       </div>
