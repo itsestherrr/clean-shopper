@@ -84,7 +84,6 @@ export default function ProductCard({
       role={isInteractive ? (isSelectable ? 'checkbox' : 'button') : undefined}
       aria-checked={isSelectable ? selected : undefined}
       aria-disabled={disabled || undefined}
-      aria-label={isSelectable ? `Select ${name}` : undefined}
       tabIndex={isInteractive ? 0 : -1}
       onKeyDown={isInteractive ? handleKeyDown : undefined}
     >

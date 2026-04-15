@@ -77,7 +77,7 @@ See `/spec/product-card` for the full interactive states matrix.
 **Keyboard:**
 - Default variant: `role="button"`, `tabIndex={0}`, Enter/Space activates `onClick`
 - Selectable variant: `role="checkbox"` with `aria-checked={selected}`, Enter/Space toggles `onSelectChange`
-- Disabled: `tabIndex={-1}`, `aria-disabled="true"`
+- Disabled: `tabIndex={-1}`, `aria-disabled="true"`, handlers suppressed, and `role` is omitted (disabled cards are not exposed as buttons or checkboxes)
 - Inner save/add-to-list buttons have their own tab stops
 
 **Focus:** `focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2`. Only visible on keyboard navigation.
