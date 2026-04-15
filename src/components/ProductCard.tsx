@@ -35,6 +35,7 @@ export default function ProductCard({
   variant = 'default',
   selected = false,
   onSelectChange,
+  disabled = false,
   onSave,
   onAddToList,
   saved = false,
@@ -49,6 +50,7 @@ export default function ProductCard({
 
   const isCompact = size === 'compact'
   const isSelectable = variant === 'selectable'
+  const isInteractive = !disabled && (isSelectable ? !!onSelectChange : !!onClick)
 
   const handleClick = () => {
     if (isSelectable) {
@@ -68,16 +70,23 @@ export default function ProductCard({
   return (
     <div
       className={[
-        'bg-surface-card rounded-card transition-shadow duration-base ease-default hover:shadow-hover cursor-pointer',
+        'bg-surface-card rounded-card transition-shadow duration-base ease-default',
+        'focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2',
+        'motion-reduce:transition-none motion-reduce:active:scale-100',
         isCompact ? 'p-md' : 'p-lg',
+        disabled
+          ? 'opacity-50 cursor-not-allowed'
+          : 'cursor-pointer hover:shadow-hover active:scale-[0.98]',
         isSelectable ? 'relative pl-[46px]' : '',
         isSelectable && selected ? 'border-2 border-primary' : '',
       ].filter(Boolean).join(' ')}
-      onClick={handleClick}
-      role={isSelectable ? 'checkbox' : 'button'}
+      onClick={isInteractive ? handleClick : undefined}
+      role={isInteractive ? (isSelectable ? 'checkbox' : 'button') : undefined}
       aria-checked={isSelectable ? selected : undefined}
-      tabIndex={0}
-      onKeyDown={handleKeyDown}
+      aria-disabled={disabled || undefined}
+      aria-label={isSelectable ? `Select ${name}` : undefined}
+      tabIndex={isInteractive ? 0 : -1}
+      onKeyDown={isInteractive ? handleKeyDown : undefined}
     >
       {isSelectable && (
         <div
@@ -114,7 +123,7 @@ export default function ProductCard({
                 {onSave && (
                   <IconButton
                     icon={saved ? '♥' : '♡'}
-                    onClick={(e) => { e.stopPropagation(); onSave() }}
+                    onClick={(e) => { e.stopPropagation(); if (!disabled) onSave() }}
                     variant="ghost"
                     active={saved}
                     ariaLabel={saved ? 'Remove from library' : 'Save to library'}
@@ -123,7 +132,7 @@ export default function ProductCard({
                 {onAddToList && (
                   <IconButton
                     icon="＋"
-                    onClick={(e) => { e.stopPropagation(); onAddToList() }}
+                    onClick={(e) => { e.stopPropagation(); if (!disabled) onAddToList() }}
                     variant="ghost"
                     ariaLabel="Add to shopping list"
                   />
