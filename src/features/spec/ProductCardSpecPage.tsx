@@ -533,10 +533,10 @@ export default function ProductCardSpecPage() {
             <table className="w-full text-small">
               <thead>
                 <tr className="border-b border-surface-divider">
-                  <th className="text-left py-sm pr-md text-text-tertiary font-normal">Prop</th>
-                  <th className="text-left py-sm pr-md text-text-tertiary font-normal">Type</th>
-                  <th className="text-left py-sm pr-md text-text-tertiary font-normal">Default</th>
-                  <th className="text-left py-sm text-text-tertiary font-normal">Description</th>
+                  <th scope="col" className="text-left py-sm pr-md text-text-tertiary font-normal">Prop</th>
+                  <th scope="col" className="text-left py-sm pr-md text-text-tertiary font-normal">Type</th>
+                  <th scope="col" className="text-left py-sm pr-md text-text-tertiary font-normal">Default</th>
+                  <th scope="col" className="text-left py-sm text-text-tertiary font-normal">Description</th>
                 </tr>
               </thead>
               <tbody className="text-text-secondary">
