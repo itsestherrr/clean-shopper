@@ -85,11 +85,11 @@ function DoDontPair({
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-md mb-sm">
         <div className="border-l-4 border-clean bg-clean-tint rounded-card p-md">
-          <p className="text-label text-clean uppercase mb-xs">✓ Do</p>
+          <p className="text-label text-clean uppercase mb-xs"><span aria-hidden="true">✓</span> Do</p>
           <p className="text-body text-text-primary">{doLabel}</p>
         </div>
         <div className="border-l-4 border-avoid bg-avoid-tint rounded-card p-md">
-          <p className="text-label text-avoid uppercase mb-xs">✗ Don't</p>
+          <p className="text-label text-avoid uppercase mb-xs"><span aria-hidden="true">✗</span> Don't</p>
           <p className="text-body text-text-primary">{dontLabel}</p>
         </div>
       </div>
