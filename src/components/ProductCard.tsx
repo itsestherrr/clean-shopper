@@ -1,3 +1,4 @@
+import type { KeyboardEvent } from 'react'
 import RatingBadge from './RatingBadge'
 import Badge from './Badge'
 import IconButton from './IconButton'
@@ -31,6 +32,9 @@ export default function ProductCard({
   category,
   description,
   size = 'default',
+  variant = 'default',
+  selected = false,
+  onSelectChange,
   onSave,
   onAddToList,
   saved = false,
@@ -44,15 +48,50 @@ export default function ProductCard({
   }
 
   const isCompact = size === 'compact'
+  const isSelectable = variant === 'selectable'
+
+  const handleClick = () => {
+    if (isSelectable) {
+      onSelectChange?.(!selected)
+    } else {
+      onClick?.()
+    }
+  }
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      handleClick()
+    }
+  }
 
   return (
     <div
-      className={`bg-surface-card rounded-card transition-shadow duration-base ease-default hover:shadow-hover cursor-pointer ${isCompact ? 'p-md' : 'p-lg'}`}
-      onClick={onClick}
-      role={onClick ? 'button' : undefined}
-      tabIndex={onClick ? 0 : undefined}
-      onKeyDown={onClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') onClick() } : undefined}
+      className={[
+        'bg-surface-card rounded-card transition-shadow duration-base ease-default hover:shadow-hover cursor-pointer',
+        isCompact ? 'p-md' : 'p-lg',
+        isSelectable ? 'relative pl-[46px]' : '',
+        isSelectable && selected ? 'border-2 border-primary' : '',
+      ].filter(Boolean).join(' ')}
+      onClick={handleClick}
+      role={isSelectable ? 'checkbox' : 'button'}
+      aria-checked={isSelectable ? selected : undefined}
+      tabIndex={0}
+      onKeyDown={handleKeyDown}
     >
+      {isSelectable && (
+        <div
+          className={`absolute top-[16px] left-[14px] w-5 h-5 rounded-[5px] border-2 flex items-center justify-center transition-colors ${
+            selected ? 'bg-primary border-primary' : 'bg-surface-card border-surface-divider'
+          }`}
+          aria-hidden="true"
+        >
+          {selected && (
+            <span className="text-surface-card text-[13px] font-bold leading-none">✓</span>
+          )}
+        </div>
+      )}
+
       {/* Header */}
       <div className={`flex justify-between items-start gap-sm ${isCompact ? '' : 'mb-sm'}`}>
         <div>
@@ -70,25 +109,27 @@ export default function ProductCard({
           {/* Footer */}
           <div className="flex justify-between items-center">
             <Badge variant="neutral">{category}</Badge>
-            <div className="flex items-center gap-xs">
-              {onSave && (
-                <IconButton
-                  icon={saved ? '♥' : '♡'}
-                  onClick={(e) => { e.stopPropagation(); onSave() }}
-                  variant="ghost"
-                  active={saved}
-                  ariaLabel={saved ? 'Remove from library' : 'Save to library'}
-                />
-              )}
-              {onAddToList && (
-                <IconButton
-                  icon="＋"
-                  onClick={(e) => { e.stopPropagation(); onAddToList() }}
-                  variant="ghost"
-                  ariaLabel="Add to shopping list"
-                />
-              )}
-            </div>
+            {!isSelectable && (
+              <div className="flex items-center gap-xs">
+                {onSave && (
+                  <IconButton
+                    icon={saved ? '♥' : '♡'}
+                    onClick={(e) => { e.stopPropagation(); onSave() }}
+                    variant="ghost"
+                    active={saved}
+                    ariaLabel={saved ? 'Remove from library' : 'Save to library'}
+                  />
+                )}
+                {onAddToList && (
+                  <IconButton
+                    icon="＋"
+                    onClick={(e) => { e.stopPropagation(); onAddToList() }}
+                    variant="ghost"
+                    ariaLabel="Add to shopping list"
+                  />
+                )}
+              </div>
+            )}
           </div>
         </>
       )}
