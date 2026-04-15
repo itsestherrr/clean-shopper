@@ -75,6 +75,99 @@ export default function ProductCardSpecPage() {
 />`}
           </pre>
         </section>
+
+        {/* Variants */}
+        <section id="variants" className="mb-3xl">
+          <h2 className="text-h2 text-text-primary mb-md">Variants</h2>
+          <p className="text-body text-text-secondary mb-lg max-w-[640px]">
+            Two variants. <code>default</code> opens a detail view on click. <code>selectable</code>{' '}
+            turns the card into a selection control for comparison pickers.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-lg">
+            <div>
+              <p className="text-label text-text-tertiary uppercase mb-sm">default</p>
+              <ProductCard
+                name="Dr. Bronner's Pure Castile Soap"
+                brand="Dr. Bronner's"
+                rating="clean"
+                category="Personal Care"
+                description="Organic, fair trade, no synthetic preservatives or detergents."
+                onSave={() => {}}
+                onAddToList={() => {}}
+                onClick={() => {}}
+              />
+            </div>
+            <div>
+              <p className="text-label text-text-tertiary uppercase mb-sm">selectable</p>
+              <ProductCard
+                variant="selectable"
+                selected={true}
+                onSelectChange={() => {}}
+                name="Dr. Bronner's Pure Castile Soap"
+                brand="Dr. Bronner's"
+                rating="clean"
+                category="Personal Care"
+                description="Organic, fair trade, no synthetic preservatives or detergents."
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* Sizes */}
+        <section id="sizes" className="mb-3xl">
+          <h2 className="text-h2 text-text-primary mb-md">Sizes</h2>
+          <p className="text-body text-text-secondary mb-lg max-w-[640px]">
+            Two sizes. <code>default</code> is used in search result grids and the product library.{' '}
+            <code>compact</code> drops description and footer for shopping list rows and library scan views.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-lg">
+            <div>
+              <p className="text-label text-text-tertiary uppercase mb-sm">default</p>
+              <ProductCard
+                name="Dr. Bronner's Pure Castile Soap"
+                brand="Dr. Bronner's"
+                rating="clean"
+                category="Personal Care"
+                description="Organic, fair trade, no synthetic preservatives or detergents."
+                onClick={() => {}}
+              />
+            </div>
+            <div>
+              <p className="text-label text-text-tertiary uppercase mb-sm">compact</p>
+              <div className="flex flex-col gap-sm">
+                <ProductCard
+                  size="compact"
+                  name="Dr. Bronner's Pure Castile Soap"
+                  brand="Dr. Bronner's"
+                  rating="clean"
+                  category="Personal Care"
+                  description="Organic, fair trade, no synthetic preservatives or detergents."
+                  onClick={() => {}}
+                />
+                <ProductCard
+                  size="compact"
+                  name="Ethique Solid Shampoo Bar"
+                  brand="Ethique"
+                  rating="clean"
+                  category="Personal Care"
+                  description="Zero-waste, palm oil free."
+                  onClick={() => {}}
+                />
+                <ProductCard
+                  size="compact"
+                  name="Mrs. Meyer's Clean Day Dish Soap"
+                  brand="Mrs. Meyer's"
+                  rating="caution"
+                  category="Home Cleaning"
+                  description="Mostly plant-derived but contains methylisothiazolinone."
+                  onClick={() => {}}
+                />
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   )
