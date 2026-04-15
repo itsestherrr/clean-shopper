@@ -2,7 +2,7 @@
 
 **Version:** 1.0
 **Last Updated:** 2026-04-03
-**Components:** 18 total (2 existing, 16 new)
+**Components:** 19 total (2 existing, 17 new)
 
 ---
 
@@ -999,6 +999,6 @@ Modal ──> IconButton
 Build these in dependency order (leaf components first):
 
 1. **Tier 1 — Primitives:** Button, Badge, RatingBadge, IconButton, Chip
-2. **Tier 2 — Composites:** Card, SearchInput, SectionHeader, EmptyState, PreferenceTag, ScoreGauge, ShoppingListItem
+2. **Tier 2 — Composites:** Card, SearchInput, SectionHeader, EmptyState, PreferenceTag, ScoreGauge, ShoppingListItem, NavBar
 3. **Tier 3 — Features:** IngredientList, ComparisonPanel, SwapCard, Modal
 4. **Existing (modify):** ProductCard, Toast
