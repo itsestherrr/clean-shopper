@@ -425,7 +425,7 @@ export default function ProductCardSpecPage() {
               rows={[
                 ['Default variant', 'role="button", tabIndex 0, Enter/Space activates onClick'],
                 ['Selectable variant', 'role="checkbox" with aria-checked, Enter/Space toggles selection'],
-                ['Disabled', 'Removed from tab order (tabIndex -1), aria-disabled="true"'],
+                ['Disabled', 'Removed from tab order (tabIndex -1), aria-disabled="true", role omitted'],
                 ['Inner buttons', 'Save and add-to-list have their own tab stops'],
               ]}
             />
@@ -479,8 +479,8 @@ export default function ProductCardSpecPage() {
                 ['border-surface-divider', '#EBE7E0'],
                 ['border-primary', '#5A8384'],
                 ['text-text-primary', '#1D1D1D'],
-                ['text-text-secondary', '#666'],
-                ['text-text-tertiary', '#9a9a9a'],
+                ['text-text-secondary', '#6B6B6B'],
+                ['text-text-tertiary', '#767676'],
               ]}
             />
             <TokenGroup
