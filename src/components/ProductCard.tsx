@@ -3,6 +3,8 @@ import Badge from './Badge'
 import IconButton from './IconButton'
 
 type Rating = 'clean' | 'caution' | 'avoid'
+type Size = 'default' | 'compact'
+type Variant = 'default' | 'selectable'
 
 interface ProductCardProps {
   name: string
@@ -10,6 +12,11 @@ interface ProductCardProps {
   rating: Rating
   category: string
   description: string
+  size?: Size
+  variant?: Variant
+  disabled?: boolean
+  selected?: boolean
+  onSelectChange?: (selected: boolean) => void
   onSave?: () => void
   onAddToList?: () => void
   saved?: boolean
