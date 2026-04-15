@@ -30,6 +30,7 @@ export default function ProductCard({
   rating,
   category,
   description,
+  size = 'default',
   onSave,
   onAddToList,
   saved = false,
@@ -42,16 +43,18 @@ export default function ProductCard({
     )
   }
 
+  const isCompact = size === 'compact'
+
   return (
     <div
-      className="bg-surface-card rounded-card p-lg transition-shadow duration-base ease-default hover:shadow-hover cursor-pointer"
+      className={`bg-surface-card rounded-card transition-shadow duration-base ease-default hover:shadow-hover cursor-pointer ${isCompact ? 'p-md' : 'p-lg'}`}
       onClick={onClick}
       role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined}
       onKeyDown={onClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') onClick() } : undefined}
     >
       {/* Header */}
-      <div className="flex justify-between items-start gap-sm mb-sm">
+      <div className={`flex justify-between items-start gap-sm ${isCompact ? '' : 'mb-sm'}`}>
         <div>
           <h4 className="text-h4 text-text-primary">{name}</h4>
           <p className="text-small text-text-tertiary mt-xs">{brand}</p>
@@ -59,32 +62,36 @@ export default function ProductCard({
         <RatingBadge rating={rating} />
       </div>
 
-      {/* Description */}
-      <p className="text-body text-text-secondary mb-md">{description}</p>
+      {!isCompact && (
+        <>
+          {/* Description */}
+          <p className="text-body text-text-secondary mb-md">{description}</p>
 
-      {/* Footer */}
-      <div className="flex justify-between items-center">
-        <Badge variant="neutral">{category}</Badge>
-        <div className="flex items-center gap-xs">
-          {onSave && (
-            <IconButton
-              icon={saved ? '♥' : '♡'}
-              onClick={(e) => { e.stopPropagation(); onSave() }}
-              variant="ghost"
-              active={saved}
-              ariaLabel={saved ? 'Remove from library' : 'Save to library'}
-            />
-          )}
-          {onAddToList && (
-            <IconButton
-              icon="＋"
-              onClick={(e) => { e.stopPropagation(); onAddToList() }}
-              variant="ghost"
-              ariaLabel="Add to shopping list"
-            />
-          )}
-        </div>
-      </div>
+          {/* Footer */}
+          <div className="flex justify-between items-center">
+            <Badge variant="neutral">{category}</Badge>
+            <div className="flex items-center gap-xs">
+              {onSave && (
+                <IconButton
+                  icon={saved ? '♥' : '♡'}
+                  onClick={(e) => { e.stopPropagation(); onSave() }}
+                  variant="ghost"
+                  active={saved}
+                  ariaLabel={saved ? 'Remove from library' : 'Save to library'}
+                />
+              )}
+              {onAddToList && (
+                <IconButton
+                  icon="＋"
+                  onClick={(e) => { e.stopPropagation(); onAddToList() }}
+                  variant="ghost"
+                  ariaLabel="Add to shopping list"
+                />
+              )}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   )
 }
