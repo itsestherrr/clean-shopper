@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local tooling and course materials
+.claude/
+.superpowers/
+course_materials/
+
