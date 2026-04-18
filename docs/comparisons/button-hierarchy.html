@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Button Hierarchy — Updated</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #FAF7F2;
+    color: #1D1D1D;
+    padding: 48px 24px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page-title {
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .page-subtitle {
+    font-size: 14px;
+    color: #6B6B6B;
+    text-align: center;
+    margin-bottom: 48px;
+    line-height: 1.65;
+    max-width: 560px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* ── Button Tier Demo ──────────────────────────── */
+  .tier-section {
+    max-width: 720px;
+    margin: 0 auto 48px;
+  }
+  .tier-title {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 8px;
+  }
+  .tier-desc {
+    font-size: 14px;
+    color: #6B6B6B;
+    line-height: 1.65;
+    margin-bottom: 24px;
+  }
+  .tier-row {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .tier-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #767676;
+    width: 80px;
+    flex-shrink: 0;
+  }
+
+  /* ── Buttons ───────────────────────────────────── */
+  .btn {
+    border: none;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+    padding: 10px 20px;
+  }
+  .btn-sm {
+    padding: 6px 16px;
+    font-size: 12px;
+  }
+  .btn-primary {
+    background: #5A8384;
+    color: #FFFFFF;
+  }
+  .btn-secondary {
+    background: transparent;
+    color: #5A8384;
+    box-shadow: inset 0 0 0 1.5px #5A8384;
+  }
+  .btn-ghost {
+    background: transparent;
+    color: #6B6B6B;
+  }
+
+  /* ── Divider ───────────────────────────────────── */
+  .divider {
+    border: none;
+    border-top: 1px solid #EBE7E0;
+    max-width: 720px;
+    margin: 48px auto;
+  }
+
+  /* ── Comparison Grid ───────────────────────────── */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  .compare-col {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .compare-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-align: center;
+  }
+  .compare-label-before { color: #6B3535; }
+  .compare-label-after { color: #3A5C35; }
+  .compare-title {
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    text-align: center;
+    line-height: 1.3;
+  }
+  .compare-desc {
+    font-size: 12px;
+    color: #6B6B6B;
+    text-align: center;
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+
+  /* ── Modal simulation ──────────────────────────── */
+  .modal-backdrop {
+    background: rgba(0,0,0,0.15);
+    border-radius: 16px;
+    padding: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-panel {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 24px;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 8px 32px rgba(100,80,50,0.14);
+  }
+
+  /* ── Modal content ─────────────────────────────── */
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+  .modal-close {
+    background: transparent;
+    border: none;
+    color: #767676;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 4px;
+    line-height: 1;
+  }
+  .product-name {
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+  .product-brand {
+    font-size: 12px;
+    color: #767676;
+    margin-top: 2px;
+  }
+  .badge-caution {
+    background: #F0E4C8;
+    color: #6B5020;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .badge-clean {
+    background: #DCE6D8;
+    color: #3A5C35;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .product-desc {
+    font-size: 14px;
+    color: #6B6B6B;
+    line-height: 1.65;
+    margin-bottom: 16px;
+  }
+
+  /* ── Ingredient rows ───────────────────────────── */
+  .ingredient-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 16px;
+  }
+  .ingredient-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 0;
+    border-bottom: 1px solid #EBE7E0;
+  }
+  .ingredient-row:last-child { border-bottom: none; }
+  .ingredient-badge {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 6px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .ingredient-badge-clean { background: #DCE6D8; color: #3A5C35; }
+  .ingredient-badge-caution { background: #F0E4C8; color: #6B5020; }
+  .ingredient-badge-avoid { background: #ECDCDC; color: #6B3535; }
+  .ingredient-name {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.35;
+  }
+  .ingredient-reason {
+    font-size: 12px;
+    color: #6B6B6B;
+    line-height: 1.5;
+    margin-top: 1px;
+  }
+
+  /* ── Swap card ─────────────────────────────────── */
+  .section-divider {
+    border: none;
+    border-top: 1px solid #EBE7E0;
+    margin: 16px 0;
+  }
+  .swap-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+  .swap-eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #767676;
+  }
+  .swap-score {
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    color: #5A8384;
+    line-height: 1;
+  }
+  .swap-score-label {
+    font-size: 12px;
+    color: #767676;
+    text-align: right;
+  }
+  .swap-product {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .swap-product-info { flex: 1; }
+  .swap-reason {
+    font-size: 14px;
+    color: #6B6B6B;
+    line-height: 1.65;
+    margin-bottom: 16px;
+  }
+  .swap-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  /* ── Callout ───────────────────────────────────── */
+  .callout {
+    padding: 12px 16px;
+    border-radius: 16px;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .callout-problem { background: #ECDCDC; color: #6B3535; }
+  .callout-solution { background: #DCE6D8; color: #3A5C35; }
+
+  /* ── Focus states ──────────────────────────────── */
+  .focus-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  .focus-demo {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  .focus-demo-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .focus-demo-label {
+    font-size: 12px;
+    color: #767676;
+    line-height: 1.5;
+    width: 100%;
+  }
+
+  /* Simulated focus ring */
+  .has-focus {
+    outline: 2px solid #5A8384;
+    outline-offset: 2px;
+  }
+
+  /* Chip */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 6px 16px;
+    font-size: 12px;
+    font-weight: 400;
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+  }
+  .chip-unselected {
+    background: #F0ECE6;
+    color: #6B6B6B;
+  }
+  .chip-selected {
+    background: #DDEAEB;
+    color: #4A7273;
+  }
+
+  /* Icon button */
+  .icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-family: inherit;
+  }
+  .icon-btn-default {
+    background: #F0ECE6;
+    color: #6B6B6B;
+  }
+  .icon-btn-ghost {
+    background: transparent;
+    color: #767676;
+  }
+
+  /* Tab simulation for before/after */
+  .tab-indicator {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #5A8384;
+    background: #DDEAEB;
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin-left: 4px;
+  }
+</style>
+</head>
+<body>
+
+<h1 class="page-title">Button System: Three Tiers</h1>
+<p class="page-subtitle">Primary (solid fill), secondary (outline), ghost (text only). Each level is visually tied to the primary color but at decreasing emphasis.</p>
+
+<div class="tier-section">
+  <div style="display: flex; flex-direction: column; gap: 16px;">
+    <div class="tier-row">
+      <span class="tier-label">Primary</span>
+      <button class="btn btn-primary">Search</button>
+      <button class="btn btn-primary btn-sm">Add to list</button>
+      <span style="font-size: 12px; color: #767676; margin-left: 8px;">Solid fill. One per view. The single most important action.</span>
+    </div>
+    <div class="tier-row">
+      <span class="tier-label">Secondary</span>
+      <button class="btn btn-secondary">Compare</button>
+      <button class="btn btn-secondary btn-sm">Save</button>
+      <span style="font-size: 12px; color: #767676; margin-left: 8px;">Outline. Supporting actions. Clearly related to primary but lower emphasis.</span>
+    </div>
+    <div class="tier-row">
+      <span class="tier-label">Ghost</span>
+      <button class="btn btn-ghost">Cancel</button>
+      <button class="btn btn-ghost btn-sm">View details</button>
+      <span style="font-size: 12px; color: #767676; margin-left: 8px;">Text only. Tertiary actions. Cancel, dismiss, "see more."</span>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<h2 style="font-size: 22px; font-weight: 600; letter-spacing: -0.02em; text-align: center; margin-bottom: 8px;">SwapCard in Context</h2>
+<p style="font-size: 14px; color: #6B6B6B; text-align: center; margin-bottom: 32px; line-height: 1.65;">SwapCard appears inside the product detail modal, not on the search results page. No competing primary button.</p>
+
+<div class="compare-grid">
+
+  <!-- BEFORE -->
+  <div class="compare-col">
+    <div class="compare-label compare-label-before">Before (spec issue)</div>
+    <div class="compare-title">Both buttons are primary fill</div>
+    <div class="compare-desc">The old secondary (muted gray fill) doesn't read as related to the primary action at all.</div>
+
+    <div class="modal-backdrop">
+      <div class="modal-panel">
+        <div class="modal-header">
+          <div>
+            <div class="product-name">Mrs. Meyer's Dish Soap</div>
+            <div class="product-brand">Mrs. Meyer's Clean Day</div>
+          </div>
+          <span class="badge-caution">Caution</span>
+        </div>
+
+        <div class="ingredient-list">
+          <div class="ingredient-row">
+            <span class="ingredient-badge ingredient-badge-avoid">Avoid</span>
+            <div>
+              <div class="ingredient-name">Methylisothiazolinone</div>
+              <div class="ingredient-reason">Known skin sensitizer, restricted in EU</div>
+            </div>
+          </div>
+          <div class="ingredient-row">
+            <span class="ingredient-badge ingredient-badge-caution">Caution</span>
+            <div>
+              <div class="ingredient-name">Fragrance</div>
+              <div class="ingredient-reason">Undisclosed blend, potential allergens</div>
+            </div>
+          </div>
+          <div class="ingredient-row">
+            <span class="ingredient-badge ingredient-badge-clean">Clean</span>
+            <div>
+              <div class="ingredient-name">Decyl Glucoside</div>
+              <div class="ingredient-reason">Plant-derived surfactant</div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="section-divider">
+
+        <div class="swap-header">
+          <div><div class="swap-eyebrow">Cleaner alternative</div></div>
+          <div style="text-align: right;">
+            <div class="swap-score">87%</div>
+            <div class="swap-score-label">cleaner swap</div>
+          </div>
+        </div>
+        <div class="swap-product">
+          <div class="swap-product-info">
+            <div class="product-name">Branch Basics Dish Soap</div>
+            <div class="product-brand">Branch Basics</div>
+          </div>
+          <span class="badge-clean">Clean</span>
+        </div>
+        <div class="swap-reason">Eliminates methylisothiazolinone. Plant-based surfactants, no synthetic fragrance.</div>
+        <div class="swap-actions">
+          <!-- Old secondary: muted gray fill — doesn't look related to primary -->
+          <button class="btn btn-sm" style="background: #F0ECE6; color: #1D1D1D;">Add to list</button>
+          <button class="btn btn-ghost btn-sm">View details</button>
+        </div>
+      </div>
+    </div>
+    <div class="callout callout-problem">The gray "Add to list" button doesn't visually connect to the teal brand. It looks like a disabled or unimportant element.</div>
+  </div>
+
+  <!-- AFTER -->
+  <div class="compare-col">
+    <div class="compare-label compare-label-after">After (three-tier system)</div>
+    <div class="compare-title">"Add to list" is primary, "View details" is ghost</div>
+    <div class="compare-desc">Inside the modal, "Add to list" is the most important action. No competing primary button on this screen.</div>
+
+    <div class="modal-backdrop">
+      <div class="modal-panel">
+        <div class="modal-header">
+          <div>
+            <div class="product-name">Mrs. Meyer's Dish Soap</div>
+            <div class="product-brand">Mrs. Meyer's Clean Day</div>
+          </div>
+          <span class="badge-caution">Caution</span>
+        </div>
+
+        <div class="ingredient-list">
+          <div class="ingredient-row">
+            <span class="ingredient-badge ingredient-badge-avoid">Avoid</span>
+            <div>
+              <div class="ingredient-name">Methylisothiazolinone</div>
+              <div class="ingredient-reason">Known skin sensitizer, restricted in EU</div>
+            </div>
+          </div>
+          <div class="ingredient-row">
+            <span class="ingredient-badge ingredient-badge-caution">Caution</span>
+            <div>
+              <div class="ingredient-name">Fragrance</div>
+              <div class="ingredient-reason">Undisclosed blend, potential allergens</div>
+            </div>
+          </div>
+          <div class="ingredient-row">
+            <span class="ingredient-badge ingredient-badge-clean">Clean</span>
+            <div>
+              <div class="ingredient-name">Decyl Glucoside</div>
+              <div class="ingredient-reason">Plant-derived surfactant</div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="section-divider">
+
+        <div class="swap-header">
+          <div><div class="swap-eyebrow">Cleaner alternative</div></div>
+          <div style="text-align: right;">
+            <div class="swap-score">87%</div>
+            <div class="swap-score-label">cleaner swap</div>
+          </div>
+        </div>
+        <div class="swap-product">
+          <div class="swap-product-info">
+            <div class="product-name">Branch Basics Dish Soap</div>
+            <div class="product-brand">Branch Basics</div>
+          </div>
+          <span class="badge-clean">Clean</span>
+        </div>
+        <div class="swap-reason">Eliminates methylisothiazolinone. Plant-based surfactants, no synthetic fragrance.</div>
+        <div class="swap-actions">
+          <button class="btn btn-primary btn-sm">Add to list</button>
+          <button class="btn btn-ghost btn-sm">View details</button>
+        </div>
+      </div>
+    </div>
+    <div class="callout callout-solution">Clear hierarchy. "Add to list" is the primary action in this context. No other primary button competing. The three-tier system gives us primary, outline, and text-only without ambiguity.</div>
+  </div>
+
+</div>
+
+<hr class="divider">
+
+<h2 style="font-size: 22px; font-weight: 600; letter-spacing: -0.02em; text-align: center; margin-bottom: 8px;">SwapCard Visual Distinction</h2>
+<p style="font-size: 14px; color: #6B6B6B; text-align: center; margin-bottom: 32px; line-height: 1.65; max-width: 560px; margin-left: auto; margin-right: auto;">The design system says "no borders on cards." How should the SwapCard area stand out from the product detail above it?</p>
+
+<div class="compare-grid">
+
+  <!-- OPTION A: primary-light -->
+  <div class="compare-col">
+    <div class="compare-label" style="color: #5A8384;">Option A</div>
+    <div class="compare-title">bg-primary-light (#DDEAEB)</div>
+    <div class="compare-desc">Subtle teal tint. Signals "this is a system recommendation" — tied to the primary color family.</div>
+
+    <div class="modal-backdrop">
+      <div class="modal-panel">
+        <div class="modal-header">
+          <div>
+            <div class="product-name">Mrs. Meyer's Dish Soap</div>
+            <div class="product-brand">Mrs. Meyer's Clean Day</div>
+          </div>
+          <span class="badge-caution">Caution</span>
+        </div>
+
+        <div class="ingredient-list">
+          <div class="ingredient-row">
+            <span class="ingredient-badge ingredient-badge-avoid">Avoid</span>
+            <div>
+              <div class="ingredient-name">Methylisothiazolinone</div>
+              <div class="ingredient-reason">Known skin sensitizer, restricted in EU</div>
+            </div>
+          </div>
+          <div class="ingredient-row">
+            <span class="ingredient-badge ingredient-badge-clean">Clean</span>
+            <div>
+              <div class="ingredient-name">Decyl Glucoside</div>
+              <div class="ingredient-reason">Plant-derived surfactant</div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="section-divider">
+
+        <!-- SwapCard with primary-light -->
+        <div style="background: #DDEAEB; border-radius: 16px; padding: 20px;">
+          <div class="swap-header">
+            <div><div class="swap-eyebrow">Cleaner alternative</div></div>
+            <div style="text-align: right;">
+              <div class="swap-score">87%</div>
+              <div class="swap-score-label">cleaner swap</div>
+            </div>
+          </div>
+          <div class="swap-product">
+            <div class="swap-product-info">
+              <div class="product-name">Branch Basics Dish Soap</div>
+              <div class="product-brand">Branch Basics</div>
+            </div>
+            <span class="badge-clean">Clean</span>
+          </div>
+          <div class="swap-reason">Eliminates methylisothiazolinone. Plant-based surfactants, no synthetic fragrance.</div>
+          <div class="swap-actions">
+            <button class="btn btn-primary btn-sm">Add to list</button>
+            <button class="btn btn-ghost btn-sm">View details</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="callout callout-solution">Teal-family tint. Connects the SwapCard to the primary action color. More distinct from the white card above.</div>
+  </div>
+
+  <!-- OPTION B: surface-muted -->
+  <div class="compare-col">
+    <div class="compare-label" style="color: #5A8384;">Option B</div>
+    <div class="compare-title">bg-surface-muted (#F0ECE6)</div>
+    <div class="compare-desc">Warm neutral tint. Creates separation without adding color meaning. Matches sidebar/secondary panel surfaces.</div>
+
+    <div class="modal-backdrop">
+      <div class="modal-panel">
+        <div class="modal-header">
+          <div>
+            <div class="product-name">Mrs. Meyer's Dish Soap</div>
+            <div class="product-brand">Mrs. Meyer's Clean Day</div>
+          </div>
+          <span class="badge-caution">Caution</span>
+        </div>
+
+        <div class="ingredient-list">
+          <div class="ingredient-row">
+            <span class="ingredient-badge ingredient-badge-avoid">Avoid</span>
+            <div>
+              <div class="ingredient-name">Methylisothiazolinone</div>
+              <div class="ingredient-reason">Known skin sensitizer, restricted in EU</div>
+            </div>
+          </div>
+          <div class="ingredient-row">
+            <span class="ingredient-badge ingredient-badge-clean">Clean</span>
+            <div>
+              <div class="ingredient-name">Decyl Glucoside</div>
+              <div class="ingredient-reason">Plant-derived surfactant</div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="section-divider">
+
+        <!-- SwapCard with surface-muted -->
+        <div style="background: #F0ECE6; border-radius: 16px; padding: 20px; margin: 0 -4px;">
+          <div class="swap-header">
+            <div><div class="swap-eyebrow">Cleaner alternative</div></div>
+            <div style="text-align: right;">
+              <div class="swap-score">87%</div>
+              <div class="swap-score-label">cleaner swap</div>
+            </div>
+          </div>
+          <div class="swap-product">
+            <div class="swap-product-info">
+              <div class="product-name">Branch Basics Dish Soap</div>
+              <div class="product-brand">Branch Basics</div>
+            </div>
+            <span class="badge-clean">Clean</span>
+          </div>
+          <div class="swap-reason">Eliminates methylisothiazolinone. Plant-based surfactants, no synthetic fragrance.</div>
+          <div class="swap-actions">
+            <button class="btn btn-primary btn-sm">Add to list</button>
+            <button class="btn btn-ghost btn-sm">View details</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="callout callout-solution">Warm neutral tint. Separates the SwapCard from white content above, but doesn't carry color meaning. Familiar — same surface used for sidebars and secondary panels.</div>
+  </div>
+
+</div>
+
+<hr class="divider">
+
+<h2 style="font-size: 22px; font-weight: 600; letter-spacing: -0.02em; text-align: center; margin-bottom: 8px;">Focus States: Keyboard Navigation</h2>
+<p style="font-size: 14px; color: #6B6B6B; text-align: center; margin-bottom: 32px; line-height: 1.65; max-width: 560px; margin-left: auto; margin-right: auto;">Every interactive element needs a visible focus indicator for keyboard users. Simulated below: what it looks like when a user tabs to each element.</p>
+
+<div class="focus-grid">
+
+  <!-- BEFORE: No focus states -->
+  <div class="compare-col">
+    <div class="compare-label compare-label-before">Before (no focus states)</div>
+    <div class="compare-title">User is tabbing, but where are they?</div>
+    <div class="compare-desc">No visual indicator. The keyboard user has no idea which element is active.</div>
+
+    <div class="focus-demo">
+      <div class="focus-demo-label">Buttons — one of these is "focused" right now:</div>
+      <div class="focus-demo-row">
+        <button class="btn btn-primary btn-sm">Search</button>
+        <button class="btn btn-secondary btn-sm">Compare</button>
+        <button class="btn btn-ghost btn-sm">Cancel</button>
+      </div>
+
+      <div class="focus-demo-label">Filter chips — one is focused:</div>
+      <div class="focus-demo-row">
+        <button class="chip chip-selected">Cleaning</button>
+        <button class="chip chip-unselected">Personal Care</button>
+        <button class="chip chip-unselected">Kitchen</button>
+      </div>
+
+      <div class="focus-demo-label">Icon buttons — one is focused:</div>
+      <div class="focus-demo-row">
+        <button class="icon-btn icon-btn-default">&#9829;</button>
+        <button class="icon-btn icon-btn-default">&#43;</button>
+        <button class="icon-btn icon-btn-ghost">&times;</button>
+      </div>
+    </div>
+    <div class="callout callout-problem">Which element is focused? Impossible to tell. A keyboard user would be navigating blind.</div>
+  </div>
+
+  <!-- AFTER: With focus rings -->
+  <div class="compare-col">
+    <div class="compare-label compare-label-after">After (focus-visible ring)</div>
+    <div class="compare-title">2px primary ring with offset</div>
+    <div class="compare-desc">Clear, consistent indicator. Only shows on keyboard navigation, not mouse clicks.</div>
+
+    <div class="focus-demo">
+      <div class="focus-demo-label">Buttons — "Compare" is focused: <span class="tab-indicator">tab</span></div>
+      <div class="focus-demo-row">
+        <button class="btn btn-primary btn-sm">Search</button>
+        <button class="btn btn-secondary btn-sm has-focus">Compare</button>
+        <button class="btn btn-ghost btn-sm">Cancel</button>
+      </div>
+
+      <div class="focus-demo-label">Filter chips — "Personal Care" is focused: <span class="tab-indicator">tab</span></div>
+      <div class="focus-demo-row">
+        <button class="chip chip-selected">Cleaning</button>
+        <button class="chip chip-unselected has-focus">Personal Care</button>
+        <button class="chip chip-unselected">Kitchen</button>
+      </div>
+
+      <div class="focus-demo-label">Icon buttons — add-to-list is focused: <span class="tab-indicator">tab</span></div>
+      <div class="focus-demo-row">
+        <button class="icon-btn icon-btn-default">&#9829;</button>
+        <button class="icon-btn icon-btn-default has-focus">&#43;</button>
+        <button class="icon-btn icon-btn-ghost">&times;</button>
+      </div>
+    </div>
+    <div class="callout callout-solution">2px ring in primary teal, 2px offset from the element. Applied via focus-visible so it only appears for keyboard navigation, never on mouse click. Same ring style across all interactive components.</div>
+  </div>
+
+</div>
+
+</body>
+</html>

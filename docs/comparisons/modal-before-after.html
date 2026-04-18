@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modal — Before &amp; After</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --surface-bg: #FAF7F2;
+      --surface-card: #FFFFFF;
+      --surface-muted: #F0ECE6;
+      --surface-divider: #EBE7E0;
+      --text-primary: #1D1D1D;
+      --text-secondary: #6B6B6B;
+      --text-tertiary: #767676;
+      --primary: #5A8384;
+      --clean: #3A5C35;
+      --clean-bg: #DCE6D8;
+      --clean-dot: #8AAE82;
+      --caution: #6B5020;
+      --caution-bg: #F0E4C8;
+      --caution-dot: #C8A44E;
+      --avoid: #6B3535;
+      --avoid-bg: #ECDCDC;
+      --avoid-dot: #C08A8A;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--surface-bg);
+      padding: 48px 24px;
+      color: var(--text-primary);
+    }
+
+    .page-title {
+      font-size: 28px; font-weight: 600; letter-spacing: -0.025em;
+      margin-bottom: 8px;
+    }
+    .page-subtitle {
+      font-size: 14px; color: var(--text-secondary); margin-bottom: 48px;
+    }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .column-label {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--text-tertiary);
+      margin-bottom: 16px;
+    }
+
+    .modal {
+      background: var(--surface-card);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 8px 32px rgba(100,80,50,0.14);
+    }
+
+    .modal-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 16px;
+    }
+    .modal-title {
+      font-size: 22px; font-weight: 600; letter-spacing: -0.02em;
+    }
+    .close-btn {
+      width: 36px; height: 36px; border-radius: 50%; border: none;
+      background: transparent; color: var(--text-tertiary);
+      font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+
+    .meta-row {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 16px;
+    }
+    .brand { font-size: 14px; color: var(--text-secondary); }
+    .description { font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 24px; }
+
+    /* Rating badge (text version - BEFORE) */
+    .rating-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 4px 8px; border-radius: 6px;
+      font-size: 10px; font-weight: 400; white-space: nowrap;
+    }
+    .rating-badge.clean { background: var(--clean-bg); color: var(--clean); }
+    .rating-badge.caution { background: var(--caution-bg); color: var(--caution); }
+    .rating-badge.avoid { background: var(--avoid-bg); color: var(--avoid); }
+
+    /* Rating badge (small - BEFORE ingredient rows) */
+    .rating-badge-sm {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 4px 8px; border-radius: 6px;
+      font-size: 10px; font-weight: 400; white-space: nowrap; flex-shrink: 0;
+    }
+    .rating-badge-sm.clean { background: var(--clean-bg); color: var(--clean); }
+    .rating-badge-sm.caution { background: var(--caution-bg); color: var(--caution); }
+    .rating-badge-sm.avoid { background: var(--avoid-bg); color: var(--avoid); }
+
+    /* Rating dot (AFTER) */
+    .rating-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      flex-shrink: 0; margin-top: 3px;
+    }
+    .rating-dot.clean { background: var(--clean-dot); }
+    .rating-dot.caution { background: var(--caution-dot); }
+    .rating-dot.avoid { background: var(--avoid-dot); }
+
+    .section-title {
+      font-size: 16px; font-weight: 500; letter-spacing: -0.01em;
+      margin-bottom: 16px;
+    }
+    .ingredients-label {
+      font-size: 14px; font-weight: 500; margin-bottom: 8px;
+    }
+
+    .ingredient-row {
+      display: flex; align-items: flex-start; gap: 8px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--surface-divider);
+    }
+    .ingredient-row:last-child { border-bottom: none; }
+
+    .ingredient-content { flex: 1; }
+    .ingredient-name {
+      font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 8px;
+    }
+    .ingredient-reason {
+      font-size: 12px; color: var(--text-secondary); margin-top: 4px;
+    }
+
+    .avoid-tag {
+      display: inline-flex; align-items: center;
+      padding: 4px 8px; border-radius: 6px;
+      font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;
+      background: var(--avoid-bg); color: var(--avoid);
+    }
+
+    /* Ingredient bar (AFTER only) */
+    .bar-container {
+      display: flex; height: 12px; border-radius: 999px;
+      overflow: hidden; background: var(--surface-muted);
+      margin-bottom: 8px;
+    }
+    .bar-segment-clean { background: var(--clean-bg); }
+    .bar-segment-caution { background: var(--caution-bg); }
+    .bar-segment-avoid { background: var(--avoid-bg); }
+
+    .legend {
+      display: flex; align-items: center; gap: 24px; margin-top: 8px;
+    }
+    .legend-item {
+      display: flex; align-items: center; gap: 4px;
+      font-size: 12px; color: var(--text-secondary);
+    }
+    .legend-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+    }
+    .legend-dot.clean { background: var(--clean-dot); }
+    .legend-dot.caution { background: var(--caution-dot); }
+    .legend-dot.avoid { background: var(--avoid-dot); }
+
+    .timestamp {
+      font-size: 10px; color: var(--text-tertiary); text-align: center;
+      margin-top: 64px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1 class="page-title">Modal — Before &amp; After</h1>
+  <p class="page-subtitle">Product detail modal ingredient display. Showing Mrs. Meyer's Clean Day Dish Soap (mixed rating).</p>
+
+  <div class="comparison">
+
+    <!-- BEFORE -->
+    <div>
+      <p class="column-label">Before</p>
+      <div class="modal">
+        <div class="modal-header">
+          <span class="modal-title">Mrs. Meyer's Clean Day Dish Soap</span>
+          <button class="close-btn">&times;</button>
+        </div>
+
+        <div class="meta-row">
+          <span class="brand">Mrs. Meyer's</span>
+          <span class="rating-badge caution">Caution</span>
+        </div>
+        <p class="description">Mostly plant-derived but contains methylisothiazolinone and undisclosed fragrance blend.</p>
+
+        <h3 class="section-title">Ingredient Breakdown</h3>
+
+        <div>
+          <div class="ingredient-row">
+            <span class="rating-badge-sm clean">Clean</span>
+            <div class="ingredient-content">
+              <div class="ingredient-name">Decyl Glucoside</div>
+              <p class="ingredient-reason">Plant-derived surfactant, very gentle</p>
+            </div>
+          </div>
+          <div class="ingredient-row">
+            <span class="rating-badge-sm avoid">Avoid</span>
+            <div class="ingredient-content">
+              <div class="ingredient-name">
+                Methylisothiazolinone
+                <span class="avoid-tag">In your avoid list</span>
+              </div>
+              <p class="ingredient-reason">Known skin sensitizer and allergen, EWG score 7</p>
+            </div>
+          </div>
+          <div class="ingredient-row">
+            <span class="rating-badge-sm caution">Caution</span>
+            <div class="ingredient-content">
+              <div class="ingredient-name">Fragrance</div>
+              <p class="ingredient-reason">Undisclosed blend may contain phthalates or allergens</p>
+            </div>
+          </div>
+          <div class="ingredient-row">
+            <span class="rating-badge-sm clean">Clean</span>
+            <div class="ingredient-content">
+              <div class="ingredient-name">Glycerin</div>
+              <p class="ingredient-reason">Plant-derived humectant, no known hazards</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AFTER -->
+    <div>
+      <p class="column-label">After</p>
+      <div class="modal">
+        <div class="modal-header">
+          <span class="modal-title">Mrs. Meyer's Clean Day Dish Soap</span>
+          <button class="close-btn">&times;</button>
+        </div>
+
+        <div class="meta-row">
+          <span class="brand">Mrs. Meyer's</span>
+          <span class="rating-badge caution">Caution</span>
+        </div>
+        <p class="description">Mostly plant-derived but contains methylisothiazolinone and undisclosed fragrance blend.</p>
+
+        <h3 class="section-title">Ingredient Breakdown (4)</h3>
+
+        <div class="bar-container">
+          <div class="bar-segment-clean" style="width: 50%"></div>
+          <div class="bar-segment-caution" style="width: 25%"></div>
+          <div class="bar-segment-avoid" style="width: 25%"></div>
+        </div>
+        <div class="legend">
+          <div class="legend-item"><span class="legend-dot clean"></span> 2 Clean</div>
+          <div class="legend-item"><span class="legend-dot caution"></span> 1 Caution</div>
+          <div class="legend-item"><span class="legend-dot avoid"></span> 1 Avoid</div>
+        </div>
+
+        <div style="margin-top: 24px;">
+          <p class="ingredients-label">Ingredients</p>
+          <div>
+            <div class="ingredient-row">
+              <span class="rating-dot clean"></span>
+              <div class="ingredient-content">
+                <div class="ingredient-name">Decyl Glucoside</div>
+                <p class="ingredient-reason">Plant-derived surfactant, very gentle</p>
+              </div>
+            </div>
+            <div class="ingredient-row">
+              <span class="rating-dot avoid"></span>
+              <div class="ingredient-content">
+                <div class="ingredient-name">
+                  Methylisothiazolinone
+                  <span class="avoid-tag">In your avoid list</span>
+                </div>
+                <p class="ingredient-reason">Known skin sensitizer and allergen, EWG score 7</p>
+              </div>
+            </div>
+            <div class="ingredient-row">
+              <span class="rating-dot caution"></span>
+              <div class="ingredient-content">
+                <div class="ingredient-name">Fragrance</div>
+                <p class="ingredient-reason">Undisclosed blend may contain phthalates or allergens</p>
+              </div>
+            </div>
+            <div class="ingredient-row">
+              <span class="rating-dot clean"></span>
+              <div class="ingredient-content">
+                <div class="ingredient-name">Glycerin</div>
+                <p class="ingredient-reason">Plant-derived humectant, no known hazards</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="timestamp">Captured 2026-04-06 — Modal ingredient display redesign</p>
+
+</body>
+</html>

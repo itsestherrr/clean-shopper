@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ProductCard — Build Test</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --color-surface-bg: #FAF7F2;
+      --color-surface-card: #FFFFFF;
+      --color-surface-muted: #F0ECE6;
+      --color-surface-divider: #EBE7E0;
+      --color-primary: #5A8384;
+      --color-primary-dark: #4A7273;
+      --color-primary-light: #DDEAEB;
+      --color-clean: #3A5C35;
+      --color-clean-bg: #DCE6D8;
+      --color-caution: #6B5020;
+      --color-caution-bg: #F0E4C8;
+      --color-avoid: #6B3535;
+      --color-avoid-bg: #ECDCDC;
+      --color-text-primary: #1D1D1D;
+      --color-text-secondary: #6B6B6B;
+      --color-text-tertiary: #767676;
+      --color-text-placeholder: #B5B0A8;
+      --shadow-hover: 0 4px 16px rgba(100,80,50,0.10);
+      --radius-badge: 6px;
+      --radius-card: 16px;
+      --spacing-xs: 4px;
+      --spacing-sm: 8px;
+      --spacing-md: 16px;
+      --spacing-lg: 24px;
+      --spacing-xl: 32px;
+      --spacing-2xl: 48px;
+      --duration-base: 150ms;
+      --duration-fast: 100ms;
+      --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--color-surface-bg);
+      color: var(--color-text-primary);
+      -webkit-font-smoothing: antialiased;
+      padding: var(--spacing-2xl);
+    }
+
+    .page {
+      max-width: 600px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xl);
+    }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-text-tertiary);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    /* ── ProductCard ─────────────────────────────── */
+    .product-card {
+      background: var(--color-surface-card);
+      border-radius: var(--radius-card);
+      padding: var(--spacing-lg);
+      transition: box-shadow var(--duration-base) var(--ease-default);
+      cursor: pointer;
+    }
+    .product-card:hover {
+      box-shadow: var(--shadow-hover);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--spacing-sm);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.35;
+      color: var(--color-text-primary);
+    }
+
+    .card-brand {
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--color-text-tertiary);
+      margin-top: var(--spacing-xs);
+    }
+
+    .card-description {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--color-text-secondary);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+    }
+
+    /* ── RatingBadge ─────────────────────────────── */
+    .rating-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+      border-radius: var(--radius-badge);
+      padding: var(--spacing-xs) var(--spacing-sm);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      line-height: 1.4;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .rating-badge.clean   { background: var(--color-clean-bg);   color: var(--color-clean); }
+    .rating-badge.caution { background: var(--color-caution-bg); color: var(--color-caution); }
+    .rating-badge.avoid   { background: var(--color-avoid-bg);   color: var(--color-avoid); }
+
+    .rating-badge.sm {
+      font-size: 10px;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    /* ── Badge ───────────────────────────────────── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: var(--radius-badge);
+      padding: var(--spacing-xs) var(--spacing-sm);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      line-height: 1.4;
+    }
+    .badge.neutral { background: var(--color-surface-muted); color: var(--color-text-tertiary); }
+
+    /* ── IconButton ──────────────────────────────── */
+    .icon-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--ease-default);
+      font-size: 16px;
+      line-height: 1;
+    }
+    .icon-btn.ghost {
+      background: transparent;
+      color: var(--color-text-tertiary);
+    }
+    .icon-btn.ghost:hover {
+      background: var(--color-surface-muted);
+      color: var(--color-text-secondary);
+    }
+    .icon-btn.ghost.active {
+      background: transparent;
+      color: var(--color-primary);
+    }
+    .icon-btn:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+
+    /* ── Loading skeleton ────────────────────────── */
+    .skeleton {
+      background: var(--color-surface-muted);
+      border-radius: var(--radius-card);
+      height: 180px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- Sample card: Dr. Bronner's -->
+    <div>
+      <p class="section-title">Default State</p>
+      <div class="product-card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Dr. Bronner's Pure Castile Soap</div>
+            <div class="card-brand">Dr. Bronner's</div>
+          </div>
+          <span class="rating-badge clean">Clean</span>
+        </div>
+        <p class="card-description">Organic, fair trade, no synthetic preservatives or detergents.</p>
+        <div class="card-footer">
+          <span class="badge neutral">Personal Care</span>
+          <div class="card-actions">
+            <button class="icon-btn ghost" aria-label="Save to library">&#9825;</button>
+            <button class="icon-btn ghost" aria-label="Add to shopping list">&#65291;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Saved state -->
+    <div>
+      <p class="section-title">Saved State</p>
+      <div class="product-card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Dr. Bronner's Pure Castile Soap</div>
+            <div class="card-brand">Dr. Bronner's</div>
+          </div>
+          <span class="rating-badge clean">Clean</span>
+        </div>
+        <p class="card-description">Organic, fair trade, no synthetic preservatives or detergents.</p>
+        <div class="card-footer">
+          <span class="badge neutral">Personal Care</span>
+          <div class="card-actions">
+            <button class="icon-btn ghost active" aria-label="Remove from library">&#9829;</button>
+            <button class="icon-btn ghost" aria-label="Add to shopping list">&#65291;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Caution rating example -->
+    <div>
+      <p class="section-title">Caution Rating</p>
+      <div class="product-card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Mrs. Meyer's Clean Day Dish Soap</div>
+            <div class="card-brand">Mrs. Meyer's</div>
+          </div>
+          <span class="rating-badge caution">Caution</span>
+        </div>
+        <p class="card-description">Mostly plant-derived but contains methylisothiazolinone and fragrance blend with undisclosed components.</p>
+        <div class="card-footer">
+          <span class="badge neutral">Home Cleaning</span>
+          <div class="card-actions">
+            <button class="icon-btn ghost" aria-label="Save to library">&#9825;</button>
+            <button class="icon-btn ghost" aria-label="Add to shopping list">&#65291;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Avoid rating example -->
+    <div>
+      <p class="section-title">Avoid Rating</p>
+      <div class="product-card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Febreze Air Effects — Original Scent</div>
+            <div class="card-brand">Procter & Gamble</div>
+          </div>
+          <span class="rating-badge avoid">Avoid</span>
+        </div>
+        <p class="card-description">Contains phthalates, synthetic musks, and multiple high-concern fragrance chemicals.</p>
+        <div class="card-footer">
+          <span class="badge neutral">Home Fragrance</span>
+          <div class="card-actions">
+            <button class="icon-btn ghost" aria-label="Save to library">&#9825;</button>
+            <button class="icon-btn ghost" aria-label="Add to shopping list">&#65291;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading skeleton -->
+    <div>
+      <p class="section-title">Loading State</p>
+      <div class="skeleton"></div>
+    </div>
+
+  </div>
+</body>
+</html>
