@@ -35,24 +35,22 @@ const STATE_LABELS: LockedState[] = ['default', 'hover', 'pressed', 'focus', 'di
 
 function StatesStrip({ variant }: { variant: 'default' | 'selectable' }) {
   return (
-    <div className="flex gap-md">
+    <div className="grid grid-cols-3 gap-lg">
       {STATE_LABELS.map((state) => (
-        <div key={state} className="flex-1 text-center">
-          <div className="bg-surface-muted rounded-card p-sm flex items-center justify-center min-h-[160px]">
-            <StateFrame state={state}>
-              <ProductCard
-                {...DEMO_PRODUCT}
-                variant={variant}
-                selected={variant === 'selectable'}
-                disabled={state === 'disabled'}
-                onClick={() => {}}
-                onSelectChange={() => {}}
-                onSave={() => {}}
-                onAddToList={() => {}}
-              />
-            </StateFrame>
-          </div>
-          <p className="text-label text-text-tertiary uppercase mt-sm">{state}</p>
+        <div key={state}>
+          <p className="text-label text-text-tertiary uppercase mb-sm">{state}</p>
+          <StateFrame state={state}>
+            <ProductCard
+              {...DEMO_PRODUCT}
+              variant={variant}
+              selected={variant === 'selectable'}
+              disabled={state === 'disabled'}
+              onClick={() => {}}
+              onSelectChange={() => {}}
+              onSave={() => {}}
+              onAddToList={() => {}}
+            />
+          </StateFrame>
         </div>
       ))}
     </div>
