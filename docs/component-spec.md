@@ -999,6 +999,6 @@ Modal ──> IconButton
 Build these in dependency order (leaf components first):
 
 1. **Tier 1 — Primitives:** Button, Badge, RatingBadge, IconButton, Chip
-2. **Tier 2 — Composites:** Card, SearchInput, SectionHeader, EmptyState, PreferenceTag, ScoreGauge, ShoppingListItem, NavBar
+2. **Tier 2 — Composites:** Card, SearchInput, SectionHeader, EmptyState, PreferenceTag, ScoreGauge, ShoppingListItem
 3. **Tier 3 — Features:** IngredientList, ComparisonPanel, SwapCard, Modal
 4. **Existing (modify):** ProductCard, Toast
