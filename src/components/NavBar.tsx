@@ -52,7 +52,7 @@ export default function NavBar({ activeTab, onNavigate }: NavBarProps) {
       ">
         <div className="text-h3 text-text-primary px-md mb-2xl">Clean Shopper</div>
 
-        <div className="flex flex-col gap-xs">
+        <div className="flex flex-col gap-xs flex-1">
           {tabs.map((tab) => {
             const isActive = activeTab === tab.key
             return (
@@ -77,6 +77,18 @@ export default function NavBar({ activeTab, onNavigate }: NavBarProps) {
             )
           })}
         </div>
+
+        <a
+          href="/spec"
+          className="
+            flex items-center gap-md px-md py-sm
+            text-small text-text-tertiary hover:text-primary
+            transition-colors duration-fast ease-default
+          "
+        >
+          <span className="w-5 h-5 flex items-center justify-center text-[18px] leading-none">◇</span>
+          <span>Component Spec</span>
+        </a>
       </nav>
     </>
   )

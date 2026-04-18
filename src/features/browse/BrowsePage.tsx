@@ -1,7 +1,18 @@
 import { useState } from 'react'
 import ProductCard from '../../components/ProductCard'
+import Modal from '../../components/Modal'
+import IngredientList from '../../components/IngredientList'
+import IngredientBar from '../../components/IngredientBar'
+import RatingBadge from '../../components/RatingBadge'
 
 type Rating = 'clean' | 'caution' | 'avoid'
+
+interface Ingredient {
+  name: string
+  rating: Rating
+  reason: string
+  isUserAvoided?: boolean
+}
 
 interface Product {
   id: string
@@ -10,6 +21,7 @@ interface Product {
   rating: Rating
   category: string
   description: string
+  ingredients: Ingredient[]
 }
 
 const PLACEHOLDER_PRODUCTS: Product[] = [
@@ -20,6 +32,12 @@ const PLACEHOLDER_PRODUCTS: Product[] = [
     rating: 'clean',
     category: 'Personal Care',
     description: 'Organic, fair trade, no synthetic preservatives or detergents. EWG Verified.',
+    ingredients: [
+      { name: 'Coconut Oil', rating: 'clean', reason: 'Gentle plant-based surfactant, no known hazards' },
+      { name: 'Olive Oil', rating: 'clean', reason: 'Moisturizing base oil, EWG score 1' },
+      { name: 'Hemp Seed Oil', rating: 'clean', reason: 'Nutrient-rich, non-comedogenic, low concern' },
+      { name: 'Tocopherol', rating: 'clean', reason: 'Vitamin E, natural antioxidant preservative' },
+    ],
   },
   {
     id: '2',
@@ -28,6 +46,11 @@ const PLACEHOLDER_PRODUCTS: Product[] = [
     rating: 'clean',
     category: 'Personal Care',
     description: 'Zero-waste, palm oil free, pH balanced. All ingredients rated low-concern.',
+    ingredients: [
+      { name: 'Sodium Cocoyl Isethionate', rating: 'clean', reason: 'Gentle coconut-derived surfactant, low irritation' },
+      { name: 'Cocoa Butter', rating: 'clean', reason: 'Plant-based moisturizer, no known hazards' },
+      { name: 'Peppermint Oil', rating: 'clean', reason: 'Natural essential oil, EWG score 1' },
+    ],
   },
   {
     id: '3',
@@ -36,6 +59,12 @@ const PLACEHOLDER_PRODUCTS: Product[] = [
     rating: 'caution',
     category: 'Home Cleaning',
     description: 'Mostly plant-derived but contains methylisothiazolinone and undisclosed fragrance blend.',
+    ingredients: [
+      { name: 'Decyl Glucoside', rating: 'clean', reason: 'Plant-derived surfactant, very gentle' },
+      { name: 'Methylisothiazolinone', rating: 'avoid', reason: 'Known skin sensitizer and allergen, EWG score 7', isUserAvoided: true },
+      { name: 'Fragrance', rating: 'caution', reason: 'Undisclosed blend may contain phthalates or allergens' },
+      { name: 'Glycerin', rating: 'clean', reason: 'Plant-derived humectant, no known hazards' },
+    ],
   },
   {
     id: '4',
@@ -44,6 +73,12 @@ const PLACEHOLDER_PRODUCTS: Product[] = [
     rating: 'caution',
     category: 'Home Cleaning',
     description: 'Thymol-based active ingredient, but includes synthetic fragrance and preservatives.',
+    ingredients: [
+      { name: 'Thymol', rating: 'clean', reason: 'Thyme-derived antimicrobial, naturally sourced' },
+      { name: 'Alkyl Polyglucoside', rating: 'clean', reason: 'Plant-based surfactant, biodegradable' },
+      { name: 'Fragrance', rating: 'caution', reason: 'Synthetic blend, composition not fully disclosed' },
+      { name: 'Phenoxyethanol', rating: 'caution', reason: 'Synthetic preservative, moderate concern at high concentrations' },
+    ],
   },
   {
     id: '5',
@@ -52,6 +87,11 @@ const PLACEHOLDER_PRODUCTS: Product[] = [
     rating: 'clean',
     category: 'Baby Care',
     description: 'Plant-derived, tear-free, no parabens, sulfates, or artificial fragrances.',
+    ingredients: [
+      { name: 'Coco-Glucoside', rating: 'clean', reason: 'Gentle coconut-derived cleanser, safe for babies' },
+      { name: 'Chamomile Extract', rating: 'clean', reason: 'Soothing botanical, no known hazards' },
+      { name: 'Citric Acid', rating: 'clean', reason: 'Natural pH adjuster, food-grade ingredient' },
+    ],
   },
   {
     id: '6',
@@ -60,11 +100,19 @@ const PLACEHOLDER_PRODUCTS: Product[] = [
     rating: 'avoid',
     category: 'Baby Care',
     description: 'Contains mineral oil, fragrance blend with undisclosed components, and parabens.',
+    ingredients: [
+      { name: 'Mineral Oil', rating: 'caution', reason: 'Petroleum-derived, may contain impurities depending on refinement' },
+      { name: 'Fragrance', rating: 'caution', reason: 'Undisclosed blend, potential allergens and endocrine disruptors' },
+      { name: 'Propylparaben', rating: 'avoid', reason: 'Endocrine disruptor, EWG score 7', isUserAvoided: true },
+      { name: 'Methylparaben', rating: 'avoid', reason: 'Preservative linked to hormone disruption, EWG score 4-7' },
+      { name: 'Isopropyl Palmitate', rating: 'caution', reason: 'Can clog pores, moderate skin irritation concern' },
+    ],
   },
 ]
 
 export default function BrowsePage() {
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set())
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
 
   function toggleSave(id: string) {
     setSavedIds((prev) => {
@@ -97,10 +145,38 @@ export default function BrowsePage() {
             saved={savedIds.has(product.id)}
             onSave={() => toggleSave(product.id)}
             onAddToList={() => console.log('add to list', product.id)}
-            onClick={() => console.log('view details', product.id)}
+            onClick={() => setSelectedProduct(product)}
           />
         ))}
       </div>
+
+      {/* Product detail modal */}
+      <Modal
+        open={selectedProduct !== null}
+        onClose={() => setSelectedProduct(null)}
+        title={selectedProduct?.name}
+      >
+        {selectedProduct && (
+          <div>
+            <div className="flex items-center gap-sm mb-md">
+              <span className="text-body text-text-secondary">{selectedProduct.brand}</span>
+              <RatingBadge rating={selectedProduct.rating} />
+            </div>
+            <p className="text-body text-text-secondary mb-lg">{selectedProduct.description}</p>
+
+            <IngredientBar
+              counts={{
+                clean: selectedProduct.ingredients.filter((i) => i.rating === 'clean').length,
+                caution: selectedProduct.ingredients.filter((i) => i.rating === 'caution').length,
+                avoid: selectedProduct.ingredients.filter((i) => i.rating === 'avoid').length,
+              }}
+            />
+            <div className="mt-lg">
+              <IngredientList ingredients={selectedProduct.ingredients} />
+            </div>
+          </div>
+        )}
+      </Modal>
     </div>
   )
 }
