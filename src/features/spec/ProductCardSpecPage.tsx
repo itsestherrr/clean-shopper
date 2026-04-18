@@ -35,7 +35,7 @@ const STATE_LABELS: LockedState[] = ['default', 'hover', 'pressed', 'focus', 'di
 
 function StatesStrip({ variant }: { variant: 'default' | 'selectable' }) {
   return (
-    <div className="grid grid-cols-3 gap-lg">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-lg">
       {STATE_LABELS.map((state) => (
         <div key={state}>
           <p className="text-label text-text-tertiary uppercase mb-sm">{state}</p>
@@ -43,7 +43,6 @@ function StatesStrip({ variant }: { variant: 'default' | 'selectable' }) {
             <ProductCard
               {...DEMO_PRODUCT}
               variant={variant}
-              selected={variant === 'selectable'}
               disabled={state === 'disabled'}
               onClick={() => {}}
               onSelectChange={() => {}}
@@ -110,11 +109,15 @@ const SECTIONS = [
 
 export default function ProductCardSpecPage() {
   return (
-    <div className="flex gap-2xl max-w-[1200px]">
-      {/* Sticky TOC */}
-      <aside className="w-[180px] shrink-0 sticky top-2xl self-start hidden lg:block">
-        <p className="text-label text-text-tertiary uppercase mb-sm">On this page</p>
-        <nav className="flex flex-col gap-xs">
+    <>
+      <header className="mb-2xl">
+        <p className="text-label text-primary uppercase mb-xs">Component spec</p>
+        <h1 className="text-h1 text-text-primary mb-sm">ProductCard</h1>
+        <p className="text-body text-text-secondary max-w-[640px]">
+          Displays a product summary with name, brand, rating, category, and description. Used
+          in search results, the product library, comparison pickers, and shopping list views.
+        </p>
+        <nav className="flex gap-md mt-md flex-wrap">
           {SECTIONS.map((s) => (
             <a
               key={s.id}
@@ -125,24 +128,13 @@ export default function ProductCardSpecPage() {
             </a>
           ))}
         </nav>
-      </aside>
-
-      {/* Content */}
-      <div className="flex-1 min-w-0">
-        <header className="mb-2xl">
-          <p className="text-label text-primary uppercase mb-xs">Component spec</p>
-          <h1 className="text-h1 text-text-primary mb-sm">ProductCard</h1>
-          <p className="text-body text-text-secondary max-w-[640px]">
-            Displays a product summary with name, brand, rating, category, and description. Used
-            in search results, the product library, comparison pickers, and shopping list views.
-          </p>
-        </header>
+      </header>
 
         {/* Overview */}
         <section id="overview" className="mb-3xl">
           <h2 className="text-h2 text-text-primary mb-md">Overview</h2>
-          <div className="bg-surface-muted rounded-card p-xl mb-lg">
-            <div className="max-w-[360px] mb-lg">
+          <div className="bg-surface-card border border-surface-divider rounded-card p-xl mb-lg">
+            <div className="max-w-[360px]">
               <ProductCard
                 name="Dr. Bronner's Pure Castile Soap"
                 brand="Dr. Bronner's"
@@ -154,17 +146,17 @@ export default function ProductCardSpecPage() {
                 onClick={() => {}}
               />
             </div>
-            <p className="text-label text-text-tertiary uppercase mb-sm">Loading</p>
-            <div className="max-w-[360px]">
-              <ProductCard
-                loading
-                name=""
-                brand=""
-                rating="clean"
-                category=""
-                description=""
-              />
-            </div>
+          </div>
+          <p className="text-label text-text-tertiary uppercase mb-sm">Loading</p>
+          <div className="max-w-[360px] mb-lg">
+            <ProductCard
+              loading
+              name=""
+              brand=""
+              rating="clean"
+              category=""
+              description=""
+            />
           </div>
           <pre className="bg-surface-card border border-surface-divider rounded-card p-md text-small overflow-x-auto">
 {`<ProductCard
@@ -275,8 +267,10 @@ export default function ProductCardSpecPage() {
         <section id="states" className="mb-3xl">
           <h2 className="text-h2 text-text-primary mb-md">States</h2>
           <p className="text-body text-text-secondary mb-lg max-w-[640px]">
-            Interactive states for each variant. The first card in each row is live — hover or
-            tab to it. The rest are visually locked for side-by-side comparison.
+            Interactive states for each variant. The default card in each strip is live — hover
+            or tab to it. The rest are visually locked for side-by-side comparison. Selectable
+            is shown unselected so hover, pressed, and focus effects are visible; see Variants
+            above for the selected appearance.
           </p>
 
           <div className="mb-xl">
@@ -363,7 +357,6 @@ export default function ProductCardSpecPage() {
             />
           </div>
         </section>
-      </div>
-    </div>
+    </>
   )
 }
