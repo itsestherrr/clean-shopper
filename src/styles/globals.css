@@ -20,16 +20,19 @@
 
   /* ── Semantic — Clean ──────────────────────────────────────────────── */
   --color-clean:      #3A5C35;
+  --color-clean-dot:  #8AAE82;
   --color-clean-bg:   #DCE6D8;
   --color-clean-tint: #E6EDE2;
 
   /* ── Semantic — Caution ────────────────────────────────────────────── */
   --color-caution:      #6B5020;
+  --color-caution-dot:  #C8A44E;
   --color-caution-bg:   #F0E4C8;
   --color-caution-tint: #F5EDD8;
 
   /* ── Semantic — Avoid ──────────────────────────────────────────────── */
   --color-avoid:      #6B3535;
+  --color-avoid-dot:  #C08A8A;
   --color-avoid-bg:   #ECDCDC;
   --color-avoid-tint: #F2E6E6;
 
@@ -146,4 +149,17 @@
   body {
     margin: 0;
   }
+}
+
+/* ── Spec page state forcing (used only in /spec/product-card) ─────── */
+.spec-force-hover > * {
+  box-shadow: var(--shadow-hover) !important;
+}
+.spec-force-pressed > * {
+  transform: scale(0.98) !important;
+  box-shadow: var(--shadow-hover) !important;
+}
+.spec-force-focus > * {
+  outline: 2px solid var(--color-primary) !important;
+  outline-offset: 2px !important;
 }

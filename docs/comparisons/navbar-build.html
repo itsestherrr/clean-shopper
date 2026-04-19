@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NavBar — Build Test</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --color-surface-bg: #FAF7F2;
+      --color-surface-card: #FFFFFF;
+      --color-surface-muted: #F0ECE6;
+      --color-surface-divider: #EBE7E0;
+      --color-primary: #5A8384;
+      --color-primary-dark: #4A7273;
+      --color-primary-light: #DDEAEB;
+      --color-clean: #3A5C35;
+      --color-clean-bg: #DCE6D8;
+      --color-caution: #6B5020;
+      --color-caution-bg: #F0E4C8;
+      --color-avoid: #6B3535;
+      --color-avoid-bg: #ECDCDC;
+      --color-text-primary: #1D1D1D;
+      --color-text-secondary: #6B6B6B;
+      --color-text-tertiary: #767676;
+      --color-text-placeholder: #B5B0A8;
+      --shadow-hover: 0 4px 16px rgba(100,80,50,0.10);
+      --radius-badge: 6px;
+      --radius-card: 16px;
+      --spacing-xs: 4px;
+      --spacing-sm: 8px;
+      --spacing-md: 16px;
+      --spacing-lg: 24px;
+      --spacing-xl: 32px;
+      --spacing-2xl: 48px;
+      --duration-fast: 100ms;
+      --duration-base: 150ms;
+      --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--color-surface-bg);
+      color: var(--color-text-primary);
+      -webkit-font-smoothing: antialiased;
+      padding: var(--spacing-2xl);
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 64px;
+    }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-text-tertiary);
+      margin-bottom: var(--spacing-md);
+    }
+
+    /* ── Shared ──────────────────────────────────── */
+    button {
+      font-family: inherit;
+    }
+
+    /* ── Desktop Sidebar ─────────────────────────── */
+    .demo-desktop {
+      display: flex;
+      gap: 0;
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      height: 480px;
+    }
+
+    .sidebar {
+      width: 240px;
+      flex-shrink: 0;
+      background: var(--color-surface-card);
+      border-right: 1px solid var(--color-surface-divider);
+      display: flex;
+      flex-direction: column;
+      padding: var(--spacing-lg) var(--spacing-md);
+    }
+
+    .sidebar-brand {
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+      color: var(--color-text-primary);
+      padding: 0 var(--spacing-md);
+      margin-bottom: var(--spacing-2xl);
+    }
+
+    .sidebar-tabs {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xs);
+    }
+
+    .sidebar-tab {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      padding: var(--spacing-sm) var(--spacing-md);
+      border-radius: var(--radius-card);
+      border: none;
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--ease-default);
+      font-size: 14px;
+      line-height: 1.65;
+      background: transparent;
+      color: var(--color-text-secondary);
+    }
+
+    .sidebar-tab:hover {
+      background: var(--color-surface-muted);
+    }
+
+    .sidebar-tab.active {
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+      font-weight: 500;
+    }
+
+    .sidebar-tab.active:hover {
+      background: var(--color-primary-light);
+    }
+
+    .sidebar-tab:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+
+    .sidebar-tab .tab-icon {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .desktop-content {
+      flex: 1;
+      background: var(--color-surface-bg);
+      padding: var(--spacing-2xl);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xl);
+    }
+
+    /* ── Product card inside desktop demo ─────── */
+    .product-card {
+      background: var(--color-surface-card);
+      border-radius: var(--radius-card);
+      padding: var(--spacing-lg);
+      transition: box-shadow var(--duration-base) var(--ease-default);
+      cursor: pointer;
+      max-width: 500px;
+    }
+    .product-card:hover { box-shadow: var(--shadow-hover); }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--spacing-sm);
+      margin-bottom: var(--spacing-sm);
+    }
+    .card-title { font-size: 14px; font-weight: 500; line-height: 1.35; color: var(--color-text-primary); }
+    .card-brand { font-size: 12px; line-height: 1.5; color: var(--color-text-tertiary); margin-top: var(--spacing-xs); }
+    .card-description { font-size: 14px; line-height: 1.65; color: var(--color-text-secondary); margin-bottom: var(--spacing-md); }
+    .card-footer { display: flex; justify-content: space-between; align-items: center; }
+    .card-actions { display: flex; align-items: center; gap: var(--spacing-xs); }
+
+    .rating-badge {
+      display: inline-flex; align-items: center;
+      border-radius: var(--radius-badge); padding: var(--spacing-xs) var(--spacing-sm);
+      font-size: 11px; font-weight: 500; letter-spacing: 0.06em;
+      text-transform: uppercase; line-height: 1.4;
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .rating-badge.clean { background: var(--color-clean-bg); color: var(--color-clean); }
+
+    .badge {
+      display: inline-flex; align-items: center;
+      border-radius: var(--radius-badge); padding: var(--spacing-xs) var(--spacing-sm);
+      font-size: 11px; font-weight: 500; letter-spacing: 0.06em;
+      text-transform: uppercase; line-height: 1.4;
+    }
+    .badge.neutral { background: var(--color-surface-muted); color: var(--color-text-tertiary); }
+
+    .icon-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 36px; height: 36px; border-radius: 999px; border: none;
+      cursor: pointer; transition: all var(--duration-fast) var(--ease-default);
+      font-size: 16px; line-height: 1;
+      background: transparent; color: var(--color-text-tertiary);
+    }
+    .icon-btn:hover { background: var(--color-surface-muted); color: var(--color-text-secondary); }
+
+    /* ── Mobile Bottom Bar ────────────────────────── */
+    .demo-mobile {
+      width: 375px;
+      height: 680px;
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      position: relative;
+      background: var(--color-surface-bg);
+    }
+
+    .mobile-content {
+      padding: var(--spacing-lg);
+      padding-bottom: 80px;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xl);
+    }
+
+    .bottom-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--color-surface-card);
+      border-top: 1px solid var(--color-surface-divider);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: var(--spacing-xs) var(--spacing-sm);
+      padding-bottom: calc(var(--spacing-xs) + 4px);
+    }
+
+    .bottom-tab {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-xs);
+      padding: var(--spacing-xs) var(--spacing-sm);
+      border: none;
+      cursor: pointer;
+      transition: color var(--duration-fast) var(--ease-default);
+      background: transparent;
+      color: var(--color-text-tertiary);
+    }
+
+    .bottom-tab.active {
+      color: var(--color-primary);
+    }
+
+    .bottom-tab:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+
+    .bottom-tab .tab-icon {
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .bottom-tab .tab-label {
+      font-size: 10px;
+      line-height: 1.4;
+    }
+
+    /* ── Layout ──────────────────────────────────── */
+    .previews {
+      display: flex;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+
+    .preview-col {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .skeleton {
+      background: var(--color-surface-muted);
+      border-radius: var(--radius-card);
+      height: 180px;
+      animation: pulse 2s ease-in-out infinite;
+      max-width: 500px;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <div class="previews">
+
+      <!-- Desktop layout -->
+      <div class="preview-col">
+        <p class="section-title">Desktop — Sidebar (Home Active)</p>
+        <div class="demo-desktop">
+          <div class="sidebar">
+            <div class="sidebar-brand">Clean Shopper</div>
+            <div class="sidebar-tabs">
+              <button class="sidebar-tab active">
+                <span class="tab-icon">&#8962;</span>
+                <span>Home</span>
+              </button>
+              <button class="sidebar-tab">
+                <span class="tab-icon">&#9825;</span>
+                <span>Library</span>
+              </button>
+              <button class="sidebar-tab">
+                <span class="tab-icon">&#9776;</span>
+                <span>Shopping List</span>
+              </button>
+              <button class="sidebar-tab">
+                <span class="tab-icon">&#9881;</span>
+                <span>Preferences</span>
+              </button>
+            </div>
+          </div>
+          <div class="desktop-content">
+            <div class="product-card">
+              <div class="card-header">
+                <div>
+                  <div class="card-title">Dr. Bronner's Pure Castile Soap</div>
+                  <div class="card-brand">Dr. Bronner's</div>
+                </div>
+                <span class="rating-badge clean">Clean</span>
+              </div>
+              <p class="card-description">Organic, fair trade, no synthetic preservatives or detergents.</p>
+              <div class="card-footer">
+                <span class="badge neutral">Personal Care</span>
+                <div class="card-actions">
+                  <button class="icon-btn" aria-label="Save">&#9825;</button>
+                  <button class="icon-btn" aria-label="Add">&#65291;</button>
+                </div>
+              </div>
+            </div>
+            <div class="skeleton"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile layout -->
+      <div class="preview-col">
+        <p class="section-title">Mobile — Bottom Tab Bar (Home Active)</p>
+        <div class="demo-mobile">
+          <div class="mobile-content">
+            <div class="product-card" style="max-width: 100%;">
+              <div class="card-header">
+                <div>
+                  <div class="card-title">Dr. Bronner's Pure Castile Soap</div>
+                  <div class="card-brand">Dr. Bronner's</div>
+                </div>
+                <span class="rating-badge clean">Clean</span>
+              </div>
+              <p class="card-description">Organic, fair trade, no synthetic preservatives or detergents.</p>
+              <div class="card-footer">
+                <span class="badge neutral">Personal Care</span>
+                <div class="card-actions">
+                  <button class="icon-btn" aria-label="Save">&#9825;</button>
+                  <button class="icon-btn" aria-label="Add">&#65291;</button>
+                </div>
+              </div>
+            </div>
+            <div class="skeleton" style="max-width: 100%;"></div>
+          </div>
+          <div class="bottom-bar">
+            <button class="bottom-tab active">
+              <span class="tab-icon">&#8962;</span>
+              <span class="tab-label">Home</span>
+            </button>
+            <button class="bottom-tab">
+              <span class="tab-icon">&#9825;</span>
+              <span class="tab-label">Library</span>
+            </button>
+            <button class="bottom-tab">
+              <span class="tab-icon">&#9776;</span>
+              <span class="tab-label">Shopping List</span>
+            </button>
+            <button class="bottom-tab">
+              <span class="tab-icon">&#9881;</span>
+              <span class="tab-label">Preferences</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

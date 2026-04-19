@@ -122,61 +122,12 @@ Size md: text-label uppercase
 
 ## 3. ProductCard *(exists)*
 
-**Purpose:** Displays a product summary with name, brand, rating, category, and description.
+ProductCard has its own deep specification at `docs/component-spec/product-card.md` — it was selected as the showcase component for the case study and is documented Primer-style with variants, sizes, states, do/don't, accessibility, tokens, and composition. The live interactive version renders at `/spec/product-card` in the running app.
 
-**File:** `src/components/ProductCard.tsx` (already implemented)
-
-### Props
-
-| Prop | Type | Required | Default | Description |
-| --- | --- | --- | --- | --- |
-| `name` | `string` | yes | — | Product name |
-| `brand` | `string` | yes | — | Brand name |
-| `rating` | `'clean' \ | 'caution' \ | 'avoid'` | yes | — | Product safety rating |
-| `category` | `string` | yes | — | Product category label |
-| `description` | `string` | yes | — | Short product description |
-| `onSave` | `() => void` | no | — | Callback for save-to-library action |
-| `onAddToList` | `() => void` | no | — | Callback for add-to-shopping-list action |
-| `saved` | `boolean` | no | `false` | Whether product is already saved |
-| `onClick` | `() => void` | no | — | Opens product detail modal |
-
-### Visual Structure
-
-```
-Container: bg-surface-card rounded-card p-lg
-           transition-shadow duration-base ease-default hover:shadow-hover
-Header:    flex justify-between items-start gap-sm mb-sm
-  Title:   text-h4 text-text-primary
-  Brand:   text-small text-text-tertiary mt-xs
-  Rating:  <RatingBadge /> (top-right)
-Body:      text-body text-text-secondary mb-md
-Footer:    flex justify-between items-center
-  Category: <Badge variant="neutral" />
-  Actions:  <IconButton /> for save + add-to-list
-```
-
-### States
-
-| State | Styles |
-| --- | --- |
-| Default | No shadow, flat on `bg-surface-bg` |
-| Hover | `shadow-hover` via transition |
-| Saved | Save IconButton shows filled state |
-| Loading | Skeleton placeholder: `bg-surface-muted rounded-card animate-pulse h-[180px]`. No content rendered — just the pulsing card shape. Used while AI search results stream in. |
-
-### Modification Notes
-
-The existing implementation needs these additions to support all JTBD:
-- `onSave`, `onAddToList`, and `saved` props
-- Footer row with action IconButtons
-- Refactor inline rating badge to use the standalone `RatingBadge` component
-- Refactor inline category tag to use the standalone `Badge` component
-
-### Usage Rules
-
-- Use in search results, product library, and comparison selection
-- Do not use for shopping list items — use ShoppingListItem instead (more compact)
-- Always provide all required props; truncate description to ~120 chars at the data layer
+**Quick summary:** Displays a product summary with name, brand, rating, category, description.
+- **Variants:** `default`, `selectable`
+- **Sizes:** `default`, `compact`
+- **Composes:** `RatingBadge`, `Badge`, `IconButton`
 
 ---
 
@@ -1048,6 +999,6 @@ Modal ──> IconButton
 Build these in dependency order (leaf components first):
 
 1. **Tier 1 — Primitives:** Button, Badge, RatingBadge, IconButton, Chip
-2. **Tier 2 — Composites:** Card, SearchInput, SectionHeader, EmptyState, PreferenceTag, ScoreGauge, ShoppingListItem, NavBar
+2. **Tier 2 — Composites:** Card, SearchInput, SectionHeader, EmptyState, PreferenceTag, ScoreGauge, ShoppingListItem
 3. **Tier 3 — Features:** IngredientList, ComparisonPanel, SwapCard, Modal
 4. **Existing (modify):** ProductCard, Toast

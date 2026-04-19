@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WCAG AA Contrast Corrections</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #FAF7F2;
+      padding: 48px;
+      color: #1D1D1D;
+    }
+    h1 {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      font-size: 14px;
+      color: #6B6B6B;
+      margin-bottom: 40px;
+    }
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      max-width: 820px;
+    }
+    .column-header {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #9B9B9B;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #EBE7E0;
+      margin-bottom: 20px;
+    }
+    .column-header.after {
+      color: #3A5C35;
+    }
+    .swatch-row {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .swatch {
+      border-radius: 12px;
+      padding: 20px 24px;
+      position: relative;
+    }
+    .swatch-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .swatch-text {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+    .swatch-meta {
+      font-size: 12px;
+      opacity: 0.7;
+    }
+    .contrast-badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      letter-spacing: 0.02em;
+    }
+    .fail {
+      background: rgba(154, 106, 106, 0.15);
+      color: #9A6A6A;
+    }
+    .pass {
+      background: rgba(58, 92, 53, 0.12);
+      color: #3A5C35;
+    }
+
+    /* Before colors */
+    .clean-before { background: #DCE6D8; }
+    .clean-before .swatch-label,
+    .clean-before .swatch-text { color: #6A8362; }
+    .clean-before .swatch-meta { color: #6A8362; }
+
+    .caution-before { background: #F0E4C8; }
+    .caution-before .swatch-label,
+    .caution-before .swatch-text { color: #B8943D; }
+    .caution-before .swatch-meta { color: #B8943D; }
+
+    .avoid-before { background: #ECDCDC; }
+    .avoid-before .swatch-label,
+    .avoid-before .swatch-text { color: #9A6A6A; }
+    .avoid-before .swatch-meta { color: #9A6A6A; }
+
+    .tertiary-before { background: #FFFFFF; }
+    .tertiary-before .swatch-text { color: #9B9B9B; }
+    .tertiary-before .swatch-meta { color: #9B9B9B; }
+
+    /* After colors */
+    .clean-after { background: #DCE6D8; }
+    .clean-after .swatch-label,
+    .clean-after .swatch-text { color: #3A5C35; }
+    .clean-after .swatch-meta { color: #3A5C35; }
+
+    .caution-after { background: #F0E4C8; }
+    .caution-after .swatch-label,
+    .caution-after .swatch-text { color: #6B5020; }
+    .caution-after .swatch-meta { color: #6B5020; }
+
+    .avoid-after { background: #ECDCDC; }
+    .avoid-after .swatch-label,
+    .avoid-after .swatch-text { color: #6B3535; }
+    .avoid-after .swatch-meta { color: #6B3535; }
+
+    .tertiary-after { background: #FFFFFF; }
+    .tertiary-after .swatch-text { color: #767676; }
+    .tertiary-after .swatch-meta { color: #767676; }
+
+    .arrow-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      grid-column: 1 / -1;
+      margin: -12px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>WCAG AA Contrast Corrections</h1>
+  <p class="subtitle">Semantic text colors adjusted to meet minimum 4.5:1 contrast ratio while preserving the muted, calm aesthetic.</p>
+
+  <div class="comparison-grid">
+    <div>
+      <div class="column-header">Before — Original Palette</div>
+      <div class="swatch-row">
+        <div class="swatch clean-before">
+          <span class="contrast-badge fail">3.2:1 FAIL</span>
+          <div class="swatch-label">Clean</div>
+          <div class="swatch-text">All ingredients rated low-concern</div>
+          <div class="swatch-meta">#6A8362 on #DCE6D8</div>
+        </div>
+        <div class="swatch caution-before">
+          <span class="contrast-badge fail">2.8:1 FAIL</span>
+          <div class="swatch-label">Caution</div>
+          <div class="swatch-text">Some ingredients of moderate concern</div>
+          <div class="swatch-meta">#B8943D on #F0E4C8</div>
+        </div>
+        <div class="swatch avoid-before">
+          <span class="contrast-badge fail">3.0:1 FAIL</span>
+          <div class="swatch-label">Avoid</div>
+          <div class="swatch-text">High-concern ingredients present</div>
+          <div class="swatch-meta">#9A6A6A on #ECDCDC</div>
+        </div>
+        <div class="swatch tertiary-before" style="border: 1px solid #EBE7E0;">
+          <span class="contrast-badge fail">2.8:1 FAIL</span>
+          <div class="swatch-label" style="color: #9B9B9B;">Tertiary Text</div>
+          <div class="swatch-text">Timestamps, metadata, counts</div>
+          <div class="swatch-meta">#9B9B9B on #FFFFFF</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="column-header after">After — WCAG AA Corrected</div>
+      <div class="swatch-row">
+        <div class="swatch clean-after">
+          <span class="contrast-badge pass">5.9:1 PASS</span>
+          <div class="swatch-label">Clean</div>
+          <div class="swatch-text">All ingredients rated low-concern</div>
+          <div class="swatch-meta">#3A5C35 on #DCE6D8</div>
+        </div>
+        <div class="swatch caution-after">
+          <span class="contrast-badge pass">5.9:1 PASS</span>
+          <div class="swatch-label">Caution</div>
+          <div class="swatch-text">Some ingredients of moderate concern</div>
+          <div class="swatch-meta">#6B5020 on #F0E4C8</div>
+        </div>
+        <div class="swatch avoid-after">
+          <span class="contrast-badge pass">7.2:1 PASS</span>
+          <div class="swatch-label">Avoid</div>
+          <div class="swatch-text">High-concern ingredients present</div>
+          <div class="swatch-meta">#6B3535 on #ECDCDC</div>
+        </div>
+        <div class="swatch tertiary-after" style="border: 1px solid #EBE7E0;">
+          <span class="contrast-badge pass">4.5:1 PASS</span>
+          <div class="swatch-label" style="color: #767676;">Tertiary Text</div>
+          <div class="swatch-text">Timestamps, metadata, counts</div>
+          <div class="swatch-meta">#767676 on #FFFFFF</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

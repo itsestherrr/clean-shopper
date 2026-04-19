@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prompt Optimizer — Claude Code</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #0d1117;
+      --surface:    #161b22;
+      --surface-2:  #21262d;
+      --border:     #30363d;
+      --border-2:   #3d444d;
+      --text:       #e6edf3;
+      --muted:      #8b949e;
+      --strong:     #3fb950;
+      --warn:       #d29922;
+      --crit:       #f85149;
+      --accent:     #58a6ff;
+      --mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'SF Mono', Consolas, monospace;
+      --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+      padding: 28px 20px;
+      line-height: 1.5;
+    }
+
+    .wrap { max-width: 860px; margin: 0 auto; }
+
+    /* ── Header ── */
+    .hd { margin-bottom: 28px; }
+    .hd h1 { font-size: 18px; font-weight: 600; letter-spacing: -0.02em; }
+    .hd p  { color: var(--muted); font-size: 13px; margin-top: 3px; }
+
+    /* ── Config bar ── */
+    .config {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .config-item { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 200px; }
+    .config-label { font-size: 12px; color: var(--muted); white-space: nowrap; }
+    .config input {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 5px 9px;
+      flex: 1;
+      outline: none;
+      min-width: 0;
+    }
+    .config input:focus { border-color: var(--accent); }
+    .key-status { font-size: 11px; white-space: nowrap; }
+
+    /* ── Buttons ── */
+    .btn {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      cursor: pointer;
+      font-family: var(--sans);
+      font-size: 13px;
+      padding: 6px 14px;
+      transition: background 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+    .btn:hover { background: #2d333b; border-color: var(--accent); }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; pointer-events: none; }
+    .btn-save { font-size: 12px; padding: 5px 11px; }
+    .btn-primary { background: #1f6feb; border-color: #1f6feb; color: #fff; }
+    .btn-primary:hover { background: #388bfd; border-color: #388bfd; }
+    .btn-ghost { background: transparent; border-color: transparent; color: var(--muted); font-size: 12px; }
+    .btn-ghost:hover { color: var(--text); border-color: var(--border); background: var(--surface-2); }
+    .btn-danger { background: transparent; border-color: transparent; color: var(--crit); font-size: 12px; opacity: 0.7; }
+    .btn-danger:hover { opacity: 1; border-color: var(--crit); background: rgba(248,81,73,0.08); }
+
+    /* ── Input section ── */
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 8px;
+    }
+    textarea {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.65;
+      padding: 14px;
+      resize: vertical;
+      width: 100%;
+      min-height: 160px;
+      outline: none;
+      tab-size: 2;
+      transition: border-color 0.15s;
+    }
+    textarea:focus { border-color: var(--accent); }
+    textarea::placeholder { color: var(--border-2); }
+    .input-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+    .char-count { font-size: 12px; color: var(--muted); }
+
+    /* ── History strip ── */
+    .history-wrap { margin-bottom: 24px; }
+    .history-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .history-strip {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+    }
+    .history-strip::-webkit-scrollbar { height: 4px; }
+    .history-strip::-webkit-scrollbar-track { background: var(--surface); }
+    .history-strip::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    .iter-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 9px 13px;
+      min-width: 100px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      flex-shrink: 0;
+      user-select: none;
+    }
+    .iter-card:hover { border-color: var(--border-2); }
+    .iter-card.active { border-color: var(--accent); background: rgba(31,111,235,0.08); }
+    .iter-round { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+    .iter-dots { display: flex; gap: 3px; flex-wrap: wrap; }
+    .dot {
+      width: 7px; height: 7px; border-radius: 50%;
+    }
+    .dot.s { background: var(--strong); }
+    .dot.w { background: var(--warn); }
+    .dot.c { background: var(--crit); }
+
+    /* ── Error ── */
+    .error {
+      display: none;
+      background: rgba(248,81,73,0.1);
+      border: 1px solid rgba(248,81,73,0.3);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--crit);
+      font-size: 13px;
+      margin-bottom: 16px;
+    }
+    .error.on { display: block; }
+
+    /* ── Loading ── */
+    .loading {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 36px;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .loading.on { display: flex; }
+    .spin {
+      width: 16px; height: 16px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+      flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Results ── */
+    .results { display: none; }
+    .results.on { display: block; animation: fadeUp 0.25s ease; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Score bar */
+    .score-bar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 11px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .score-item { display: flex; align-items: center; gap: 7px; }
+    .score-pip { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; }
+    .score-pip.s { background: var(--strong); }
+    .score-pip.w { background: var(--warn); }
+    .score-pip.c { background: var(--crit); }
+    .score-n { font-weight: 600; font-size: 13px; }
+    .score-lbl { font-size: 13px; color: var(--muted); }
+    .score-sep { width: 1px; height: 16px; background: var(--border); }
+
+    /* Dimensions */
+    .dims { display: flex; flex-direction: column; gap: 9px; margin-bottom: 24px; }
+    .dim {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--border);
+      border-radius: 8px;
+      padding: 13px 16px;
+      display: grid;
+      grid-template-columns: 170px 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+    .dim.s { border-left-color: var(--strong); }
+    .dim.w { border-left-color: var(--warn); }
+    .dim.c { border-left-color: var(--crit); }
+    .dim-left { display: flex; flex-direction: column; gap: 5px; }
+    .dim-name { font-size: 13px; font-weight: 600; }
+    .badge {
+      display: inline-flex;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 10px;
+      width: fit-content;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .badge.s { background: rgba(63,185,80,0.15);  color: var(--strong); }
+    .badge.w { background: rgba(210,153,34,0.15); color: var(--warn); }
+    .badge.c { background: rgba(248,81,73,0.15);  color: var(--crit); }
+    .dim-right { display: flex; flex-direction: column; gap: 7px; }
+    .diag { font-size: 13px; color: var(--text); }
+    .sugg {
+      font-size: 12px;
+      color: var(--muted);
+      padding: 7px 10px 7px 12px;
+      background: var(--bg);
+      border-radius: 5px;
+      border-left: 2px solid var(--border-2);
+      line-height: 1.55;
+    }
+    .sugg::before { content: "→ "; color: var(--accent); }
+
+    /* Revised prompt panel */
+    .revised-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .revised-head {
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border);
+      padding: 9px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .revised-head-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+    .revised-head-actions { display: flex; gap: 6px; }
+    .revised-body {
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.65;
+      padding: 16px;
+      color: var(--text);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    /* Changes box */
+    .changes-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 28px;
+    }
+    .changes-box h3 {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 8px;
+    }
+    .changes-box p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    /* ── Responsive ── */
+    @media (max-width: 580px) {
+      .dim { grid-template-columns: 1fr; gap: 9px; }
+      .dim-left { flex-direction: row; align-items: center; gap: 10px; }
+      .config-item { min-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hd">
+    <h1>Prompt Optimizer</h1>
+    <p>Analyze and improve Claude Code prompts across 7 dimensions</p>
+  </div>
+
+  <!-- Config -->
+  <div class="config">
+    <div class="config-item">
+      <span class="config-label">API key</span>
+      <input type="password" id="apiKey" placeholder="sk-ant-…" autocomplete="off" />
+      <button class="btn btn-save" onclick="saveKey()">Save</button>
+      <span class="key-status" id="keyStatus"></span>
+    </div>
+    <div class="config-item" style="flex: 0 0 auto; min-width: 0;">
+      <span class="config-label">Model</span>
+      <input type="text" id="model" value="claude-opus-4-6" style="min-width:200px;" />
+    </div>
+  </div>
+
+  <!-- Input -->
+  <div style="margin-bottom: 24px;">
+    <div class="section-label">Your prompt</div>
+    <textarea
+      id="prompt"
+      placeholder="Paste the Claude Code prompt you want to optimize…"
+      oninput="updateCount()"
+    ></textarea>
+    <div class="input-footer">
+      <span class="char-count" id="charCount">0 characters</span>
+      <button class="btn btn-primary" id="analyzeBtn" onclick="analyze()">Analyze →</button>
+    </div>
+  </div>
+
+  <!-- History -->
+  <div class="history-wrap" id="historyWrap" style="display:none">
+    <div class="history-head">
+      <div class="section-label" style="margin:0">Iteration history</div>
+      <button class="btn btn-danger" onclick="clearHistory()">Clear</button>
+    </div>
+    <div class="history-strip" id="historyStrip"></div>
+  </div>
+
+  <!-- Error -->
+  <div class="error" id="errBox"></div>
+
+  <!-- Loading -->
+  <div class="loading" id="loader">
+    <div class="spin"></div>
+    Analyzing your prompt…
+  </div>
+
+  <!-- Results -->
+  <div class="results" id="results">
+
+    <div class="score-bar" id="scoreBar"></div>
+
+    <div class="section-label">Dimension analysis</div>
+    <div class="dims" id="dims"></div>
+
+    <div class="section-label">Revised prompt</div>
+    <div class="revised-panel">
+      <div class="revised-head">
+        <span class="revised-head-label">Optimized version</span>
+        <div class="revised-head-actions">
+          <button class="btn btn-ghost" id="copyBtn" onclick="copyRevised()">Copy</button>
+          <button class="btn btn-primary" onclick="useRevised()">Use this version →</button>
+        </div>
+      </div>
+      <div class="revised-body" id="revisedBody"></div>
+    </div>
+
+    <div class="changes-box">
+      <h3>What changed and why</h3>
+      <p id="changesText"></p>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────
+let iters = [];
+let current = -1;
+
+// ── Init ───────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  const k = localStorage.getItem('po_api_key');
+  if (k) {
+    document.getElementById('apiKey').value = k;
+    setKeyStatus(true);
+  }
+  const m = localStorage.getItem('po_model');
+  if (m) document.getElementById('model').value = m;
+
+  const saved = localStorage.getItem('po_iters');
+  if (saved) {
+    try {
+      iters = JSON.parse(saved);
+      if (iters.length) { renderHistory(); showIter(iters.length - 1); }
+    } catch { iters = []; }
+  }
+  updateCount();
+});
+
+// ── Config ─────────────────────────────────────────────
+function saveKey() {
+  const k = document.getElementById('apiKey').value.trim();
+  if (!k) return;
+  localStorage.setItem('po_api_key', k);
+  setKeyStatus(true);
+}
+
+function setKeyStatus(ok) {
+  const el = document.getElementById('keyStatus');
+  el.textContent = ok ? '✓ Saved' : '';
+  el.style.color = ok ? 'var(--strong)' : '';
+}
+
+function updateCount() {
+  const n = document.getElementById('prompt').value.length;
+  document.getElementById('charCount').textContent = n.toLocaleString() + ' characters';
+}
+
+// ── Analyze ────────────────────────────────────────────
+async function analyze() {
+  const apiKey = localStorage.getItem('po_api_key') || document.getElementById('apiKey').value.trim();
+  if (!apiKey) { showErr('Enter and save your Anthropic API key first.'); return; }
+
+  const prompt = document.getElementById('prompt').value.trim();
+  if (!prompt) { showErr('Paste a prompt to analyze.'); return; }
+
+  const model = document.getElementById('model').value.trim() || 'claude-opus-4-6';
+  localStorage.setItem('po_model', model);
+
+  clearErr();
+  setLoading(true);
+  document.getElementById('results').classList.remove('on');
+  document.getElementById('analyzeBtn').disabled = true;
+
+  try {
+    const data = await callClaude(apiKey, model, prompt);
+    const iter = { round: iters.length + 1, prompt, ...data };
+    iters.push(iter);
+    localStorage.setItem('po_iters', JSON.stringify(iters));
+    current = iters.length - 1;
+    renderHistory();
+    showIter(current);
+  } catch (e) {
+    showErr(e.message);
+  } finally {
+    setLoading(false);
+    document.getElementById('analyzeBtn').disabled = false;
+  }
+}
+
+async function callClaude(apiKey, model, prompt) {
+  const sys = `You are a rigorous prompt engineering expert for Claude Code. Analyze the supplied prompt across exactly 7 dimensions and return ONLY valid JSON — no markdown fences, no prose outside the JSON.
+
+Required structure:
+{
+  "dimensions": [
+    {
+      "id": "clarity",
+      "name": "Clarity",
+      "rating": "Strong" | "Needs Work" | "Critical",
+      "diagnosis": "One sentence: what is strong, or exactly what is wrong.",
+      "suggestion": "Specific, concrete fix — or 'No changes needed.' if Strong."
+    }
+    /* ... 6 more ... */
+  ],
+  "revised_prompt": "Complete revised prompt with all issues resolved.",
+  "changes_summary": "2–3 sentences explaining the key changes and their rationale."
+}
+
+The 7 dimensions in order (use these exact ids and names):
+1. id:"clarity"       name:"Clarity"               — Is the instruction unambiguous? Could it be read two ways?
+2. id:"context"       name:"Context"               — Does Claude have what it needs? Missing stack, file paths, constraints?
+3. id:"scope"         name:"Scope"                 — Is the task bounded? Will vagueness cause Claude to drift?
+4. id:"role_persona"  name:"Role & Persona"        — Has the prompt established who Claude is or what lens to apply?
+5. id:"sequencing"    name:"Instruction Sequencing"— Are constraints declared before the task, not buried after?
+6. id:"references"    name:"Unresolved References" — Any 'it', 'this', 'the file', 'the component' without a clear antecedent?
+7. id:"efficiency"    name:"Token Efficiency"      — Is there padding, redundancy, or over-explanation that adds noise?
+
+Rating values must be exactly: "Strong", "Needs Work", or "Critical".
+Be strict. "Strong" requires genuinely clean writing, not just passable.
+The revised_prompt must be a complete, standalone, improved version — not a summary of changes.`;
+
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model,
+      max_tokens: 2048,
+      system: sys,
+      messages: [{ role: 'user', content: `Analyze this Claude Code prompt:\n\n${prompt}` }]
+    })
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error?.message || `API error ${res.status}`);
+  }
+
+  const body = await res.json();
+  const raw = body.content[0].text
+    .replace(/^```json\s*/i, '')
+    .replace(/^```\s*/i, '')
+    .replace(/```\s*$/i, '')
+    .trim();
+
+  try {
+    return JSON.parse(raw);
+  } catch {
+    throw new Error('The model returned malformed JSON. Try again.');
+  }
+}
+
+// ── Render ─────────────────────────────────────────────
+function ratingClass(r) {
+  if (r === 'Strong')     return 's';
+  if (r === 'Needs Work') return 'w';
+  return 'c';
+}
+
+function counts(dims) {
+  return dims.reduce((a, d) => {
+    const k = ratingClass(d.rating);
+    a[k] = (a[k] || 0) + 1;
+    return a;
+  }, { s:0, w:0, c:0 });
+}
+
+function renderHistory() {
+  const wrap  = document.getElementById('historyWrap');
+  const strip = document.getElementById('historyStrip');
+  wrap.style.display = iters.length ? 'block' : 'none';
+  strip.innerHTML = '';
+  iters.forEach((iter, i) => {
+    const c = counts(iter.dimensions);
+    const card = document.createElement('div');
+    card.className = 'iter-card' + (i === current ? ' active' : '');
+    card.innerHTML = `
+      <div class="iter-round">Round ${iter.round}</div>
+      <div class="iter-dots">
+        ${rep(c.s, '<div class="dot s"></div>')}
+        ${rep(c.w, '<div class="dot w"></div>')}
+        ${rep(c.c, '<div class="dot c"></div>')}
+      </div>`;
+    card.onclick = () => {
+      current = i;
+      document.querySelectorAll('.iter-card').forEach((el, j) => el.classList.toggle('active', j === i));
+      showIter(i);
+    };
+    strip.appendChild(card);
+  });
+}
+
+function rep(n, html) { return Array(n).fill(html).join(''); }
+
+function showIter(idx) {
+  const iter = iters[idx];
+  if (!iter) return;
+  current = idx;
+
+  const c = counts(iter.dimensions);
+
+  // Score bar
+  document.getElementById('scoreBar').innerHTML = `
+    <div class="score-item"><div class="score-pip s"></div><span class="score-n">${c.s}</span><span class="score-lbl">Strong</span></div>
+    <div class="score-sep"></div>
+    <div class="score-item"><div class="score-pip w"></div><span class="score-n">${c.w}</span><span class="score-lbl">Needs Work</span></div>
+    <div class="score-sep"></div>
+    <div class="score-item"><div class="score-pip c"></div><span class="score-n">${c.c}</span><span class="score-lbl">Critical</span></div>
+    <div class="score-sep"></div>
+    <span style="font-size:12px;color:var(--muted)">Round ${iter.round} of ${iters.length}</span>
+  `;
+
+  // Dimensions
+  const dimsEl = document.getElementById('dims');
+  dimsEl.innerHTML = '';
+  iter.dimensions.forEach(d => {
+    const rc = ratingClass(d.rating);
+    const card = document.createElement('div');
+    card.className = `dim ${rc}`;
+    card.innerHTML = `
+      <div class="dim-left">
+        <div class="dim-name">${esc(d.name)}</div>
+        <div class="badge ${rc}">${esc(d.rating)}</div>
+      </div>
+      <div class="dim-right">
+        <div class="diag">${esc(d.diagnosis)}</div>
+        ${rc !== 's' ? `<div class="sugg">${esc(d.suggestion)}</div>` : ''}
+      </div>`;
+    dimsEl.appendChild(card);
+  });
+
+  // Revised prompt
+  document.getElementById('revisedBody').textContent = iter.revised_prompt || '';
+
+  // Changes
+  document.getElementById('changesText').textContent = iter.changes_summary || '';
+
+  document.getElementById('results').classList.add('on');
+}
+
+// ── Actions ────────────────────────────────────────────
+function useRevised() {
+  const iter = iters[current];
+  if (!iter) return;
+  document.getElementById('prompt').value = iter.revised_prompt;
+  updateCount();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function copyRevised() {
+  const iter = iters[current];
+  if (!iter) return;
+  navigator.clipboard.writeText(iter.revised_prompt).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 1600);
+  });
+}
+
+function clearHistory() {
+  if (!confirm('Clear all iteration history?')) return;
+  iters = [];
+  current = -1;
+  localStorage.removeItem('po_iters');
+  document.getElementById('historyWrap').style.display = 'none';
+  document.getElementById('results').classList.remove('on');
+}
+
+// ── Util ───────────────────────────────────────────────
+function showErr(msg) { const el = document.getElementById('errBox'); el.textContent = msg; el.classList.add('on'); }
+function clearErr()   { document.getElementById('errBox').classList.remove('on'); }
+function setLoading(on) { document.getElementById('loader').classList.toggle('on', on); }
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s || '';
+  return d.innerHTML;
+}
+</script>
+</body>
+</html>

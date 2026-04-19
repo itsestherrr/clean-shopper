@@ -36,12 +36,15 @@ Clean Shopper feels focused, calm, and trustworthy — like a well-designed pers
 | Token Name | Hex Value | Usage Rule |
 | --- | --- | --- |
 | clean | #3A5C35 | Text and icon color for clean-rated products. Not used for any other purpose. WCAG AA: 5.9:1 on clean-bg. |
+| clean-dot | #8AAE82 | Mid-tone indicator dots and small UI elements on white surfaces. WCAG: 3.1:1 on white. |
 | clean-bg | #DCE6D8 | Background of clean rating pills, badges, and tinted summary cards |
 | clean-tint | #E6EDE2 | Light tinted surface for clean-category sections or card backgrounds |
 | caution | #6B5020 | Text and icon color for caution-rated products. Not used for generic warnings. WCAG AA: 5.9:1 on caution-bg. |
+| caution-dot | #C8A44E | Mid-tone indicator dots and small UI elements on white surfaces. WCAG: 3.0:1 on white. |
 | caution-bg | #F0E4C8 | Background of caution rating pills, badges, and tinted summary cards |
 | caution-tint | #F5EDD8 | Light tinted surface for caution-category sections |
 | avoid | #6B3535 | Text and icon color for avoid-rated products. Not used for generic errors. WCAG AA: 7.2:1 on avoid-bg. |
+| avoid-dot | #C08A8A | Mid-tone indicator dots and small UI elements on white surfaces. WCAG: 3.1:1 on white. |
 | avoid-bg | #ECDCDC | Background of avoid rating pills, badges, and tinted summary cards |
 | avoid-tint | #F2E6E6 | Light tinted surface for avoid-category sections |
 

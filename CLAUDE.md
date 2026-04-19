@@ -14,7 +14,8 @@ Single-user app. No authentication in V1. Local state plus Supabase for data per
 - Tailwind CSS -- styling
 
 ## Conventions
-- Components: PascalCase filenames, one component per file, lives in /src/components/
+- Components: PascalCase filenames, one component per file
+- Shared components reused across screens live in /src/components/. Screen-specific files live in that screen's folder under /src/features/ (e.g. /src/features/browse/). Do not mix the two.
 - Utility functions: camelCase, lives in /src/lib/
 - API calls: all external API calls through /src/lib/api/, never inline in components
 - Styling: Tailwind only. No inline styles. No CSS modules. Use Tailwind theme classes for all design token values. Never hardcode hex colors, pixel font sizes, or spacing values in components. If a needed token does not exist in the Tailwind config, add it there rather than hardcoding the value. This means bg-primary not #2D7B5E, text-h3 not text-lg, p-lg not p-4.
@@ -35,6 +36,7 @@ Single-user app. No authentication in V1. Local state plus Supabase for data per
 
 ## References
 - Component spec: See /docs/component-spec.md — use existing components before creating new ones. Follow the spec for props, states, and visual structure.
+- ProductCard deep spec: See /docs/component-spec/product-card.md — ProductCard is documented in its own file with full variants/sizes/states/accessibility treatment. Live interactive version at /spec/product-card in the app.
 - Build plan: See /docs/build-plan.md -- build phase by phase, do not jump ahead
 - Project context: See /docs/project-context.md -- full project intake and design decisions
 - Design system: See /docs/design-system.md -- follow these visual specifications for all UI work. Do not hardcode colors, font sizes, spacing, or shadows.
