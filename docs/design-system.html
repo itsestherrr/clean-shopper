@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Clean Shopper — Design System</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Surfaces */
+    --color-surface-bg: #FAF7F2;
+    --color-surface-card: #FFFFFF;
+    --color-surface-muted: #F0ECE6;
+    --color-surface-divider: #EBE7E0;
+
+    /* Primary */
+    --color-primary: #5A8384;
+    --color-primary-dark: #4A7273;
+    --color-primary-light: #DDEAEB;
+
+    /* Semantic — Clean */
+    --color-clean: #3A5C35;
+    --color-clean-dot: #8AAE82;
+    --color-clean-bg: #DCE6D8;
+    --color-clean-tint: #E6EDE2;
+
+    /* Semantic — Caution */
+    --color-caution: #6B5020;
+    --color-caution-dot: #C8A44E;
+    --color-caution-bg: #F0E4C8;
+    --color-caution-tint: #F5EDD8;
+
+    /* Semantic — Avoid */
+    --color-avoid: #6B3535;
+    --color-avoid-dot: #C08A8A;
+    --color-avoid-bg: #ECDCDC;
+    --color-avoid-tint: #F2E6E6;
+
+    /* Text */
+    --color-text-primary: #1D1D1D;
+    --color-text-secondary: #6B6B6B;
+    --color-text-tertiary: #767676;
+    --color-text-placeholder: #B5B0A8;
+
+    /* Accents */
+    --color-accent-lavender: #7A6A8A;
+    --color-accent-taupe: #8A7060;
+    --color-accent-moss: #6A8362;
+    --color-accent-slate: #5A6A7A;
+
+    /* Spacing */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    --spacing-2xl: 48px;
+    --spacing-3xl: 64px;
+
+    /* Radius */
+    --radius-badge: 6px;
+    --radius-card: 16px;
+    --radius-full: 999px;
+
+    /* Shadows */
+    --shadow-hover: 0 4px 16px rgba(100, 80, 50, 0.10);
+    --shadow-modal: 0 8px 32px rgba(100, 80, 50, 0.14);
+
+    /* Motion */
+    --duration-fast: 100ms;
+    --duration-base: 150ms;
+    --duration-slow: 250ms;
+    --duration-slower: 350ms;
+    --easing-default: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--color-text-primary);
+    background: var(--color-surface-bg);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.6;
+  }
+
+  .page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: var(--spacing-3xl) var(--spacing-2xl);
+  }
+
+  /* Typography classes mirroring @theme */
+  .t-display { font-size: 36px; line-height: 1.1; letter-spacing: -0.03em; font-weight: 700; }
+  .t-h1 { font-size: 28px; line-height: 1.2; letter-spacing: -0.025em; font-weight: 600; }
+  .t-h2 { font-size: 22px; line-height: 1.25; letter-spacing: -0.02em; font-weight: 600; }
+  .t-h3 { font-size: 16px; line-height: 1.3; letter-spacing: -0.01em; font-weight: 500; }
+  .t-h4 { font-size: 14px; line-height: 1.35; font-weight: 500; }
+  .t-body { font-size: 14px; line-height: 1.65; }
+  .t-small { font-size: 12px; line-height: 1.5; }
+  .t-label { font-size: 11px; line-height: 1.4; letter-spacing: 0.06em; font-weight: 500; text-transform: uppercase; }
+  .t-micro { font-size: 10px; line-height: 1.4; }
+
+  header.hero {
+    padding-bottom: var(--spacing-2xl);
+    margin-bottom: var(--spacing-2xl);
+    border-bottom: 1px solid var(--color-surface-divider);
+  }
+  header.hero p {
+    color: var(--color-text-secondary);
+    max-width: 640px;
+    margin: var(--spacing-sm) 0 0;
+  }
+
+  section {
+    margin-bottom: var(--spacing-3xl);
+  }
+  section > h2 {
+    margin: 0 0 var(--spacing-xs);
+  }
+  section > .section-desc {
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--spacing-xl);
+  }
+
+  /* Color swatches */
+  .swatch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--spacing-md);
+  }
+  .swatch {
+    background: var(--color-surface-card);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    border: 1px solid var(--color-surface-divider);
+  }
+  .swatch .chip {
+    height: 80px;
+  }
+  .swatch .meta {
+    padding: var(--spacing-sm) var(--spacing-md) var(--spacing-md);
+  }
+  .swatch .name { font-weight: 500; font-size: 13px; }
+  .swatch .value { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--color-text-tertiary); margin-top: 2px; }
+  .swatch .note { font-size: 11px; color: var(--color-text-secondary); margin-top: var(--spacing-xs); }
+
+  .group-title {
+    margin: var(--spacing-xl) 0 var(--spacing-md);
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    font-weight: 500;
+  }
+  .group-title:first-child { margin-top: 0; }
+
+  /* Type scale */
+  .type-row {
+    display: grid;
+    grid-template-columns: 120px 1fr auto;
+    gap: var(--spacing-lg);
+    align-items: baseline;
+    padding: var(--spacing-md) 0;
+    border-bottom: 1px solid var(--color-surface-divider);
+  }
+  .type-row:last-child { border-bottom: none; }
+  .type-row .tag { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--color-text-tertiary); }
+  .type-row .specs { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--color-text-tertiary); text-align: right; white-space: nowrap; }
+
+  /* Spacing scale */
+  .spacing-row {
+    display: grid;
+    grid-template-columns: 60px 80px 1fr;
+    gap: var(--spacing-md);
+    align-items: center;
+    padding: var(--spacing-sm) 0;
+  }
+  .spacing-row .tag { font-family: ui-monospace, Menlo, monospace; font-size: 12px; }
+  .spacing-row .val { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--color-text-tertiary); }
+  .spacing-row .bar {
+    height: 20px;
+    background: var(--color-primary);
+    border-radius: 2px;
+  }
+
+  /* Radius */
+  .radius-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-md);
+  }
+  .radius-demo {
+    background: var(--color-surface-card);
+    border: 1px solid var(--color-surface-divider);
+    padding: var(--spacing-xl);
+    text-align: center;
+  }
+  .radius-demo .box {
+    width: 100%;
+    height: 80px;
+    background: var(--color-primary-light);
+    margin: 0 auto var(--spacing-md);
+  }
+  .radius-demo .name { font-weight: 500; font-size: 13px; }
+  .radius-demo .value { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--color-text-tertiary); }
+
+  /* Shadow */
+  .shadow-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-lg);
+  }
+  .shadow-demo {
+    background: var(--color-surface-card);
+    border-radius: var(--radius-card);
+    padding: var(--spacing-xl);
+    text-align: center;
+  }
+  .shadow-demo.hover { box-shadow: var(--shadow-hover); }
+  .shadow-demo.modal { box-shadow: var(--shadow-modal); }
+  .shadow-demo .name { font-weight: 500; font-size: 13px; margin-bottom: var(--spacing-xs); }
+  .shadow-demo .value { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--color-text-tertiary); }
+
+  /* Motion */
+  .motion-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: var(--spacing-md);
+  }
+  .motion-demo {
+    background: var(--color-surface-card);
+    border-radius: var(--radius-card);
+    border: 1px solid var(--color-surface-divider);
+    padding: var(--spacing-lg);
+    cursor: pointer;
+  }
+  .motion-demo .dot {
+    width: 24px;
+    height: 24px;
+    background: var(--color-primary);
+    border-radius: var(--radius-full);
+    margin-bottom: var(--spacing-md);
+    transform: translateX(0);
+    transition-timing-function: var(--easing-default);
+  }
+  .motion-demo:hover .dot { transform: translateX(140px); }
+  .motion-demo.fast .dot { transition-duration: var(--duration-fast); }
+  .motion-demo.base .dot { transition-duration: var(--duration-base); }
+  .motion-demo.slow .dot { transition-duration: var(--duration-slow); }
+  .motion-demo.slower .dot { transition-duration: var(--duration-slower); }
+  .motion-demo .name { font-weight: 500; font-size: 13px; }
+  .motion-demo .value { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--color-text-tertiary); margin-top: 2px; }
+  .motion-demo .hint { font-size: 11px; color: var(--color-text-tertiary); margin-top: var(--spacing-sm); }
+
+  code { font-family: ui-monospace, Menlo, monospace; font-size: 12px; background: var(--color-surface-muted); padding: 2px 6px; border-radius: 4px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="hero">
+    <div class="t-label" style="color: var(--color-text-tertiary);">Clean Shopper</div>
+    <h1 class="t-display" style="margin: 8px 0 0;">Design System</h1>
+    <p class="t-body">
+      Visual reference for tokens used across the app. Source of truth:
+      <code>docs/design-system.md</code> and <code>src/styles/globals.css</code>.
+    </p>
+  </header>
+
+  <!-- ─── COLORS ─── -->
+  <section>
+    <h2 class="t-h1">Colors</h2>
+    <p class="section-desc t-body">Semantic names — always reference the token, never the hex.</p>
+
+    <div class="group-title">Surfaces</div>
+    <div class="swatch-grid">
+      <div class="swatch"><div class="chip" style="background:#FAF7F2;border-bottom:1px solid var(--color-surface-divider)"></div><div class="meta"><div class="name">surface-bg</div><div class="value">#FAF7F2</div><div class="note">App background</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#FFFFFF;border-bottom:1px solid var(--color-surface-divider)"></div><div class="meta"><div class="name">surface-card</div><div class="value">#FFFFFF</div><div class="note">Cards, modals, inputs</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#F0ECE6"></div><div class="meta"><div class="name">surface-muted</div><div class="value">#F0ECE6</div><div class="note">Muted fills, skeletons</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#EBE7E0"></div><div class="meta"><div class="name">surface-divider</div><div class="value">#EBE7E0</div><div class="note">Borders, dividers</div></div></div>
+    </div>
+
+    <div class="group-title">Primary</div>
+    <div class="swatch-grid">
+      <div class="swatch"><div class="chip" style="background:#5A8384"></div><div class="meta"><div class="name">primary</div><div class="value">#5A8384</div><div class="note">Buttons, active states</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#4A7273"></div><div class="meta"><div class="name">primary-dark</div><div class="value">#4A7273</div><div class="note">Hover on primary</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#DDEAEB"></div><div class="meta"><div class="name">primary-light</div><div class="value">#DDEAEB</div><div class="note">Active nav bg, tints</div></div></div>
+    </div>
+
+    <div class="group-title">Clean (rating)</div>
+    <div class="swatch-grid">
+      <div class="swatch"><div class="chip" style="background:#3A5C35"></div><div class="meta"><div class="name">clean</div><div class="value">#3A5C35</div><div class="note">Label / dark text on tint</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#8AAE82"></div><div class="meta"><div class="name">clean-dot</div><div class="value">#8AAE82</div><div class="note">Ingredient dot</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#DCE6D8"></div><div class="meta"><div class="name">clean-bg</div><div class="value">#DCE6D8</div><div class="note">Badge background</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#E6EDE2"></div><div class="meta"><div class="name">clean-tint</div><div class="value">#E6EDE2</div><div class="note">Row tint</div></div></div>
+    </div>
+
+    <div class="group-title">Caution (rating)</div>
+    <div class="swatch-grid">
+      <div class="swatch"><div class="chip" style="background:#6B5020"></div><div class="meta"><div class="name">caution</div><div class="value">#6B5020</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#C8A44E"></div><div class="meta"><div class="name">caution-dot</div><div class="value">#C8A44E</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#F0E4C8"></div><div class="meta"><div class="name">caution-bg</div><div class="value">#F0E4C8</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#F5EDD8"></div><div class="meta"><div class="name">caution-tint</div><div class="value">#F5EDD8</div></div></div>
+    </div>
+
+    <div class="group-title">Avoid (rating)</div>
+    <div class="swatch-grid">
+      <div class="swatch"><div class="chip" style="background:#6B3535"></div><div class="meta"><div class="name">avoid</div><div class="value">#6B3535</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#C08A8A"></div><div class="meta"><div class="name">avoid-dot</div><div class="value">#C08A8A</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#ECDCDC"></div><div class="meta"><div class="name">avoid-bg</div><div class="value">#ECDCDC</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#F2E6E6"></div><div class="meta"><div class="name">avoid-tint</div><div class="value">#F2E6E6</div></div></div>
+    </div>
+
+    <div class="group-title">Text</div>
+    <div class="swatch-grid">
+      <div class="swatch"><div class="chip" style="background:#1D1D1D"></div><div class="meta"><div class="name">text-primary</div><div class="value">#1D1D1D</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#6B6B6B"></div><div class="meta"><div class="name">text-secondary</div><div class="value">#6B6B6B</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#767676"></div><div class="meta"><div class="name">text-tertiary</div><div class="value">#767676</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#B5B0A8"></div><div class="meta"><div class="name">text-placeholder</div><div class="value">#B5B0A8</div></div></div>
+    </div>
+
+    <div class="group-title">Accents</div>
+    <div class="swatch-grid">
+      <div class="swatch"><div class="chip" style="background:#7A6A8A"></div><div class="meta"><div class="name">accent-lavender</div><div class="value">#7A6A8A</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#8A7060"></div><div class="meta"><div class="name">accent-taupe</div><div class="value">#8A7060</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#6A8362"></div><div class="meta"><div class="name">accent-moss</div><div class="value">#6A8362</div></div></div>
+      <div class="swatch"><div class="chip" style="background:#5A6A7A"></div><div class="meta"><div class="name">accent-slate</div><div class="value">#5A6A7A</div></div></div>
+    </div>
+  </section>
+
+  <!-- ─── TYPOGRAPHY ─── -->
+  <section>
+    <h2 class="t-h1">Typography</h2>
+    <p class="section-desc t-body">Inter, variable weight. Always use the token, never raw <code>font-size</code>.</p>
+
+    <div>
+      <div class="type-row"><span class="tag">display</span><span class="t-display">Display</span><span class="specs">36 / 1.1 / 700</span></div>
+      <div class="type-row"><span class="tag">h1</span><span class="t-h1">Heading 1</span><span class="specs">28 / 1.2 / 600</span></div>
+      <div class="type-row"><span class="tag">h2</span><span class="t-h2">Heading 2</span><span class="specs">22 / 1.25 / 600</span></div>
+      <div class="type-row"><span class="tag">h3</span><span class="t-h3">Heading 3</span><span class="specs">16 / 1.3 / 500</span></div>
+      <div class="type-row"><span class="tag">h4</span><span class="t-h4">Heading 4</span><span class="specs">14 / 1.35 / 500</span></div>
+      <div class="type-row"><span class="tag">body</span><span class="t-body">Body text — used for paragraphs and most prose.</span><span class="specs">14 / 1.65 / 400</span></div>
+      <div class="type-row"><span class="tag">small</span><span class="t-small">Small text</span><span class="specs">12 / 1.5 / 400</span></div>
+      <div class="type-row"><span class="tag">label</span><span class="t-label">Label uppercase</span><span class="specs">11 / 1.4 / 500</span></div>
+      <div class="type-row"><span class="tag">micro</span><span class="t-micro">Micro text</span><span class="specs">10 / 1.4 / 400</span></div>
+    </div>
+  </section>
+
+  <!-- ─── SPACING ─── -->
+  <section>
+    <h2 class="t-h1">Spacing</h2>
+    <p class="section-desc t-body">4px base scale. Used for padding, margin, gap.</p>
+
+    <div>
+      <div class="spacing-row"><span class="tag">xs</span><span class="val">4px</span><div class="bar" style="width: 4px;"></div></div>
+      <div class="spacing-row"><span class="tag">sm</span><span class="val">8px</span><div class="bar" style="width: 8px;"></div></div>
+      <div class="spacing-row"><span class="tag">md</span><span class="val">16px</span><div class="bar" style="width: 16px;"></div></div>
+      <div class="spacing-row"><span class="tag">lg</span><span class="val">24px</span><div class="bar" style="width: 24px;"></div></div>
+      <div class="spacing-row"><span class="tag">xl</span><span class="val">32px</span><div class="bar" style="width: 32px;"></div></div>
+      <div class="spacing-row"><span class="tag">2xl</span><span class="val">48px</span><div class="bar" style="width: 48px;"></div></div>
+      <div class="spacing-row"><span class="tag">3xl</span><span class="val">64px</span><div class="bar" style="width: 64px;"></div></div>
+    </div>
+  </section>
+
+  <!-- ─── RADIUS ─── -->
+  <section>
+    <h2 class="t-h1">Radius</h2>
+    <p class="section-desc t-body">Three levels: small chips, cards & modals, and pills/circles.</p>
+
+    <div class="radius-grid">
+      <div class="radius-demo">
+        <div class="box" style="border-radius: var(--radius-badge);"></div>
+        <div class="name">badge</div>
+        <div class="value">6px</div>
+      </div>
+      <div class="radius-demo">
+        <div class="box" style="border-radius: var(--radius-card);"></div>
+        <div class="name">card</div>
+        <div class="value">16px</div>
+      </div>
+      <div class="radius-demo">
+        <div class="box" style="border-radius: var(--radius-full); width: 80px;"></div>
+        <div class="name">full</div>
+        <div class="value">999px</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── SHADOWS ─── -->
+  <section>
+    <h2 class="t-h1">Shadows</h2>
+    <p class="section-desc t-body">Warm-tinted shadows — not neutral gray.</p>
+
+    <div class="shadow-grid">
+      <div class="shadow-demo hover">
+        <div class="name">shadow-hover</div>
+        <div class="value">0 4px 16px rgba(100, 80, 50, 0.10)</div>
+      </div>
+      <div class="shadow-demo modal">
+        <div class="name">shadow-modal</div>
+        <div class="value">0 8px 32px rgba(100, 80, 50, 0.14)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── MOTION ─── -->
+  <section>
+    <h2 class="t-h1">Motion</h2>
+    <p class="section-desc t-body">Hover any card to see the duration. All use the <code>default</code> easing — <code>cubic-bezier(0.4, 0, 0.2, 1)</code>.</p>
+
+    <div class="motion-grid">
+      <div class="motion-demo fast">
+        <div class="dot"></div>
+        <div class="name">fast</div>
+        <div class="value">100ms</div>
+        <div class="hint">Color changes, tiny toggles</div>
+      </div>
+      <div class="motion-demo base">
+        <div class="dot"></div>
+        <div class="name">base</div>
+        <div class="value">150ms</div>
+        <div class="hint">Default for most transitions</div>
+      </div>
+      <div class="motion-demo slow">
+        <div class="dot"></div>
+        <div class="name">slow</div>
+        <div class="value">250ms</div>
+        <div class="hint">Modal / toast enter</div>
+      </div>
+      <div class="motion-demo slower">
+        <div class="dot"></div>
+        <div class="name">slower</div>
+        <div class="value">350ms</div>
+        <div class="hint">Larger surfaces</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

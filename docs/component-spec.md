@@ -1,8 +1,8 @@
 # Component Specification: Clean Shopper V1
 
-**Version:** 1.0
-**Last Updated:** 2026-04-03
-**Components:** 19 total (2 existing, 17 new)
+**Version:** 1.1
+**Last Updated:** 2026-04-19
+**Components:** 20 documented — 11 built, 9 planned
 
 ---
 
@@ -21,7 +21,7 @@ This is the single source of truth for all reusable UI components. Before creati
 
 ---
 
-## 1. Button
+## 1. Button *(built)*
 
 **Purpose:** Primary interactive element for CTAs and form submissions across the app.
 
@@ -78,7 +78,7 @@ All hover transitions: `transition-colors duration-fast ease-default`
 
 ---
 
-## 2. RatingBadge
+## 2. RatingBadge *(built)*
 
 **Purpose:** Displays a clean/caution/avoid rating as a small colored pill with label text.
 
@@ -120,7 +120,7 @@ Size md: text-label uppercase
 
 ---
 
-## 3. ProductCard *(exists)*
+## 3. ProductCard *(built)*
 
 ProductCard has its own deep specification at `docs/component-spec/product-card.md` — it was selected as the showcase component for the case study and is documented Primer-style with variants, sizes, states, do/don't, accessibility, tokens, and composition. The live interactive version renders at `/spec/product-card` in the running app.
 
@@ -131,7 +131,7 @@ ProductCard has its own deep specification at `docs/component-spec/product-card.
 
 ---
 
-## 4. SearchInput
+## 4. SearchInput *(built)*
 
 **Purpose:** Text input for product search queries and filtering within lists.
 
@@ -183,7 +183,7 @@ Clear btn: absolute right-md text-text-tertiary (× when value is non-empty)
 
 ---
 
-## 5. Badge
+## 5. Badge *(built)*
 
 **Purpose:** Small label for displaying categories, certifications, ingredient tags, and other metadata.
 
@@ -224,7 +224,7 @@ Variants:
 
 ---
 
-## 6. Card
+## 6. Card *(planned — not yet built)*
 
 **Purpose:** Generic surface container used as a base wrapper for content panels and sections.
 
@@ -269,7 +269,7 @@ Hoverable: transition-shadow duration-base ease-default hover:shadow-hover
 
 ---
 
-## 7. Modal
+## 7. Modal *(built)*
 
 **Purpose:** Centered overlay dialog for detailed views and confirmation actions.
 
@@ -324,7 +324,7 @@ Body:     children rendered here
 
 ---
 
-## 8. Toast *(exists)*
+## 8. Toast *(built)*
 
 **Purpose:** Brief notification confirming a user action.
 
@@ -372,7 +372,7 @@ Type mapping:
 
 ---
 
-## 9. IconButton
+## 9. IconButton *(built)*
 
 **Purpose:** Small icon-only interactive element for inline actions.
 
@@ -428,7 +428,7 @@ Size md: w-9 h-9 (36px)
 
 ---
 
-## 10. SectionHeader
+## 10. SectionHeader *(planned — not yet built)*
 
 **Purpose:** Consistent section title with optional eyebrow label for dividing content areas.
 
@@ -471,7 +471,7 @@ Action:   text-small text-primary (right-aligned)
 
 ---
 
-## 11. EmptyState
+## 11. EmptyState *(built)*
 
 **Purpose:** Centered message for when a list or section has no content.
 
@@ -514,7 +514,7 @@ Action:      mt-lg (renders a Button or link)
 
 ---
 
-## 12. Chip
+## 12. Chip *(planned — not yet built; filter UI in SearchPage is currently inline checkboxes)*
 
 **Purpose:** Pill-shaped, toggleable filter element for selecting categories, certifications, or ingredient filters.
 
@@ -562,7 +562,7 @@ Selected:   bg-primary-light text-primary-dark
 
 ---
 
-## 13. IngredientList
+## 13. IngredientList *(built)*
 
 **Purpose:** Stacked list of ingredients, each with a mini rating and one-line safety explanation.
 
@@ -619,7 +619,7 @@ Each row: flex items-start gap-sm py-sm
 
 ---
 
-## 14. ComparisonPanel
+## 14. ComparisonPanel *(planned — not yet built)*
 
 **Purpose:** Side-by-side layout for comparing two products across rating, ingredients, and certifications.
 
@@ -681,7 +681,7 @@ Recommendation: mt-lg p-md bg-primary-light rounded-card
 
 ---
 
-## 15. PreferenceTag
+## 15. PreferenceTag *(planned — not yet built)*
 
 **Purpose:** Removable pill displaying a saved ingredient, brand, or certification preference.
 
@@ -729,7 +729,7 @@ Remove button: ml-xs text-current opacity-40 hover:opacity-70
 
 ---
 
-## 16. ShoppingListItem
+## 16. ShoppingListItem *(planned — not yet built)*
 
 **Purpose:** Compact row for shopping list items, optimized for scanning and checking off.
 
@@ -783,7 +783,7 @@ Remove:    <IconButton icon="×" variant="ghost" size="sm" />
 
 ---
 
-## 17. SwapCard
+## 17. SwapCard *(planned — not yet built)*
 
 **Purpose:** Displays a cleaner product alternative with a Swap Score when the searched product is rated caution or avoid.
 
@@ -852,7 +852,7 @@ Actions:   flex gap-sm
 
 ---
 
-## 18. ScoreGauge
+## 18. ScoreGauge *(planned — not yet built)*
 
 **Purpose:** Visual progress indicator showing the user's overall Clean Confidence Score.
 
@@ -902,9 +902,9 @@ Subtitle:  text-small text-text-secondary mt-xs ("clean")
 
 ---
 
-## 19. NavBar
+## 19. NavBar *(built)*
 
-**Purpose:** Primary app navigation. Bottom tab bar on mobile, vertical sidebar on desktop.
+**Purpose:** Primary app navigation. Horizontal top bar on desktop (ecommerce-style), bottom tab bar with a top account bar on mobile.
 
 **File:** `src/components/NavBar.tsx`
 
@@ -913,73 +913,121 @@ Subtitle:  text-small text-text-secondary mt-xs ("clean")
 | Prop | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
 | `activeTab` | `'home' \ | 'library' \ | 'list' \ | 'preferences'` | yes | — | Currently active tab |
-| `onNavigate` | `(tab: string) => void` | yes | — | Called when a tab is tapped |
+| `onNavigate` | `(tab: Tab) => void` | yes | — | Called when a tab is tapped |
+| `user` | `{ email: string }` | yes | — | Signed-in user for the account display |
+| `onSignOut` | `() => void` | yes | — | Called when sign-out is clicked |
 
 ### Nav Items
 
 | Key | Label | Icon | Description |
 | --- | --- | --- | --- |
-| `home` | Home | house icon | Search and dashboard |
-| `library` | Library | bookmark icon | Saved products |
-| `list` | Shopping List | list/cart icon | Shopping list |
-| `preferences` | Preferences | sliders/settings icon | Ingredient, brand, certification preferences |
+| `home` | Home | ⌂ | Search and dashboard |
+| `library` | Library | ♡ | Saved products |
+| `list` | Shopping List | ☰ | Shopping list |
+| `preferences` | Preferences | ⚙ | Ingredient, brand, certification preferences |
 
 ### Visual Structure
 
 ```
-Mobile (below md): fixed bottom-0 left-0 right-0 z-sticky
-  Container: bg-surface-card border-t border-surface-divider
-             flex justify-around items-center
-             px-sm py-xs
-             safe-area: pb-[env(safe-area-inset-bottom)]
+Mobile (below md):
 
-  Each tab:  flex flex-col items-center gap-xs py-xs px-sm
-             cursor-pointer transition-colors duration-fast ease-default
-    Icon:    w-6 h-6
-    Label:   text-micro
+  Top account bar (non-fixed, sits above content):
+    bg-surface-card border-b border-surface-divider
+    flex items-center justify-between px-md py-sm gap-md
+      Left: "SIGNED IN AS" (text-label uppercase text-text-tertiary)
+            user email (text-small text-text-primary truncate)
+      Right: Sign out link (text-small text-primary, rounded-full)
 
-  Inactive:  text-text-tertiary
-  Active:    text-primary
+  Bottom tab bar:
+    fixed bottom-0 left-0 right-0 z-sticky
+    bg-surface-card border-t border-surface-divider
+    flex justify-around items-center px-sm py-xs
+    safe-area: pb-[env(safe-area-inset-bottom)]
 
-Desktop (md and above): fixed left-0 top-0 bottom-0 w-[240px] z-sticky
-  Container: bg-surface-card border-r border-surface-divider
-             flex flex-col py-lg px-md
+    Each tab: flex flex-col items-center gap-xs py-xs px-sm
+      Icon:  text-[20px] leading-none
+      Label: text-micro
+      Inactive: text-text-tertiary
+      Active:   text-primary
 
-  App name:  text-h3 text-text-primary px-md mb-2xl
+Desktop (md and above): fixed top-0 left-0 right-0 h-[64px] z-sticky
+  Container: bg-surface-card border-b border-surface-divider
+             flex items-center px-xl gap-xl
 
-  Each tab:  flex items-center gap-md px-md py-sm
-             rounded-card cursor-pointer
-             transition-colors duration-fast ease-default
-    Icon:    w-5 h-5
-    Label:   text-body
+  Logo:       text-h3 text-text-primary ("Clean Shopper")
 
-  Inactive:  text-text-secondary
-  Active:    bg-primary-light text-primary font-medium
-  Hover:     bg-surface-muted (inactive only)
+  Tab cluster (flex-1):
+    Each tab: flex items-center gap-sm px-md py-sm rounded-card
+              transition-colors duration-fast ease-default
+      Icon:   text-[18px] leading-none
+      Label:  text-body
+      Inactive: bg-transparent text-text-secondary (hover: bg-surface-muted)
+      Active:   bg-primary-light text-primary font-medium
+
+  Component Spec link: text-small text-text-tertiary (hover: text-primary)
+
+  Account cluster (right, with left border separator):
+    "SIGNED IN" label + email
+    Sign out button (text-small text-text-secondary, hover: text-primary)
 ```
 
 ### States
 
 | State | Styles |
 | --- | --- |
-| Inactive tab | `text-text-tertiary` (mobile) / `text-text-secondary` (desktop) |
-| Active tab | `text-primary` (mobile) / `bg-primary-light text-primary font-medium` (desktop) |
+| Inactive tab (mobile) | `text-text-tertiary` |
+| Inactive tab (desktop) | `bg-transparent text-text-secondary` |
+| Active tab (mobile) | `text-primary` |
+| Active tab (desktop) | `bg-primary-light text-primary font-medium` |
 | Hover (desktop, inactive) | `bg-surface-muted` |
 | Focus | `focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2` |
 
 ### Layout Integration
 
 The NavBar controls the page layout shell. The parent layout should account for it:
-- **Mobile:** Add `pb-[72px]` to the main content area to prevent content from hiding behind the fixed bottom bar
-- **Desktop:** Add `ml-[240px]` to the main content area to sit beside the fixed sidebar
+- **Mobile:** Add `pb-[72px]` to the main content area to prevent content from hiding behind the fixed bottom bar. The top account bar is non-fixed and sits in normal flow.
+- **Desktop:** Add `md:pt-[64px]` to the main content area to sit below the fixed top bar. Main content should also be width-capped and centered: `max-w-screen-xl mx-auto p-2xl`.
 
 ### Usage Rules
 
-- Always visible on every screen — this is the persistent app shell
+- Always visible on every signed-in screen — hidden only on `/signin` and `/signup`
 - Exactly one tab is active at a time
 - Do not add more than 5 tabs — mobile bottom bars become cramped beyond that
 - Do not hide the NavBar on any view (including modals — modals overlay above it via z-index)
 - The border on the NavBar is the one exception to the "no borders on cards" rule — navigation chrome uses a single 1px `border-surface-divider` to separate from content
+
+---
+
+## 20. IngredientBar *(built)*
+
+**Purpose:** Horizontal stacked bar showing the proportion of clean / caution / avoid ingredients in a product.
+
+**File:** `src/components/IngredientBar.tsx`
+
+### Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `counts` | `{ clean: number; caution: number; avoid: number }` | yes | — | Counts per rating category |
+
+### Visual Structure
+
+```
+A single horizontal bar divided into three segments proportional to the counts.
+  clean segment:   bg-clean-dot
+  caution segment: bg-caution-dot
+  avoid segment:   bg-avoid-dot
+
+Below the bar: a legend with dot + count + label per non-zero category.
+
+Live at /spec/ingredient-bar in the running app.
+```
+
+### Usage Rules
+
+- Use inside the product detail Modal to summarize ingredient composition
+- Only renders when at least one category has a non-zero count
+- Pair with IngredientList below for the detailed breakdown
 
 ---
 
@@ -998,7 +1046,14 @@ Modal ──> IconButton
 
 Build these in dependency order (leaf components first):
 
-1. **Tier 1 — Primitives:** Button, Badge, RatingBadge, IconButton, Chip
-2. **Tier 2 — Composites:** Card, SearchInput, SectionHeader, EmptyState, PreferenceTag, ScoreGauge, ShoppingListItem
-3. **Tier 3 — Features:** IngredientList, ComparisonPanel, SwapCard, Modal
-4. **Existing (modify):** ProductCard, Toast
+1. **Tier 1 — Primitives:** Button ✓, Badge ✓, RatingBadge ✓, IconButton ✓, Chip
+2. **Tier 2 — Composites:** Card, SearchInput ✓, SectionHeader, EmptyState ✓, PreferenceTag, ScoreGauge, ShoppingListItem
+3. **Tier 3 — Features:** IngredientList ✓, IngredientBar ✓, ComparisonPanel, SwapCard, Modal ✓
+4. **Shell:** NavBar ✓, Toast ✓
+
+## Known inline patterns (not yet extracted to components)
+
+These UI patterns are implemented inline in feature pages. If they get reused, extract them into documented components.
+
+- **Filter sidebar** in `src/features/search/SearchPage.tsx`: category + rating checkbox groups with a "Clear" link. If a third page needs the same pattern, extract to a `FilterGroup` component (and use `Chip` for the individual toggles if appropriate).
+- **Auth form inputs** in `src/features/auth/SignInPage.tsx` and `SignUpPage.tsx`: inset-shadow bordered text input with error-state variant. If reused outside auth, extract to an `Input` component.

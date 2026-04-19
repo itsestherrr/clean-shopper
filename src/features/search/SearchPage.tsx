@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
-import { type Product, type ProductRow, rowToProduct } from '../../lib/types'
+import { type Product, type ProductRow, type Rating, rowToProduct } from '../../lib/types'
+
+const RATINGS: Rating[] = ['clean', 'caution', 'avoid']
 import { supabase } from '../../lib/supabase'
+import { useSavedProducts } from '../../lib/use-saved-products'
 import ProductCard from '../../components/ProductCard'
 import SearchInput from '../../components/SearchInput'
 import EmptyState from '../../components/EmptyState'
@@ -14,8 +17,10 @@ export default function SearchPage() {
   const [query, setQuery] = useState('')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [savedIds, setSavedIds] = useState<Set<string>>(new Set())
+  const { savedIds, toggle: toggleSave } = useSavedProducts()
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+  const [categoryFilter, setCategoryFilter] = useState<Set<string>>(new Set())
+  const [ratingFilter, setRatingFilter] = useState<Set<Rating>>(new Set())
 
   // Load all products once on mount
   useEffect(() => {
@@ -38,21 +43,24 @@ export default function SearchPage() {
 
   // Filter client-side — fast enough for this catalog size
   const term = query.trim().toLowerCase()
-  const displayed = term
-    ? allProducts.filter(
-        (p) =>
-          p.name.toLowerCase().includes(term) ||
-          p.brand.toLowerCase().includes(term) ||
-          p.description.toLowerCase().includes(term)
-      )
-    : allProducts
+  const displayed = allProducts.filter((p) => {
+    if (term && !(
+      p.name.toLowerCase().includes(term) ||
+      p.brand.toLowerCase().includes(term) ||
+      p.description.toLowerCase().includes(term)
+    )) return false
+    if (categoryFilter.size > 0 && !categoryFilter.has(p.category)) return false
+    if (ratingFilter.size > 0 && !ratingFilter.has(p.rating)) return false
+    return true
+  })
 
-  function toggleSave(id: string) {
-    setSavedIds((prev) => {
-      const next = new Set(prev)
-      next.has(id) ? next.delete(id) : next.add(id)
-      return next
-    })
+  const categories = Array.from(new Set(allProducts.map((p) => p.category))).sort()
+  const filtersActive = categoryFilter.size > 0 || ratingFilter.size > 0
+
+  function toggleSetValue<T>(set: Set<T>, value: T): Set<T> {
+    const next = new Set(set)
+    next.has(value) ? next.delete(value) : next.add(value)
+    return next
   }
 
   const hasStructuredIngredients = (selectedProduct?.ingredients.length ?? 0) > 0
@@ -86,51 +94,108 @@ export default function SearchPage() {
         <p className="text-body text-avoid mb-lg">Failed to load products: {error}</p>
       )}
 
-      {/* Loading skeleton */}
-      {loading && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <ProductCard key={i} loading name="" brand="" rating="clean" category="" description="" />
-          ))}
-        </div>
-      )}
+      <div className="flex flex-col md:flex-row gap-xl">
+        {/* Filter sidebar */}
+        {!loading && !error && (
+          <aside className="md:w-[220px] md:flex-shrink-0">
+            <div className="flex items-center justify-between mb-md">
+              <h2 className="text-label uppercase text-text-tertiary">Filters</h2>
+              {filtersActive && (
+                <button
+                  type="button"
+                  onClick={() => { setCategoryFilter(new Set()); setRatingFilter(new Set()) }}
+                  className="text-small text-primary hover:text-primary-dark cursor-pointer bg-transparent border-none"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
 
-      {/* Result count — only when actively filtering */}
-      {!loading && !error && term && (
-        <p className="text-small text-text-tertiary mb-lg">
-          {displayed.length} {displayed.length === 1 ? 'result' : 'results'} for &ldquo;{query.trim()}&rdquo;
-        </p>
-      )}
+            <div className="mb-lg">
+              <h3 className="text-small text-text-secondary font-medium mb-sm">Category</h3>
+              <div className="flex flex-col gap-xs">
+                {categories.map((c) => (
+                  <label key={c} className="flex items-center gap-sm cursor-pointer py-xs">
+                    <input
+                      type="checkbox"
+                      checked={categoryFilter.has(c)}
+                      onChange={() => setCategoryFilter((prev) => toggleSetValue(prev, c))}
+                      className="accent-primary"
+                    />
+                    <span className="text-body text-text-primary">{c}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
 
-      {/* Product grid */}
-      {!loading && !error && displayed.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
-          {displayed.map((product) => (
-            <ProductCard
-              key={product.id}
-              name={product.name}
-              brand={product.brand}
-              rating={product.rating}
-              category={product.category}
-              description={product.description}
-              imageUrl={product.imageUrl}
-              saved={savedIds.has(product.id)}
-              onSave={() => toggleSave(product.id)}
-              onAddToList={() => console.log('add to list', product.id)}
-              onClick={() => setSelectedProduct(product)}
+            <div>
+              <h3 className="text-small text-text-secondary font-medium mb-sm">Rating</h3>
+              <div className="flex flex-col gap-xs">
+                {RATINGS.map((r) => (
+                  <label key={r} className="flex items-center gap-sm cursor-pointer py-xs">
+                    <input
+                      type="checkbox"
+                      checked={ratingFilter.has(r)}
+                      onChange={() => setRatingFilter((prev) => toggleSetValue(prev, r))}
+                      className="accent-primary"
+                    />
+                    <span className="text-body text-text-primary capitalize">{r}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </aside>
+        )}
+
+        {/* Main content */}
+        <div className="flex-1 min-w-0">
+          {/* Loading skeleton */}
+          {loading && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <ProductCard key={i} loading name="" brand="" rating="clean" category="" description="" />
+              ))}
+            </div>
+          )}
+
+          {/* Result count — only when filtering is active */}
+          {!loading && !error && (term || filtersActive) && (
+            <p className="text-small text-text-tertiary mb-lg">
+              {displayed.length} {displayed.length === 1 ? 'result' : 'results'}
+              {term && <> for &ldquo;{query.trim()}&rdquo;</>}
+            </p>
+          )}
+
+          {/* Product grid */}
+          {!loading && !error && displayed.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
+              {displayed.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  name={product.name}
+                  brand={product.brand}
+                  rating={product.rating}
+                  category={product.category}
+                  description={product.description}
+                  imageUrl={product.imageUrl}
+                  saved={savedIds.has(product.id)}
+                  onSave={() => toggleSave(product.id)}
+                  onClick={() => setSelectedProduct(product)}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* No results */}
+          {!loading && !error && (term || filtersActive) && displayed.length === 0 && (
+            <EmptyState
+              icon="🔍"
+              title="No products found"
+              description={term ? `No results for "${query.trim()}". Try a different keyword or adjust filters.` : 'No products match the selected filters.'}
             />
-          ))}
+          )}
         </div>
-      )}
-
-      {/* No results — only shown when filtering returns nothing */}
-      {!loading && !error && term && displayed.length === 0 && (
-        <EmptyState
-          icon="🔍"
-          title="No products found"
-          description={`No results for "${query.trim()}". Try a different keyword or brand name.`}
-        />
-      )}
+      </div>
 
       {/* Product detail modal */}
       <Modal

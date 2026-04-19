@@ -5,13 +5,14 @@ import IngredientList from '../../components/IngredientList'
 import IngredientBar from '../../components/IngredientBar'
 import RatingBadge from '../../components/RatingBadge'
 import { supabase } from '../../lib/supabase'
+import { useSavedProducts } from '../../lib/use-saved-products'
 import { type Product, type ProductRow, rowToProduct } from '../../lib/types'
 
 export default function BrowsePage() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [savedIds, setSavedIds] = useState<Set<string>>(new Set())
+  const { savedIds, toggle: toggleSave } = useSavedProducts()
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
 
   useEffect(() => {
@@ -33,14 +34,6 @@ export default function BrowsePage() {
 
     loadProducts()
   }, [])
-
-  function toggleSave(id: string) {
-    setSavedIds((prev) => {
-      const next = new Set(prev)
-      next.has(id) ? next.delete(id) : next.add(id)
-      return next
-    })
-  }
 
   return (
     <div>
@@ -73,7 +66,6 @@ export default function BrowsePage() {
             imageUrl={product.imageUrl}
             saved={savedIds.has(product.id)}
             onSave={() => toggleSave(product.id)}
-            onAddToList={() => console.log('add to list', product.id)}
             onClick={() => setSelectedProduct(product)}
           />
         ))}
