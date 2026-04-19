@@ -2,6 +2,7 @@ import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-
 import NavBar from './components/NavBar'
 import RequireAuth from './components/RequireAuth'
 import BrowsePage from './features/browse/BrowsePage'
+import LibraryPage from './features/library/LibraryPage'
 import SearchPage from './features/search/SearchPage'
 import SignInPage from './features/auth/SignInPage'
 import SignUpPage from './features/auth/SignUpPage'
@@ -61,7 +62,8 @@ function App() {
       )}
 
       {/* Main content — offset for NavBar (no offset when NavBar is hidden) */}
-      <main className={showNavBar ? 'md:ml-[240px] pb-[72px] md:pb-0 p-2xl' : ''}>
+      <main className={showNavBar ? 'md:pt-[64px] pb-[72px] md:pb-0' : ''}>
+        <div className={showNavBar ? 'max-w-screen-xl mx-auto p-2xl' : ''}>
         <Routes>
           <Route path="/" element={<Navigate to="/search" replace />} />
           <Route
@@ -69,6 +71,14 @@ function App() {
             element={
               <RequireAuth>
                 <SearchPage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/library"
+            element={
+              <RequireAuth>
+                <LibraryPage />
               </RequireAuth>
             }
           />
@@ -94,6 +104,7 @@ function App() {
             <Route path="toast" element={<ToastSpecPage />} />
           </Route>
         </Routes>
+        </div>
       </main>
     </div>
   )

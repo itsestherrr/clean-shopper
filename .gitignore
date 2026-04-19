@@ -33,3 +33,5 @@ dist-ssr
 .superpowers/
 course_materials/
 
+.aidesigner/*
+!.aidesigner/.gitkeep

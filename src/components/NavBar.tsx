@@ -73,15 +73,15 @@ export default function NavBar({ activeTab, onNavigate, user, onSignOut }: NavBa
         })}
       </nav>
 
-      {/* Desktop: sidebar */}
+      {/* Desktop: top bar */}
       <nav className="
-        hidden md:flex fixed left-0 top-0 bottom-0 w-[240px] z-sticky
-        bg-surface-card border-r border-surface-divider
-        flex-col py-lg px-md
+        hidden md:flex fixed top-0 left-0 right-0 h-[64px] z-sticky
+        bg-surface-card border-b border-surface-divider
+        items-center px-xl gap-xl
       ">
-        <div className="text-h3 text-text-primary px-md mb-2xl">Clean Shopper</div>
+        <div className="text-h3 text-text-primary">Clean Shopper</div>
 
-        <div className="flex flex-col gap-xs flex-1">
+        <div className="flex items-center gap-xs flex-1">
           {tabs.map((tab) => {
             const isActive = activeTab === tab.key
             return (
@@ -90,7 +90,7 @@ export default function NavBar({ activeTab, onNavigate, user, onSignOut }: NavBa
                 type="button"
                 onClick={() => onNavigate(tab.key)}
                 className={`
-                  flex items-center gap-md px-md py-sm
+                  flex items-center gap-sm px-md py-sm
                   rounded-card cursor-pointer border-none
                   transition-colors duration-fast ease-default
                   focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2
@@ -100,7 +100,7 @@ export default function NavBar({ activeTab, onNavigate, user, onSignOut }: NavBa
                   }
                 `}
               >
-                <span className="w-5 h-5 flex items-center justify-center text-[18px] leading-none">{tab.icon}</span>
+                <span className="text-[18px] leading-none">{tab.icon}</span>
                 <span className="text-body">{tab.label}</span>
               </button>
             )
@@ -110,25 +110,23 @@ export default function NavBar({ activeTab, onNavigate, user, onSignOut }: NavBa
         <a
           href="/spec"
           className="
-            flex items-center gap-md px-md py-sm
             text-small text-text-tertiary hover:text-primary
             transition-colors duration-fast ease-default
           "
         >
-          <span className="w-5 h-5 flex items-center justify-center text-[18px] leading-none">◇</span>
-          <span>Component Spec</span>
+          Component Spec
         </a>
 
-        {/* Desktop user section */}
-        <div className="mt-md pt-md border-t border-surface-divider px-md flex flex-col gap-xs">
-          <span className="text-label uppercase text-text-tertiary">Signed in as</span>
-          <span className="text-small text-text-primary truncate">{user.email}</span>
+        <div className="flex items-center gap-md pl-md border-l border-surface-divider">
+          <div className="flex flex-col items-end">
+            <span className="text-label uppercase text-text-tertiary leading-none">Signed in</span>
+            <span className="text-small text-text-primary truncate max-w-[180px]">{user.email}</span>
+          </div>
           <button
             type="button"
             onClick={onSignOut}
             className="
               text-small text-text-secondary hover:text-primary
-              text-left mt-xs
               cursor-pointer bg-transparent border-none
               transition-colors duration-fast ease-default
               focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2
