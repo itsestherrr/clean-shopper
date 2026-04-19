@@ -3,6 +3,8 @@ type Tab = 'home' | 'library' | 'list' | 'preferences'
 interface NavBarProps {
   activeTab: Tab
   onNavigate: (tab: Tab) => void
+  user: { email: string }
+  onSignOut: () => void
 }
 
 const tabs: { key: Tab; label: string; icon: string }[] = [
@@ -12,9 +14,36 @@ const tabs: { key: Tab; label: string; icon: string }[] = [
   { key: 'preferences', label: 'Preferences', icon: '⚙' },
 ]
 
-export default function NavBar({ activeTab, onNavigate }: NavBarProps) {
+export default function NavBar({ activeTab, onNavigate, user, onSignOut }: NavBarProps) {
   return (
     <>
+      {/* Mobile: top account bar (non-fixed, sits above content) */}
+      <div className="
+        md:hidden
+        bg-surface-card border-b border-surface-divider
+        flex items-center justify-between
+        px-md py-sm gap-md
+      ">
+        <div className="flex flex-col min-w-0 flex-1">
+          <span className="text-label uppercase text-text-tertiary">Signed in as</span>
+          <span className="text-small text-text-primary truncate">{user.email}</span>
+        </div>
+        <button
+          type="button"
+          onClick={onSignOut}
+          className="
+            flex-shrink-0
+            text-small text-primary hover:text-primary-dark
+            cursor-pointer bg-transparent border-none
+            transition-colors duration-fast ease-default
+            focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2
+            px-sm py-xs rounded-full
+          "
+        >
+          Sign out
+        </button>
+      </div>
+
       {/* Mobile: bottom tab bar */}
       <nav className="
         md:hidden fixed bottom-0 left-0 right-0 z-sticky
@@ -89,6 +118,25 @@ export default function NavBar({ activeTab, onNavigate }: NavBarProps) {
           <span className="w-5 h-5 flex items-center justify-center text-[18px] leading-none">◇</span>
           <span>Component Spec</span>
         </a>
+
+        {/* Desktop user section */}
+        <div className="mt-md pt-md border-t border-surface-divider px-md flex flex-col gap-xs">
+          <span className="text-label uppercase text-text-tertiary">Signed in as</span>
+          <span className="text-small text-text-primary truncate">{user.email}</span>
+          <button
+            type="button"
+            onClick={onSignOut}
+            className="
+              text-small text-text-secondary hover:text-primary
+              text-left mt-xs
+              cursor-pointer bg-transparent border-none
+              transition-colors duration-fast ease-default
+              focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2
+            "
+          >
+            Sign out
+          </button>
+        </div>
       </nav>
     </>
   )

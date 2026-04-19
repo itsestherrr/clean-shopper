@@ -5,6 +5,7 @@ import BrowsePage from './features/browse/BrowsePage'
 import SearchPage from './features/search/SearchPage'
 import SignInPage from './features/auth/SignInPage'
 import SignUpPage from './features/auth/SignUpPage'
+import { supabase } from './lib/supabase'
 import { useSession } from './lib/use-session'
 import SpecLayout from './features/spec/SpecLayout'
 import BadgeSpecPage from './features/spec/BadgeSpecPage'
@@ -41,10 +42,22 @@ function App() {
     if (path) navigate(path)
   }
 
+  async function handleSignOut() {
+    await supabase.auth.signOut()
+    navigate('/signin', { replace: true })
+  }
+
+  const userEmail = session?.user?.email ?? ''
+
   return (
     <div className="bg-surface-bg min-h-screen">
       {showNavBar && (
-        <NavBar activeTab={activeTab as 'home' | 'library' | 'list' | 'preferences'} onNavigate={handleNavigate} />
+        <NavBar
+          activeTab={activeTab as 'home' | 'library' | 'list' | 'preferences'}
+          onNavigate={handleNavigate}
+          user={{ email: userEmail }}
+          onSignOut={handleSignOut}
+        />
       )}
 
       {/* Main content — offset for NavBar (no offset when NavBar is hidden) */}
