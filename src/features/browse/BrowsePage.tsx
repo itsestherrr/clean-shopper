@@ -5,35 +5,7 @@ import IngredientList from '../../components/IngredientList'
 import IngredientBar from '../../components/IngredientBar'
 import RatingBadge from '../../components/RatingBadge'
 import { supabase } from '../../lib/supabase'
-
-type Rating = 'clean' | 'caution' | 'avoid'
-
-interface Ingredient {
-  name: string
-  rating: Rating
-  reason: string
-  isUserAvoided?: boolean
-}
-
-interface Product {
-  id: string
-  name: string
-  brand: string
-  rating: Rating
-  category: string
-  description: string
-  ingredients: Ingredient[]
-}
-
-interface ProductRow {
-  id: string
-  name: string
-  brand: string
-  category: string
-  description: string | null
-  rating: Rating | null
-  ingredients: Ingredient[] | null
-}
+import { type Product, type ProductRow, rowToProduct } from '../../lib/types'
 
 export default function BrowsePage() {
   const [products, setProducts] = useState<Product[]>([])
@@ -46,7 +18,7 @@ export default function BrowsePage() {
     async function loadProducts() {
       const { data, error } = await supabase
         .from('products')
-        .select('id, name, brand, category, description, rating, ingredients')
+        .select('id, name, brand, category, description, rating, ingredients, image_url')
         .order('created_at', { ascending: true })
 
       if (error) {
@@ -55,17 +27,7 @@ export default function BrowsePage() {
         return
       }
 
-      const mapped: Product[] = (data as ProductRow[] | null ?? []).map((row) => ({
-        id: row.id,
-        name: row.name,
-        brand: row.brand,
-        category: row.category,
-        description: row.description ?? '',
-        rating: row.rating ?? 'clean',
-        ingredients: row.ingredients ?? [],
-      }))
-
-      setProducts(mapped)
+      setProducts((data as ProductRow[] | null ?? []).map(rowToProduct))
       setLoading(false)
     }
 
@@ -75,11 +37,7 @@ export default function BrowsePage() {
   function toggleSave(id: string) {
     setSavedIds((prev) => {
       const next = new Set(prev)
-      if (next.has(id)) {
-        next.delete(id)
-      } else {
-        next.add(id)
-      }
+      next.has(id) ? next.delete(id) : next.add(id)
       return next
     })
   }
@@ -88,7 +46,7 @@ export default function BrowsePage() {
     <div>
       <h1 className="text-h1 text-text-primary mb-sm">Browse Products</h1>
       <p className="text-body text-text-secondary mb-2xl">
-        Explore products and check their ingredient safety ratings.
+        Explore facial cleansers, moisturizers, body wash, and deodorant rated by ingredient safety.
       </p>
 
       {loading && (
@@ -112,6 +70,7 @@ export default function BrowsePage() {
             rating={product.rating}
             category={product.category}
             description={product.description}
+            imageUrl={product.imageUrl}
             saved={savedIds.has(product.id)}
             onSave={() => toggleSave(product.id)}
             onAddToList={() => console.log('add to list', product.id)}
