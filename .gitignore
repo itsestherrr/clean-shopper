@@ -35,3 +35,15 @@ course_materials/
 
 .aidesigner/*
 !.aidesigner/.gitkeep
+
+# Local tool caches
+.agents/
+.playwright-mcp/
+
+# Scratch — screenshots and one-off explorations at repo root
+/*.png
+/browse-mockup.html
+/palette-explore.html
+
+# Explicit archives kept locally but not versioned
+docs/**/*.v3-archive

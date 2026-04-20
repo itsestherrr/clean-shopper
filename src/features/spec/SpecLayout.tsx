@@ -1,13 +1,11 @@
 import { Outlet, NavLink } from 'react-router-dom'
 
 const SPEC_PAGES = [
-  { name: 'Badge', path: '/spec/badge' },
   { name: 'IconButton', path: '/spec/icon-button' },
   { name: 'IngredientBar', path: '/spec/ingredient-bar' },
   { name: 'IngredientList', path: '/spec/ingredient-list' },
   { name: 'Modal', path: '/spec/modal' },
   { name: 'ProductCard', path: '/spec/product-card' },
-  { name: 'RatingBadge', path: '/spec/rating-badge' },
   { name: 'Toast', path: '/spec/toast' },
 ]
 

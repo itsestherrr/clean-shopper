@@ -1,0 +1,2303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Decisions · Clean Shopper Spec</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_shell.css">
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
+<style>
+  .mono { font-family:'JetBrains Mono',monospace; }
+
+  .decision {
+    background:#FCFBFA;
+    border:1.5px solid #DAD2E2;
+    border-radius:16px 16px 10px 10px;
+    padding:28px 28px 24px;
+    margin-bottom:24px;
+  }
+  .d-head { display:flex; align-items:center; gap:12px; margin-bottom:4px; }
+  .d-num {
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px; font-weight:700;
+    color:#6B4F8F;
+    letter-spacing:0.08em;
+    background:#F5F2F8;
+    padding:3px 8px;
+    border-radius:4px;
+  }
+  .d-status {
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px; font-weight:800;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    padding:3px 8px;
+    border-radius:4px;
+  }
+  .d-status.open    { background:#FCF6DF; color:#7A6115; }
+  .d-status.decided { background:#3F1F68; color:#C9EC2D; }
+  .d-title {
+    font-size:18px; font-weight:700;
+    color:#3F1F68;
+    letter-spacing:-0.008em;
+    margin-bottom:12px;
+  }
+  .d-q {
+    font-size:14px;
+    color:#6B4F8F;
+    line-height:1.55;
+    margin-bottom:20px;
+  }
+  .d-options { display:grid; gap:10px; margin-bottom:16px; }
+  .d-opt {
+    border:1.5px solid #E9E6ED;
+    border-radius:10px;
+    padding:14px 16px;
+    background:#FFFFFF;
+    display:grid;
+    grid-template-columns:24px 1fr auto;
+    gap:14px;
+    align-items:center;
+  }
+  .d-opt.picked { border-color:#3F1F68; background:#F5F2F8; }
+  .d-opt.rejected { opacity:0.50; }
+  .d-opt-radio {
+    width:16px; height:16px;
+    border-radius:999px;
+    border:2px solid #ADA1BE;
+  }
+  .d-opt.picked .d-opt-radio {
+    border-color:#3F1F68;
+    background:radial-gradient(circle, #3F1F68 40%, transparent 45%);
+  }
+  .d-opt-label { font-size:14px; font-weight:700; color:#3F1F68; }
+  .d-opt-desc  { font-size:12px; color:#6B4F8F; line-height:1.5; margin-top:2px; }
+  .d-opt-preview { flex-shrink:0; }
+
+  .d-note {
+    margin-top:4px;
+    padding:14px 16px;
+    background:#E7F1ED;
+    border-left:3px solid #2B5F4E;
+    border-radius:0 8px 8px 0;
+    font-size:13px;
+    color:#2B5F4E;
+    line-height:1.6;
+  }
+  .d-note strong { font-weight:800; }
+  .d-note .why-not {
+    display:block;
+    margin-top:8px;
+    font-size:12px;
+    color:#6B4F8F;
+  }
+  .d-note.open {
+    background:#FCF6DF;
+    border-left-color:#7A6115;
+    color:#7A6115;
+  }
+
+  .btn {
+    font-family:'Plus Jakarta Sans',sans-serif;
+    font-weight:600;
+    border:none;
+    cursor:pointer;
+    border-radius:9999px;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    transition:
+      background-color 200ms cubic-bezier(0.4, 0, 0.2, 1),
+      color 200ms cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1),
+      transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .btn-primary   { background:#3F1F68; color:#FCFBFA; }
+  .btn-secondary { background:#FFFFFF; color:#3F1F68; border:2px solid #3F1F68; }
+  .btn-ghost     { background:transparent; color:#3F1F68; }
+  /* Hero = no shadow at rest. Shadow appears on hover (B-12 revised). */
+  .btn.shadow-amethyst { box-shadow:none; }
+  .btn.shadow-lime     { box-shadow:none; }
+  .btn-sm { font-size:12px; padding:4px 16px; height:32px; }
+  .btn-md { font-size:14px; padding:8px 24px; height:40px; }
+  .btn-lg { font-size:16px; padding:16px 32px; height:48px; }
+
+  /* ── HOVER — non-hero (B-13 final: darken to amethyst-110) ─── */
+  .btn-primary:hover   { background:#2A1247; }                 /* amethyst-110 NEW */
+  .btn-secondary:hover { background:#2A1247; color:#FCFBFA; border-color:#2A1247; }
+  .btn-ghost:hover     { background:#DAD2E2; }                 /* amethyst-20 (exception) */
+
+  /* ── HOVER — hero (B-12 revised): shadow appears + lift. No fill change. ── */
+  .btn.shadow-lime:hover {
+    background:#3F1F68; color:#FCFBFA; border-color:transparent;
+    box-shadow:4px 4px 0 0 #C9EC2D;
+    transform:translate(-2px,-2px);
+  }
+  .btn.shadow-amethyst:hover {
+    background:#FFFFFF; color:#3F1F68; border-color:#3F1F68;
+    box-shadow:4px 4px 0 0 #3F1F68;
+    transform:translate(-2px,-2px);
+  }
+
+  /* ── PRESS (B-10) ─────────────────────────────────────────────── */
+  /* Force rest colors back — hover color must not bleed into press */
+  .btn:active            { transform:scale(0.96); }
+  .btn-primary:active    { background:#3F1F68; }
+  .btn-secondary:active  { background:#FFFFFF; color:#3F1F68; border-color:#3F1F68; }
+  .btn-ghost:active      { background:transparent; color:#3F1F68; }
+  /* Hero press: back to no shadow (it was only there on hover) */
+  .btn.shadow-lime:active     { box-shadow:none; }
+  .btn.shadow-amethyst:active { box-shadow:none; }
+
+  /* ── B-12 · Hero shadow INVERSION demo (scoped) ─────────────────── */
+  .invert-demo .btn.shadow-lime:hover     { box-shadow:4px 4px 0 0 #6B4F8F; } /* lime → amethyst-80 */
+  .invert-demo .btn.shadow-amethyst:hover { box-shadow:4px 4px 0 0 #C9EC2D; } /* amethyst → lime */
+
+  /* ── B-13 · Unified hover (secondary transforms to filled amethyst) — scoped ── */
+  .unified-80 .btn-secondary:hover,
+  .unified-80 .btn-ghost:hover {
+    background:#6B4F8F !important; color:#FCFBFA !important; border-color:#6B4F8F !important;
+  }
+  .unified-80 .btn-primary:hover { background:#6B4F8F !important; }
+
+  .unified-90 .btn-primary:hover,
+  .unified-90 .btn-secondary:hover {
+    background:#4E2D73 !important; color:#FCFBFA !important; border-color:#4E2D73 !important;
+  }
+  .unified-90 .btn-ghost:hover {
+    background:#DAD2E2 !important; color:#3F1F68 !important;   /* amethyst-20 exception */
+  }
+
+  .unified-custom .btn-primary:hover,
+  .unified-custom .btn-secondary:hover,
+  .unified-custom .btn-ghost:hover {
+    background:#5A3B82 !important; color:#FCFBFA !important; border-color:#5A3B82 !important;
+  }
+
+  /* ── B-14 · Hover visibility experiments (scoped) ───────────────── */
+  /* Direction 1: DARKEN instead of lighten. Industry standard. */
+  .darken-deep .btn-primary:hover,
+  .darken-deep .btn-secondary:hover {
+    background:#2A1247 !important; color:#FCFBFA !important; border-color:#2A1247 !important;
+  }
+  .darken-deep .btn-ghost:hover { background:#DAD2E2 !important; color:#3F1F68 !important; }
+
+  /* Direction 2: Keep -90, amplify with subtle scale + inset ring */
+  .amplified-90 .btn-primary:hover,
+  .amplified-90 .btn-secondary:hover {
+    background:#4E2D73 !important; color:#FCFBFA !important; border-color:#4E2D73 !important;
+    box-shadow:inset 0 0 0 2px #C9EC2D !important;
+    transform:scale(1.02) !important;
+  }
+  .amplified-90 .btn-ghost:hover { background:#DAD2E2 !important; color:#3F1F68 !important; }
+
+  /* Direction 3: Embrace -80 (accept the lighter/"muted" read) */
+  .lighten-80 .btn-primary:hover,
+  .lighten-80 .btn-secondary:hover {
+    background:#6B4F8F !important; color:#FCFBFA !important; border-color:#6B4F8F !important;
+  }
+  .lighten-80 .btn-ghost:hover { background:#DAD2E2 !important; color:#3F1F68 !important; }
+
+  /* Ramp swatch display */
+  .ramp-row {
+    display:grid;
+    grid-template-columns:repeat(7, 1fr);
+    gap:2px;
+    margin-top:12px;
+    margin-bottom:6px;
+  }
+  .ramp-stop {
+    height:44px;
+    border-radius:4px;
+    position:relative;
+    display:flex;
+    align-items:flex-end;
+    padding:4px 6px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:9px;
+    font-weight:700;
+    letter-spacing:0.06em;
+  }
+  .ramp-stop .stop-label { position:absolute; top:4px; left:6px; font-size:8px; }
+  .ramp-stop.new { outline:2px solid #C9EC2D; outline-offset:2px; }
+
+  .try-hint {
+    display:inline-block;
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px; font-weight:800;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:#C9EC2D;
+    background:#3F1F68;
+    padding:4px 10px;
+    border-radius:999px;
+    margin-bottom:12px;
+  }
+  .a11y-table {
+    width:100%;
+    margin-top:10px;
+    border-collapse:collapse;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+  }
+  .a11y-table th, .a11y-table td {
+    text-align:left;
+    padding:6px 10px;
+    border-bottom:1px solid #DAD2E2;
+  }
+  .a11y-table th { color:#6B4F8F; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; font-size:10px; }
+  .a11y-table td { color:#3F1F68; }
+  .a11y-table .pass { color:#2B5F4E; font-weight:700; }
+  .a11y-table .swatch {
+    display:inline-block; width:14px; height:14px; border-radius:3px;
+    border:1px solid rgba(0,0,0,0.08); vertical-align:middle; margin-right:6px;
+  }
+
+  .section-head {
+    display:flex;
+    align-items:baseline;
+    gap:12px;
+    margin:40px 0 20px;
+    padding-bottom:12px;
+    border-bottom:1.5px solid #DAD2E2;
+  }
+
+  /* ══ Component tab switcher ══════════════════════════════════════ */
+  .tabbar {
+    display:flex; gap:4px;
+    border-bottom:1.5px solid #DAD2E2;
+    margin:24px 0 8px;
+    position:sticky; top:0; z-index:10;
+    background:#FCFBFA;
+    padding-top:8px;
+  }
+  .tab {
+    display:inline-flex; align-items:center; gap:10px;
+    padding:12px 20px 14px;
+    font-family:'Plus Jakarta Sans',sans-serif;
+    font-size:13px; font-weight:700;
+    color:#ADA1BE;
+    background:transparent;
+    border:none; border-bottom:2px solid transparent;
+    cursor:pointer;
+    transition:color 150ms ease, border-color 150ms ease;
+    letter-spacing:-0.005em;
+    margin-bottom:-1.5px;
+  }
+  .tab:hover { color:#6B4F8F; }
+  .tab.active {
+    color:#3F1F68;
+    border-bottom-color:#3F1F68;
+  }
+  .tab-count {
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px; font-weight:700;
+    color:#ADA1BE;
+    letter-spacing:0.06em;
+    padding:2px 6px;
+    background:#F5F2F8;
+    border-radius:4px;
+  }
+  .tab.active .tab-count { background:#DAD2E2; color:#3F1F68; }
+
+  .tab-panel { display:none; }
+  .tab-panel.active { display:block; }
+  .section-title { font-size:24px; font-weight:800; color:#3F1F68; letter-spacing:-0.015em; }
+  .section-count { font-family:'JetBrains Mono',monospace; font-size:11px; color:#ADA1BE; letter-spacing:0.08em; }
+
+  .frame { background:#FCFBFA; border:1px solid #E9E6ED; border-radius:12px; padding:16px; }
+  .frame-label {
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px; font-weight:800;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:#ADA1BE;
+    margin-bottom:10px;
+  }
+
+  /* Press demo — B-10 */
+  .press-demo { position:relative; padding:24px; }
+  .press-demo .btn.demo-rest,
+  .press-demo .btn.demo-press { display:inline-flex; }
+  .press-demo .demo-row { display:flex; align-items:center; gap:32px; }
+  .press-demo .demo-label {
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px; font-weight:700;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:#ADA1BE;
+  }
+  /* Press = shrink. Hero keeps shadow; non-hero never has one. */
+  .demo-press { transform:scale(0.94); }
+
+  /* Hover previews */
+  .hover-primary-a   { background:#6B4F8F !important; } /* amethyst-80 */
+  .hover-primary-b   { background:#5A3B82 !important; } /* custom mid */
+  .hover-secondary-a { background:#F5F2F8 !important; } /* amethyst-5 tint */
+  .hover-secondary-b { background:#3F1F68 !important; color:#FCFBFA !important; } /* inverse */
+  .hover-ghost       { background:#F5F2F8 !important; }
+
+  /* ══════════════════════════════════════════════════════════════════
+     BADGE PRE-FLIGHT
+     ══════════════════════════════════════════════════════════════════ */
+  .badge {
+    display:inline-flex; align-items:center; gap:6px;
+    font-family:'Plus Jakarta Sans',sans-serif; font-weight:700;
+    font-size:11px; line-height:1; letter-spacing:0.06em;
+    padding:6px 10px; white-space:nowrap;
+    border:1px solid transparent;
+  }
+  .badge.is-upper { text-transform:uppercase; letter-spacing:0.12em; }
+
+  .badge-clean   { background:#D7E8E0; color:#2B5F4E; border-color:rgba(125,191,168,0.5); }
+  .badge-caution { background:#F5E9B8; color:#7A6115; border-color:rgba(201,162,39,0.5); }
+  .badge-avoid   { background:#FFD9D2; color:#B3240E; border-color:rgba(255,58,32,0.4); }
+  .badge-clean.tier-tint   { background:#E7F1ED; }
+  .badge-caution.tier-tint { background:#FCF6DF; }
+  .badge-avoid.tier-tint   { background:#FFEBE7; }
+
+  .badge-category { background:#F0EAE0; color:#3F1F68; border-color:transparent; }
+  .badge-accent   { background:#C9EC2D; color:#3F1F68; border-color:transparent; }
+
+  .shape-pill   { border-radius:9999px; }
+  .shape-soft   { border-radius:16px; }
+  .shape-slight { border-radius:6px; }
+  .shape-tight  { border-radius:4px; }
+  .shape-asym   { border-radius:16px 16px 8px 8px; }
+  .shape-cut    { clip-path:polygon(8px 0, 100% 0, 100% 100%, 0 100%, 0 8px); border-radius:0; }
+
+  .ing-row {
+    display:flex; align-items:center; gap:10px;
+    padding:6px 0; font-size:13px; color:#3F1F68;
+    border-bottom:1px dashed #E9E6ED;
+  }
+  .ing-row:last-child { border-bottom:none; }
+  .ing-dot {
+    width:8px; height:8px; border-radius:9999px; flex-shrink:0;
+    border:1.5px solid currentColor;
+  }
+  .ing-dot.clean   { background:#7DBFA8; color:#2B5F4E; }
+  .ing-dot.caution { background:#C9A227; color:#7A6115; }
+  .ing-dot.avoid   { background:#FF3A20; color:#B3240E; }
+
+  .scene { border-radius:12px; overflow:hidden; border:1px solid #E9E6ED; }
+  .scene-img { height:100px; background-size:cover; background-position:center; position:relative; }
+  .scene-img.clean-img    { background-image:linear-gradient(135deg, #7DBFA8 0%, #2B5F4E 100%); }
+  .scene-img.product-img  { background-image:linear-gradient(135deg, #C9BDA8 0%, #8A7560 100%); }
+  .scene-cream    { background:#FCFBFA; padding:16px; }
+  .scene-paper    { background:#FFFFFF; padding:16px; border-top:1px solid #E9E6ED; }
+  .scene-amethyst { background:#3F1F68; padding:16px; color:#FCFBFA; }
+
+  .shape-pick-row { display:flex; flex-wrap:wrap; gap:14px; align-items:center; padding:10px 12px; border-left:2px solid transparent; border-radius:4px; }
+  .shape-pick-row.is-picked { border-left-color:#3F1F68; background:#F5F2F8; }
+  .shape-pick-row.is-picked .shape-pick-label { color:#3F1F68; font-weight:700; }
+  .shape-pick-row.is-picked::after { content:"✓ picked"; font-family:'JetBrains Mono',monospace; font-size:10px; color:#3F1F68; letter-spacing:0.06em; margin-left:auto; }
+  .shape-pick-row.is-picked[style*="#3F1F68"]::after { color:#C9EC2D; }
+  .shape-pick-label { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; color:#ADA1BE; letter-spacing:0.12em; text-transform:uppercase; width:120px; flex-shrink:0; }
+
+  /* ══════════════════════════════════════════════════════════════════
+     PRODUCT CARD MOCKS (decisions tab)
+     ══════════════════════════════════════════════════════════════════ */
+  .pc-card {
+    background:#FFFFFF;
+    border:1.5px solid #E9E6ED;
+    border-radius:16px;
+    overflow:hidden;
+    display:flex; flex-direction:column;
+    width:220px;
+    font-family:'Plus Jakarta Sans',sans-serif;
+    transition:transform 250ms cubic-bezier(0.4,0,0.2,1), box-shadow 250ms cubic-bezier(0.4,0,0.2,1), border-color 200ms ease;
+  }
+  /* radius variants */
+  .pc-card.r-symmetric { border-radius:16px; }
+  .pc-card.r-asym     { border-radius:24px 24px 10px 10px; }
+  .pc-card.r-asym-sm  { border-radius:16px 16px 8px 8px; }
+
+  /* hover variants (locked-on for preview; toggle with :hover on actual cards) */
+  .pc-card.hv-soft:hover       { box-shadow:0 4px 16px rgba(63,31,104,0.08); }
+  .pc-card.hv-flat-lime:hover {
+    transform:translate(-2px,-2px);
+    box-shadow:4px 4px 0 0 #C9EC2D;
+    border-color:#3F1F68;
+  }
+  .pc-card.hv-flat-ame:hover  {
+    transform:translate(-2px,-2px);
+    box-shadow:4px 4px 0 0 #3F1F68;
+    border-color:#3F1F68;
+  }
+  .pc-card.hv-border:hover     { border-color:#3F1F68; }
+  .pc-card.hv-lime-noshift:hover { box-shadow:4px 4px 0 0 #C9EC2D; border-color:#3F1F68; }
+  .pc-card.hv-lime-small:hover {
+    transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 0 #C9EC2D;
+    border-color:#3F1F68;
+  }
+  .pc-card.hv-lime-small-nolift:hover { box-shadow:2px 2px 0 0 #C9EC2D; border-color:#3F1F68; }
+  .pc-card.hv-border-lime:hover {
+    border-color:#3F1F68;
+    box-shadow:2.5px 2.5px 0 0 #C9EC2D;
+  }
+
+  /* Force-on state (for stationary preview) */
+  .pc-card.force-hover.hv-soft      { box-shadow:0 4px 16px rgba(63,31,104,0.08); }
+  .pc-card.force-hover.hv-flat-lime { transform:translate(-2px,-2px); box-shadow:4px 4px 0 0 #C9EC2D; border-color:#3F1F68; }
+  .pc-card.force-hover.hv-flat-ame  { transform:translate(-2px,-2px); box-shadow:4px 4px 0 0 #3F1F68; border-color:#3F1F68; }
+  .pc-card.force-hover.hv-border    { border-color:#3F1F68; }
+
+  .pc-img {
+    position:relative;
+    background:linear-gradient(135deg, #DAD2E2 0%, #8A7560 100%);
+    display:flex; align-items:center; justify-content:center;
+    color:rgba(255,255,255,0.6);
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px; letter-spacing:0.12em;
+    overflow:hidden;
+  }
+  /* aspect variants */
+  .pc-img.ar-fixed    { height:140px; }
+  .pc-img.ar-1x1      { aspect-ratio:1/1; }
+  .pc-img.ar-4x3      { aspect-ratio:4/3; }
+  .pc-img.ar-3x2      { aspect-ratio:3/2; }
+  .pc-img.ar-4x5      { aspect-ratio:4/5; }
+
+  .pc-body {
+    padding:14px 14px 14px;
+    display:flex; flex-direction:column; gap:8px;
+  }
+  .pc-name { font-size:14px; font-weight:700; color:#3F1F68; line-height:1.3; }
+  .pc-brand { font-size:11px; color:#ADA1BE; }
+
+  /* mini status badge (pill) */
+  .pc-status {
+    display:inline-flex; align-items:center; gap:4px;
+    padding:3px 8px;
+    border-radius:9999px;
+    font-size:9px; font-weight:800; letter-spacing:0.14em; text-transform:uppercase;
+    white-space:nowrap;
+  }
+  .pc-status.clean   { background:#D7E8E0; color:#2B5F4E; }
+  .pc-status.caution { background:#F5E9B8; color:#7A6115; }
+  .pc-status.avoid   { background:#FFD9D2; color:#B3240E; }
+  .pc-status i { font-size:10px; }
+
+  /* mini category tag (tight 4px) */
+  .pc-ctag {
+    display:inline-flex; align-items:center;
+    padding:3px 7px;
+    border-radius:4px;
+    background:#F0EAE0; color:#5A4F3A;
+    font-size:9px; font-weight:800; letter-spacing:0.14em; text-transform:uppercase;
+    white-space:nowrap;
+  }
+
+  /* heart overlay */
+  .pc-heart {
+    position:absolute; top:10px; right:10px;
+    width:32px; height:32px;
+    border-radius:9999px;
+    background:rgba(255,255,255,0.85);
+    backdrop-filter:blur(6px);
+    display:flex; align-items:center; justify-content:center;
+    color:#3F1F68;
+    font-size:16px;
+    border:none;
+    cursor:pointer;
+  }
+  .pc-heart.active { color:#B79BD3; }
+  .pc-heart.active::before { content:"♥"; }
+  .pc-heart:not(.active)::before { content:"♡"; }
+
+  /* footer heart (inline) */
+  .pc-footer {
+    display:flex; justify-content:space-between; align-items:center; padding-top:4px;
+  }
+  .pc-icon-btn {
+    width:28px; height:28px; border-radius:9999px;
+    display:inline-flex; align-items:center; justify-content:center;
+    color:#3F1F68; background:transparent; font-size:15px;
+  }
+
+  /* overlay positions */
+  .pc-overlay-tl { position:absolute; top:10px; left:10px; }
+  .pc-overlay-tr { position:absolute; top:10px; right:10px; }
+  .pc-overlay-bl { position:absolute; bottom:10px; left:10px; }
+
+  /* compact row */
+  .pc-compact {
+    background:#FFFFFF; border:1.5px solid #E9E6ED; border-radius:12px;
+    display:flex; align-items:center; gap:12px; padding:10px;
+    font-family:'Plus Jakarta Sans',sans-serif; max-width:420px;
+  }
+  .pc-compact-thumb {
+    flex-shrink:0; border-radius:8px; overflow:hidden;
+    background:linear-gradient(135deg, #DAD2E2 0%, #8A7560 100%);
+  }
+  .pc-compact-thumb.sz-none { display:none; }
+  .pc-compact-thumb.sz-48 { width:48px; height:48px; }
+  .pc-compact-thumb.sz-56 { width:56px; height:56px; }
+  .pc-compact-body { flex:1; min-width:0; }
+  .pc-compact-body .pc-name { font-size:13px; }
+  .pc-compact-body .pc-brand { font-size:10px; }
+
+  /* grid layout helpers */
+  .opt-grid-4 { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:14px; }
+  .opt-grid-3 { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:14px; }
+  .opt-grid-2 { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; }
+  .opt-card {
+    border:1.5px solid #E9E6ED; background:#FFFFFF; border-radius:10px;
+    padding:14px; display:flex; flex-direction:column; gap:10px; align-items:center;
+  }
+  .opt-card.picked { border-color:#3F1F68; background:#F5F2F8; }
+  .opt-card-radio { width:14px; height:14px; border-radius:999px; border:2px solid #ADA1BE; align-self:flex-start; }
+  .opt-card.picked .opt-card-radio { border-color:#3F1F68; background:radial-gradient(circle, #3F1F68 40%, transparent 45%); }
+  .opt-card-label { font-size:12px; font-weight:700; color:#3F1F68; }
+  .opt-card-desc { font-size:11px; color:#6B4F8F; line-height:1.45; text-align:center; }
+
+  /* subtle reveal panel for click-target mock */
+  .pdp-mock {
+    width:100%; min-height:120px; background:#FCFBFA; border:1.5px dashed #DAD2E2; border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'JetBrains Mono',monospace; font-size:11px; color:#6B4F8F; letter-spacing:0.08em;
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="mark">C</div>
+      <div><span class="name">Clean Shopper</span><span class="tag">spec</span></div>
+    </div>
+    <div class="nav-group">
+      <a href="design-system.html" class="nav-link"><span class="nav-dot"></span>Design System</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-label">Components</div>
+      <a href="product-card.html" class="nav-link"><span class="nav-dot"></span>Product Card</a>
+      <a href="badge.html" class="nav-link"><span class="nav-dot"></span>Badge</a>
+      <a href="button.html" class="nav-link"><span class="nav-dot"></span>Button</a>
+    </div>
+    <div class="nav-group">
+      <a href="decisions.html" class="nav-link active"><span class="nav-dot"></span>Decisions log</a>
+    </div>
+    <div class="sidebar-footer">v4 · amethyst apothecary</div>
+  </aside>
+
+  <main class="main">
+    <div class="main-inner">
+
+      <header class="mb-10">
+        <div class="mono text-[11px] text-ink-tertiary tracking-[0.16em] uppercase mb-3">Decisions log</div>
+        <h1 class="text-5xl font-extrabold tracking-tighter leading-[0.95] mb-4" style="color:#3F1F68;">decisions.</h1>
+        <p class="text-base text-ink-secondary max-w-[620px] leading-relaxed mb-3">
+          Open calls, locked calls — per component. Filled radio = picked option. Rationale note at the bottom of each decision: short reminder of why we picked what we did, and why we skipped the alternatives when it's worth remembering.
+        </p>
+        <div class="try-hint">Hover &amp; click any button → live states</div>
+      </header>
+
+      <div class="tabbar">
+        <button class="tab" data-tab="button">Button <span class="tab-count">13</span></button>
+        <button class="tab" data-tab="badge">Badge <span class="tab-count">5</span></button>
+        <button class="tab" data-tab="product-card">Product Card <span class="tab-count">11</span></button>
+      </div>
+
+      <!-- ================= BUTTON ================= -->
+      <div class="tab-panel" data-panel="button">
+      <div class="section-head">
+        <div class="section-title">Button</div>
+        <div class="section-count">13 decided · 0 open</div>
+      </div>
+
+      <!-- B-01 -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">B-01</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Does Button have a ghost variant?</div>
+        <div class="d-q">Three variants or two? Ghost handles tertiary inline verbs (clear filters, cancel, see all).</div>
+
+        <div class="d-options">
+          <div class="d-opt picked">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">Keep ghost</div>
+              <div class="d-opt-desc">Transparent bg, no shadow, no border, tinted bg on hover.</div>
+            </div>
+            <button class="btn btn-ghost btn-md d-opt-preview">Clear filters</button>
+          </div>
+          <div class="d-opt rejected">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">Drop ghost</div>
+              <div class="d-opt-desc">Force tertiary to secondary or a separate Link component.</div>
+            </div>
+            <button class="btn btn-secondary btn-md d-opt-preview">Clear filters</button>
+          </div>
+          <div class="d-opt rejected">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">Rename ghost → tertiary</div>
+              <div class="d-opt-desc">Same behavior, clearer hierarchy name.</div>
+            </div>
+            <span class="mono text-[11px] text-ink-tertiary self-center">naming only</span>
+          </div>
+        </div>
+
+        <div class="d-note">
+          <strong>Keep ghost.</strong> Clean Shopper has a lot of inline verbs — forcing them to secondary would make toolbars and modal footers crowded. "Ghost" is industry-standard naming, no rename cost.
+        </div>
+      </div>
+
+      <!-- B-02 -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">B-02</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">How many sizes?</div>
+        <div class="d-q">Three (sm/md/lg) vs two (md/lg).</div>
+
+        <div class="d-options">
+          <div class="d-opt picked">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">Three sizes: sm / md / lg</div>
+              <div class="d-opt-desc">32 / 40 / 48px.</div>
+            </div>
+            <div class="d-opt-preview flex items-center gap-2">
+              <button class="btn btn-primary btn-sm">sm</button>
+              <button class="btn btn-primary btn-md">md</button>
+              <button class="btn btn-primary btn-lg">lg</button>
+            </div>
+          </div>
+          <div class="d-opt rejected">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">Two sizes: md / lg</div>
+              <div class="d-opt-desc">Drop sm, use ghost in dense UIs.</div>
+            </div>
+            <div class="d-opt-preview flex items-center gap-2">
+              <button class="btn btn-primary btn-md">md</button>
+              <button class="btn btn-primary btn-lg">lg</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-note">
+          <strong>Three sizes.</strong> Filter toolbars at md feel heavy; sm solves that without forcing ghost to do double duty. Can drop sm later if we never use it.
+        </div>
+      </div>
+
+      <!-- B-03 -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">B-03</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Focus ring color</div>
+        <div class="d-q">Slate always vs contextual (cream on primary, slate elsewhere).</div>
+
+        <div class="d-options">
+          <div class="d-opt picked">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">Slate ring always</div>
+              <div class="d-opt-desc">Same focus on every variant.</div>
+            </div>
+            <div class="d-opt-preview flex items-center gap-2">
+              <button class="btn btn-primary btn-md" style="outline:2px solid #3B7080; outline-offset:2px;">Primary</button>
+              <button class="btn btn-secondary btn-md" style="outline:2px solid #3B7080; outline-offset:2px;">Secondary</button>
+            </div>
+          </div>
+          <div class="d-opt rejected">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">Contextual: cream on primary, slate elsewhere</div>
+              <div class="d-opt-desc">Stronger contrast on primary; per-variant rules.</div>
+            </div>
+            <div class="d-opt-preview flex items-center gap-2">
+              <button class="btn btn-primary btn-md" style="outline:2px solid #FCFBFA; outline-offset:2px;">Primary</button>
+              <button class="btn btn-secondary btn-md" style="outline:2px solid #3B7080; outline-offset:2px;">Secondary</button>
+            </div>
+          </div>
+          <div class="d-opt rejected">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">Lime on primary, slate elsewhere</div>
+              <div class="d-opt-desc">Lime accent on amethyst.</div>
+            </div>
+            <div class="d-opt-preview flex items-center gap-2">
+              <button class="btn btn-primary btn-md" style="outline:2px solid #C9EC2D; outline-offset:2px;">Primary</button>
+              <button class="btn btn-secondary btn-md" style="outline:2px solid #3B7080; outline-offset:2px;">Secondary</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-note">
+          <strong>Slate always.</strong> Role-lock integrity: slate = interactive, focus = slate, no exceptions. Passes WCAG AA (3.4:1 on amethyst) so the contrast concern doesn't block it.
+        </div>
+      </div>
+
+      <!-- B-04 -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">B-04</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Can a Button use lime as foreground?</div>
+        <div class="d-q">Lime is role-locked to accent. Hero button on amethyst could use lime text. Harder rule or allowed exception?</div>
+
+        <div class="d-options">
+          <div class="d-opt picked">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">Never — buttons use cream on amethyst</div>
+              <div class="d-opt-desc">Predictable, single rule.</div>
+            </div>
+            <div class="d-opt-preview" style="background:#3F1F68; padding:12px 16px; border-radius:10px;">
+              <button class="btn btn-md" style="background:transparent; color:#FCFBFA; border:2px solid #FCFBFA;">Save product</button>
+            </div>
+          </div>
+          <div class="d-opt rejected">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">Yes — amethyst-surface hero only</div>
+              <div class="d-opt-desc">Rare "Start free trial" pattern.</div>
+            </div>
+            <div class="d-opt-preview" style="background:#3F1F68; padding:12px 16px; border-radius:10px;">
+              <button class="btn btn-md" style="background:transparent; color:#C9EC2D; border:2px solid #C9EC2D;">Start free</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-note">
+          <strong>Never.</strong> Buttons always use cream/amethyst for text. Lime stays reserved for badges and shadow accents — using it for button text <em>and</em> hero shadow (B-09) would double-up the accent on one element.
+        </div>
+      </div>
+
+      <!-- B-05 -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">B-05</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Can Button render icon-only?</div>
+        <div class="d-q">We already have an IconButton component.</div>
+
+        <div class="d-options">
+          <div class="d-opt picked">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">No — route to IconButton</div>
+              <div class="d-opt-desc">IconButton enforces <code class="mono text-[12px]">aria-label</code>, uses a square shape.</div>
+            </div>
+            <div class="d-opt-preview flex items-center gap-2">
+              <button class="btn btn-primary btn-md">Save</button>
+              <span class="mono text-[11px] text-ink-tertiary">→</span>
+              <button style="width:40px;height:40px;border-radius:10px;background:#FFFFFF;border:2px solid #3F1F68;color:#3F1F68;cursor:pointer;"><i class="ph ph-heart"></i></button>
+            </div>
+          </div>
+          <div class="d-opt rejected">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">Yes — merge into Button</div>
+              <div class="d-opt-desc">Runtime aria-label validation.</div>
+            </div>
+            <span class="mono text-[11px] text-ink-tertiary self-center">merges 2 components</span>
+          </div>
+        </div>
+
+        <div class="d-note">
+          <strong>Route to IconButton.</strong> Type-level a11y enforcement — can't ship an inaccessible button. Square shape is also correct for icon-only hit targets; pill shape is wrong.
+        </div>
+      </div>
+
+      <!-- B-06 -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">B-06</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Loading state</div>
+        <div class="d-q">Keep label + swap icon for spinner, or spinner replaces everything.</div>
+
+        <div class="d-options">
+          <div class="d-opt picked">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">Spinner replaces icon slot, label stays</div>
+              <div class="d-opt-desc"><code class="mono text-[12px]">aria-busy="true"</code>. No layout shift.</div>
+            </div>
+            <button class="btn btn-primary btn-md d-opt-preview">
+              <span class="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></span>Saving
+            </button>
+          </div>
+          <div class="d-opt rejected">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">Spinner replaces entire content</div>
+              <div class="d-opt-desc">Loses label, layout shift.</div>
+            </div>
+            <button class="btn btn-primary btn-md d-opt-preview">
+              <span class="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></span>
+            </button>
+          </div>
+        </div>
+
+        <div class="d-note">
+          <strong>Spinner + label.</strong> No layout shift; screen reader has a real name ("Saving") to announce, not just "busy."
+        </div>
+      </div>
+
+      <!-- B-07 -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">B-07</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title"><code class="mono text-[14px]">iconPosition</code> prop?</div>
+        <div class="d-q">Leading only, or leading + trailing.</div>
+
+        <div class="d-options">
+          <div class="d-opt picked">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">Leading + trailing</div>
+              <div class="d-opt-desc">Both patterns.</div>
+            </div>
+            <div class="d-opt-preview flex items-center gap-2">
+              <button class="btn btn-secondary btn-md"><i class="ph ph-plus"></i>Add to list</button>
+              <button class="btn btn-secondary btn-md">Continue<i class="ph ph-arrow-right"></i></button>
+            </div>
+          </div>
+          <div class="d-opt rejected">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">Leading only</div>
+              <div class="d-opt-desc">Simpler API.</div>
+            </div>
+            <span class="mono text-[11px] text-ink-tertiary self-center">less flexible</span>
+          </div>
+        </div>
+
+        <div class="d-note">
+          <strong>Leading + trailing.</strong> "Continue →" and "Open in new tab ↗" are real patterns. One prop covers both.
+        </div>
+      </div>
+
+      <!-- B-08 -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">B-08</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Shadow policy</div>
+        <div class="d-q">When does a button carry the flat-offset shadow?</div>
+
+        <div class="d-options">
+          <div class="d-opt rejected">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">A. Always</div>
+              <div class="d-opt-desc">Every primary + secondary.</div>
+            </div>
+            <div class="d-opt-preview frame" style="min-width:300px;">
+              <div class="frame-label">Filter row</div>
+              <div class="flex gap-2 flex-wrap">
+                <button class="btn btn-secondary shadow-amethyst btn-sm">All</button>
+                <button class="btn btn-secondary shadow-amethyst btn-sm">Clean</button>
+                <button class="btn btn-secondary shadow-amethyst btn-sm">Caution</button>
+              </div>
+            </div>
+          </div>
+          <div class="d-opt rejected">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">B. Primary only</div>
+              <div class="d-opt-desc">Automatic via variant.</div>
+            </div>
+            <div class="d-opt-preview frame" style="min-width:300px;">
+              <div class="frame-label">Dialog footer</div>
+              <div class="flex gap-2 items-center">
+                <button class="btn btn-ghost btn-md">Cancel</button>
+                <button class="btn btn-primary shadow-amethyst btn-md">Save</button>
+              </div>
+            </div>
+          </div>
+          <div class="d-opt picked">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">C. Hero modifier (<code class="mono text-[12px]">hero</code> prop)</div>
+              <div class="d-opt-desc">Explicit opt-in for moments that matter.</div>
+            </div>
+            <div class="d-opt-preview frame" style="min-width:300px;">
+              <div class="frame-label">Empty-state CTA</div>
+              <div class="flex justify-center">
+                <button class="btn btn-primary shadow-lime btn-lg">Start researching</button>
+              </div>
+            </div>
+          </div>
+          <div class="d-opt rejected">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">D. Never</div>
+              <div class="d-opt-desc">Cards own the signature alone.</div>
+            </div>
+            <div class="d-opt-preview frame" style="min-width:300px;">
+              <div class="frame-label">Dialog footer</div>
+              <div class="flex gap-2 items-center">
+                <button class="btn btn-ghost btn-md">Cancel</button>
+                <button class="btn btn-primary btn-md">Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-note">
+          <strong>Hero modifier.</strong> Most buttons render flat; the <code class="mono text-[12px]">hero</code> prop opts in to the signature shadow for empty-state CTAs, auth submits, onboarding. Makes the shadow <em>mean something</em> when it appears.
+          <span class="why-not"><strong>Why not:</strong> <em>Always</em> made filter rows feel like 4 cards lined up. <em>Primary only</em> shouted on every confirm dialog. <em>Never</em> lost the button↔card visual rhyme and weakened the brand signature.</span>
+        </div>
+      </div>
+
+      <!-- B-09 -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">B-09</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Hero primary shadow color</div>
+        <div class="d-q">Primary bg = amethyst. Amethyst shadow disappears against amethyst. Secondary (white bg) keeps amethyst shadow — this is primary-only.</div>
+
+        <div class="d-options">
+          <div class="d-opt rejected">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">A. Amethyst</div>
+              <div class="d-opt-desc">Invisible against amethyst bg.</div>
+            </div>
+            <div class="d-opt-preview frame" style="min-width:240px;">
+              <div class="frame-label">#3F1F68</div>
+              <button class="btn btn-primary btn-lg" style="box-shadow:4px 4px 0 0 #3F1F68;">Start</button>
+            </div>
+          </div>
+          <div class="d-opt picked">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">B. Lime</div>
+              <div class="d-opt-desc"><code class="mono text-[12px]">shadow-flat-lime</code> — already in the system.</div>
+            </div>
+            <div class="d-opt-preview frame" style="min-width:240px;">
+              <div class="frame-label">#C9EC2D</div>
+              <button class="btn btn-primary btn-lg" style="box-shadow:4px 4px 0 0 #C9EC2D;">Start</button>
+            </div>
+          </div>
+          <div class="d-opt rejected">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">C. Cream</div>
+              <div class="d-opt-desc">Safe, forgettable.</div>
+            </div>
+            <div class="d-opt-preview frame" style="min-width:240px;">
+              <div class="frame-label">#FCFBFA</div>
+              <button class="btn btn-primary btn-lg" style="box-shadow:4px 4px 0 0 #FCFBFA;">Start</button>
+            </div>
+          </div>
+          <div class="d-opt rejected">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">D. Slate</div>
+              <div class="d-opt-desc">Breaks interactive role-lock.</div>
+            </div>
+            <div class="d-opt-preview frame" style="min-width:240px;">
+              <div class="frame-label">#3B7080</div>
+              <button class="btn btn-primary btn-lg" style="box-shadow:4px 4px 0 0 #3B7080;">Start</button>
+            </div>
+          </div>
+          <div class="d-opt rejected">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">E. Stone</div>
+              <div class="d-opt-desc">Breaks category role-lock.</div>
+            </div>
+            <div class="d-opt-preview frame" style="min-width:240px;">
+              <div class="frame-label">#C9BDA8</div>
+              <button class="btn btn-primary btn-lg" style="box-shadow:4px 4px 0 0 #C9BDA8;">Start</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-note">
+          <strong>Lime.</strong> The hero primary <em>is</em> the accent moment by definition, so lime is correct usage of the accent role — not a violation. Three things line up: contrast need, role system, and existing token (<code class="mono text-[12px]">shadow-flat-lime</code>).
+          <span class="why-not"><strong>Why not:</strong> <em>Amethyst</em> disappeared. <em>Cream</em> was visible but forgettable. <em>Slate</em> and <em>stone</em> both break their role-locks (interactive and category respectively).</span>
+        </div>
+      </div>
+
+      <!-- B-10 Press -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">B-10</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Pressed state behavior</div>
+        <div class="d-q">Press = a "pop" — button shrinks slightly on press, returns to normal on release. Shadow rules hold: hero buttons keep their shadow through the press; non-hero never show a shadow at any state.</div>
+
+        <div class="d-options">
+          <div class="d-opt picked">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">Shrink to scale(0.94), shadow persists on hero</div>
+              <div class="d-opt-desc">Same press rule for every variant. Only the visual layer differs: hero buttons keep their lime/amethyst shadow; non-hero buttons are always shadow-free. Spring easing on release.</div>
+            </div>
+            <div class="d-opt-preview frame" style="min-width:380px;">
+              <div class="frame-label">Click and hold any button · release to pop</div>
+              <div class="press-demo">
+                <div class="demo-row mb-3">
+                  <span class="demo-label" style="width:90px;">Hero 1°</span>
+                  <button class="btn btn-primary shadow-lime btn-md">Save product</button>
+                </div>
+                <div class="demo-row mb-3">
+                  <span class="demo-label" style="width:90px;">Hero 2°</span>
+                  <button class="btn btn-secondary shadow-amethyst btn-md">Save product</button>
+                </div>
+                <div class="demo-row mb-3">
+                  <span class="demo-label" style="width:90px;">Primary</span>
+                  <button class="btn btn-primary btn-md">Save product</button>
+                </div>
+                <div class="demo-row mb-3">
+                  <span class="demo-label" style="width:90px;">Secondary</span>
+                  <button class="btn btn-secondary btn-md">Save product</button>
+                </div>
+                <div class="demo-row">
+                  <span class="demo-label" style="width:90px;">Ghost</span>
+                  <button class="btn btn-ghost btn-md">Save product</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-opt rejected">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">Translate on hero, bg-darken on non-hero</div>
+              <div class="d-opt-desc">Earlier proposal — hero pushes into its shadow, non-hero darkens.</div>
+            </div>
+            <span class="mono text-[11px] text-ink-tertiary self-center">two rules</span>
+          </div>
+        </div>
+
+        <div class="d-note">
+          <strong>Shrink, shadow persists on hero.</strong> Single rule — every variant scales down on press and pops back on release. Hero buttons keep their shadow throughout (the shadow is part of "hero" and shouldn't disappear on interaction). Non-hero buttons never show a shadow. Spring easing on release so it snaps back with a little bounce.
+          <span class="why-not"><strong>Why not the two-rule version:</strong> asked press to mean one thing (translate into shadow) on hero and another (bg-darken) on non-hero. Shrink is simpler, universal, and reads as a "pop" consistently.</span>
+        </div>
+      </div>
+
+      <!-- B-11 Hover -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">B-11</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Hover state behavior</div>
+        <div class="d-q">Primary should go to a lighter fill on hover. Need to pick the exact lighter color, and decide hover for secondary and ghost. Hero and non-hero use the same hover rule — the only difference between them is whether a shadow is present at rest.</div>
+
+        <div class="d-options">
+
+          <div class="d-opt picked">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">A. Primary → amethyst-80 · Secondary + ghost → amethyst-20 · Hero shadow shifts color</div>
+              <div class="d-opt-desc">Primary lifts toward <code class="mono text-[12px]">amethyst-80</code> (#6B4F8F). Secondary + ghost pick up an <code class="mono text-[12px]">amethyst-20</code> fill (#DAD2E2). Hero buttons shift their shadow color on hover as a separate "bloom" — lime → lime-tint on primary, amethyst → amethyst-80 on secondary.</div>
+            </div>
+            <div class="d-opt-preview frame" style="min-width:380px;">
+              <div class="frame-label">Hover each button</div>
+              <div class="demo-row mb-3">
+                <span class="demo-label" style="width:90px;">Hero 1°</span>
+                <button class="btn btn-primary shadow-lime btn-md">Save product</button>
+              </div>
+              <div class="demo-row mb-3">
+                <span class="demo-label" style="width:90px;">Hero 2°</span>
+                <button class="btn btn-secondary shadow-amethyst btn-md">Save product</button>
+              </div>
+              <div class="demo-row mb-3">
+                <span class="demo-label" style="width:90px;">Primary</span>
+                <button class="btn btn-primary btn-md">Save product</button>
+              </div>
+              <div class="demo-row mb-3">
+                <span class="demo-label" style="width:90px;">Secondary</span>
+                <button class="btn btn-secondary btn-md">Save product</button>
+              </div>
+              <div class="demo-row">
+                <span class="demo-label" style="width:90px;">Ghost</span>
+                <button class="btn btn-ghost btn-md">Save product</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-opt rejected">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">B. Custom mid-amethyst · Inverse on secondary</div>
+              <div class="d-opt-desc">Primary → custom #5A3B82. Secondary flips white→amethyst. Ghost → amethyst-5.</div>
+            </div>
+            <span class="mono text-[11px] text-ink-tertiary self-center">adds token · big jump</span>
+          </div>
+
+        </div>
+
+        <div class="d-note">
+          <strong>Option A.</strong> Uses only tokens already in the ramp (<code class="mono text-[12px]">amethyst-80</code>, <code class="mono text-[12px]">amethyst-5</code>). Hover shifts feel consistent across variants — everyone moves one step on the same ramp. All three passes WCAG AA:
+          <table class="a11y-table">
+            <thead>
+              <tr><th>Variant</th><th>Text on bg</th><th>Ratio</th><th>WCAG</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Primary rest</td>
+                <td><span class="swatch" style="background:#FCFBFA;"></span>cream on <span class="swatch" style="background:#3F1F68;"></span>amethyst</td>
+                <td>12.6 : 1</td>
+                <td class="pass">AAA ✓</td>
+              </tr>
+              <tr>
+                <td>Primary hover</td>
+                <td><span class="swatch" style="background:#FCFBFA;"></span>cream on <span class="swatch" style="background:#6B4F8F;"></span>amethyst-80</td>
+                <td>6.5 : 1</td>
+                <td class="pass">AA ✓</td>
+              </tr>
+              <tr>
+                <td>Secondary rest</td>
+                <td><span class="swatch" style="background:#3F1F68;"></span>amethyst on <span class="swatch" style="background:#FFFFFF; border-color:#DAD2E2;"></span>paper</td>
+                <td>11.9 : 1</td>
+                <td class="pass">AAA ✓</td>
+              </tr>
+              <tr>
+                <td>Secondary + ghost hover</td>
+                <td><span class="swatch" style="background:#3F1F68;"></span>amethyst on <span class="swatch" style="background:#DAD2E2;"></span>amethyst-20</td>
+                <td>8.8 : 1</td>
+                <td class="pass">AAA ✓</td>
+              </tr>
+            </tbody>
+          </table>
+          <span class="why-not"><strong>Why not B:</strong> adding <code class="mono text-[12px]">#5A3B82</code> spends a new token on one use case. Inverting secondary on hover (white→amethyst) is a big visual jump that reads as "state changed" rather than "you're hovering."</span>
+        </div>
+      </div>
+
+      <!-- B-12 Hero hover — lift, no fill change -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">B-12</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Hero hover — shadow appears + lift, no fill change</div>
+        <div class="d-q">Hero at rest has <strong>no shadow</strong> — looks the same as a non-hero button. On hover, the shadow appears (<code class="mono text-[12px]">4px 4px 0</code>) <em>and</em> the button translates <code class="mono text-[12px]">-2px, -2px</code>, so the shadow looks like it was revealed by lifting the button off the page. No fill change. The hero "reward" is the shadow reveal itself.</div>
+
+        <div class="d-options">
+
+          <div class="d-opt picked">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">No shadow at rest · shadow appears + lift on hover · no fill change</div>
+              <div class="d-opt-desc">Rest: <code class="mono text-[12px]">box-shadow: none</code> — hero looks identical to non-hero at rest. Hover: shadow materializes at <code class="mono text-[12px]">4px 4px 0</code> and the button translates <code class="mono text-[12px]">(-2px, -2px)</code>. The translate makes the shadow look like it was there all along, hidden behind the button. Fill stays identical. Press still scales to 0.96 and dismisses the shadow (B-10).</div>
+            </div>
+            <div class="d-opt-preview frame" style="min-width:380px;">
+              <div class="frame-label">Hover each — watch the lift</div>
+              <div class="demo-row mb-3">
+                <span class="demo-label" style="width:70px;">Hero 1°</span>
+                <button class="btn btn-primary shadow-lime btn-md">Save product</button>
+              </div>
+              <div class="demo-row mb-3">
+                <span class="demo-label" style="width:70px;">Hero 2°</span>
+                <button class="btn btn-secondary shadow-amethyst btn-md">Save product</button>
+              </div>
+              <div class="demo-row">
+                <span class="demo-label" style="width:70px;">Hero 1° lg</span>
+                <button class="btn btn-primary shadow-lime btn-lg">Shop the edit</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="d-note">
+          <strong>Reveal, not always-on.</strong> Earlier we had the shadow on at rest. Problem: the signature flat-offset amethyst shadow is loud, and a hero CTA doesn't need to scream before the user engages. Hiding the shadow at rest and revealing it on hover turns the shadow into a <em>response</em> to intent — which is quieter at baseline and more rewarding on interaction. Hero still communicates its importance through size/placement + copy, not a resting shadow.
+          <span class="why-not"><strong>Why not shadow always on:</strong> competes with card shadows across a dense screen. <strong>Why not bloom/inversion on an always-on shadow:</strong> two events stacked (color shift + lift) felt busy. One event (shadow reveal via translate) reads cleaner.</span>
+        </div>
+      </div>
+
+      <!-- B-13 Primary/secondary hover — REOPENED (visibility problem with -90) -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">B-13</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Primary + secondary hover — darken to new <code class="mono text-[14px]">amethyst-110</code> · ghost keeps <code class="mono text-[14px]">amethyst-20</code></div>
+        <div class="d-q">Earlier we picked <code class="mono text-[12px]">amethyst-90</code> (#4E2D73) for primary + secondary hover, with ghost as an exception to <code class="mono text-[12px]">amethyst-20</code>. On the live demo it's too subtle — -90 is only 5 points lighter than -100, which means the hover is technically there but doesn't <em>feel</em> like a response. The core question: lightening amethyst (already dark at L=26) doesn't give us much room to move before it reads as "faded." Three directions worth trying below.</div>
+
+        <div class="d-note" style="margin-bottom:12px;">
+          <strong>On ramp granularity:</strong> yes, expanding the ramp is standard. Mature systems run 9–12 stops (Material 50–900, Tailwind 50–950, Radix 1–12). Our ramp is now 11-stop (<code class="mono text-[12px]">100/90/80/70/60/50/40/30/20/10/5</code>) after this pass. But that doesn't solve the hover-visibility problem on its own — the problem is <em>direction</em>, not granularity.
+        </div>
+
+        <!-- Full ramp visualization — with new -110 -->
+        <div class="ramp-row" style="grid-template-columns:repeat(12, 1fr);">
+          <div class="ramp-stop new" style="background:#2A1247; color:#FCFBFA;"><span class="stop-label">110 NEW</span></div>
+          <div class="ramp-stop" style="background:#3F1F68; color:#FCFBFA;"><span class="stop-label">100</span></div>
+          <div class="ramp-stop" style="background:#4E2D73; color:#FCFBFA;"><span class="stop-label">90</span></div>
+          <div class="ramp-stop" style="background:#6B4F8F; color:#FCFBFA;"><span class="stop-label">80</span></div>
+          <div class="ramp-stop" style="background:#7B639A; color:#FCFBFA;"><span class="stop-label">70</span></div>
+          <div class="ramp-stop" style="background:#8C78A6; color:#FCFBFA;"><span class="stop-label">60</span></div>
+          <div class="ramp-stop" style="background:#9C8CB2; color:#FCFBFA;"><span class="stop-label">50</span></div>
+          <div class="ramp-stop" style="background:#ADA1BE; color:#3F1F68;"><span class="stop-label">40</span></div>
+          <div class="ramp-stop" style="background:#C3B9D0; color:#3F1F68;"><span class="stop-label">30</span></div>
+          <div class="ramp-stop" style="background:#DAD2E2; color:#3F1F68;"><span class="stop-label">20</span></div>
+          <div class="ramp-stop" style="background:#E7E2ED; color:#3F1F68;"><span class="stop-label">10</span></div>
+          <div class="ramp-stop" style="background:#F5F2F8; color:#3F1F68;"><span class="stop-label">5</span></div>
+        </div>
+
+        <div class="d-options">
+
+          <div class="d-opt picked">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">D1. Darken to new <code class="mono text-[12px]">amethyst-110</code> (#2A1247) — extend the ramp</div>
+              <div class="d-opt-desc">Industry-standard primary-button pattern: <em>darken</em> on hover (Tailwind, Material, Radix all do this). Primary + secondary both go to a new <code class="mono text-[12px]">amethyst-110</code> step, added to the ramp below -100. Reads as "pressing deeper into" the button. Contrast with cream: ~15 : 1 (AAA ✓). Ghost stays at <code class="mono text-[12px]">-20</code>.</div>
+            </div>
+            <div class="d-opt-preview frame darken-deep" style="min-width:340px;">
+              <div class="frame-label">Darken direction — hover each</div>
+              <div class="demo-row mb-3"><span class="demo-label" style="width:80px;">Primary</span><button class="btn btn-primary btn-md">Save</button></div>
+              <div class="demo-row mb-3"><span class="demo-label" style="width:80px;">Secondary</span><button class="btn btn-secondary btn-md">Save</button></div>
+              <div class="demo-row"><span class="demo-label" style="width:80px;">Ghost</span><button class="btn btn-ghost btn-md">Save</button></div>
+            </div>
+          </div>
+
+          <div class="d-opt rejected">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">D2. Keep -90, amplify with scale(1.02) + inset lime ring</div>
+              <div class="d-opt-desc">Color change stays subtle (<code class="mono text-[12px]">amethyst-90</code>) but we stack a second cue: 2px inset lime ring + scale up 2%. The lime ring reinforces "this is a hero action" without committing to the full hero shadow. Most "signal-rich" of the three.</div>
+            </div>
+            <div class="d-opt-preview frame amplified-90" style="min-width:340px;">
+              <div class="frame-label">Amplified -90 — hover each</div>
+              <div class="demo-row mb-3"><span class="demo-label" style="width:80px;">Primary</span><button class="btn btn-primary btn-md">Save</button></div>
+              <div class="demo-row mb-3"><span class="demo-label" style="width:80px;">Secondary</span><button class="btn btn-secondary btn-md">Save</button></div>
+              <div class="demo-row"><span class="demo-label" style="width:80px;">Ghost</span><button class="btn btn-ghost btn-md">Save</button></div>
+            </div>
+          </div>
+
+          <div class="d-opt rejected">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">D3. Accept the lighter read — unify at <code class="mono text-[12px]">amethyst-80</code></div>
+              <div class="d-opt-desc">Earlier you said -80 felt "light or muted." But a lot of that read was the <em>lack</em> of a clear direction. Isolated, -80 is a legibly different shade from -100, and matches what most systems do when they lighten. Simplest to implement, no new token needed beyond the ramp fill-in.</div>
+            </div>
+            <div class="d-opt-preview frame lighten-80" style="min-width:340px;">
+              <div class="frame-label">Lighten at -80 — hover each</div>
+              <div class="demo-row mb-3"><span class="demo-label" style="width:80px;">Primary</span><button class="btn btn-primary btn-md">Save</button></div>
+              <div class="demo-row mb-3"><span class="demo-label" style="width:80px;">Secondary</span><button class="btn btn-secondary btn-md">Save</button></div>
+              <div class="demo-row"><span class="demo-label" style="width:80px;">Ghost</span><button class="btn btn-ghost btn-md">Save</button></div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="d-note">
+          <strong>D1 — darken, and extend the ramp.</strong> Amethyst is already a dark signature color — lightening it toward pastel fights the brand. Darkening reads as "you're about to commit." It's also the industry-default primary hover. The new step lives in the ramp as <code class="mono text-[12px]">amethyst-110</code>, not as a one-off named token.
+          <div style="margin-top:10px;"><strong>Why ramp-native, not one-off:</strong> every mature system does this. Tailwind extended 50–900 to include 950 for exactly this case. Radix defines step 10 as "the hover for step 9" natively. Material tonal palettes run 0–100 with hover hitting the adjacent stop. A one-off token (<code class="mono text-[12px]">amethyst-hover</code> or <code class="mono text-[12px]">amethyst-deep</code>) would orphan the value from the ramp and make the system harder to reason about — future designers would ask "why is the darkest color outside the ramp?" Putting it at -110 extends the numeric naming consistently (bigger = darker), stays disciplined, and leaves room for a semantic alias later if we want <code class="mono text-[12px]">--interactive-primary-hover → amethyst-110</code>.</div>
+          <span class="why-not"><strong>Why not D2:</strong> stacking color + scale + ring is three events for one hover. <strong>Why not D3:</strong> -80 at #6B4F8F reads as "faded" against the dark-amethyst brand — lightening a signature dark fights the identity.</span>
+        </div>
+      </div>
+
+      </div><!-- /panel:button -->
+
+      <!-- ================= BADGE ================= -->
+      <div class="tab-panel" data-panel="badge">
+      <div class="section-head">
+        <div class="section-title">Badge</div>
+        <div class="section-count">5 decided · 0 open</div>
+      </div>
+
+      <!-- BD-01 · Three components -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">BD-01</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Three components, not one with variants</div>
+        <div class="d-q">Badges in Clean Shopper carry three different jobs — status safety rating, category organization, and accent/premium moment. They share a shape-language family but have incompatible semantics. Split into three dedicated components so the role-lock is enforced at the type level.</div>
+        <div class="d-options">
+          <div class="d-opt picked">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label"><code class="mono text-[12px]">StatusBadge</code> · <code class="mono text-[12px]">CategoryTag</code> · <code class="mono text-[12px]">AccentBadge</code></div>
+              <div class="d-opt-desc">Each component owns one job. StatusBadge: clean/caution/avoid safety rating. CategoryTag: stone-tint org tag, non-judgmental. AccentBadge: lime premium moment on amethyst surfaces only.</div>
+            </div>
+            <div class="d-opt-preview frame" style="min-width:360px;">
+              <div class="frame-label">The three roles</div>
+              <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                <span class="badge badge-clean shape-pill is-upper"><i class="ph-fill ph-check-circle"></i>Clean</span>
+                <span class="badge badge-category shape-slight is-upper">Skincare</span>
+                <span class="badge badge-accent shape-asym is-upper">Editor's pick</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="d-note">
+          <strong>Three boundaries at the type level.</strong> Preserves role-lock: a dev can't accidentally ship a lime status badge or a semantic category tag. Each component has its own API, its own shape, its own rules.
+        </div>
+      </div>
+
+      <!-- BD-02 · Shape per component -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">BD-02</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Shape per component — pick one each</div>
+        <div class="d-q">Each component gets its own shape so visual weight maps to role. Status = loud/authoritative (bold shape). Category = quiet/organizational (minimal shape). Accent = distinctive (signature shape). Hover/compare the options below.</div>
+
+        <!-- STATUS shapes -->
+        <div style="margin-top:16px;">
+          <div class="frame-label" style="margin-bottom:6px;">StatusBadge — options</div>
+          <div class="shape-pick-row is-picked">
+            <span class="shape-pick-label">A. Pill (full)</span>
+            <span class="badge badge-clean shape-pill is-upper"><i class="ph-fill ph-check-circle"></i>Clean</span>
+            <span class="badge badge-caution shape-pill is-upper"><i class="ph-fill ph-warning-circle"></i>Caution</span>
+            <span class="badge badge-avoid shape-pill is-upper"><i class="ph-fill ph-x-circle"></i>Avoid</span>
+            <span class="mono text-[10px] text-ink-tertiary">rounded-full · loud, authoritative</span>
+          </div>
+          <div class="shape-pick-row">
+            <span class="shape-pick-label">B. Soft (16px)</span>
+            <span class="badge badge-clean shape-soft is-upper"><i class="ph-fill ph-check-circle"></i>Clean</span>
+            <span class="badge badge-caution shape-soft is-upper"><i class="ph-fill ph-warning-circle"></i>Caution</span>
+            <span class="badge badge-avoid shape-soft is-upper"><i class="ph-fill ph-x-circle"></i>Avoid</span>
+            <span class="mono text-[10px] text-ink-tertiary">rounded-card · softer, still prominent</span>
+          </div>
+          <div class="shape-pick-row">
+            <span class="shape-pick-label">C. Slight (6px)</span>
+            <span class="badge badge-clean shape-slight is-upper"><i class="ph-fill ph-check-circle"></i>Clean</span>
+            <span class="badge badge-caution shape-slight is-upper"><i class="ph-fill ph-warning-circle"></i>Caution</span>
+            <span class="badge badge-avoid shape-slight is-upper"><i class="ph-fill ph-x-circle"></i>Avoid</span>
+            <span class="mono text-[10px] text-ink-tertiary">rounded-badge · technical/quiet</span>
+          </div>
+        </div>
+
+        <!-- CATEGORY shapes -->
+        <div style="margin-top:22px;">
+          <div class="frame-label" style="margin-bottom:6px;">CategoryTag — options</div>
+          <div class="shape-pick-row">
+            <span class="shape-pick-label">A. Slight (6px)</span>
+            <span class="badge badge-category shape-slight is-upper">Skincare</span>
+            <span class="badge badge-category shape-slight is-upper">Haircare</span>
+            <span class="badge badge-category shape-slight is-upper">Home</span>
+            <span class="mono text-[10px] text-ink-tertiary">rounded-badge · sits back, non-shouty</span>
+          </div>
+          <div class="shape-pick-row is-picked">
+            <span class="shape-pick-label">B. Tight (4px)</span>
+            <span class="badge badge-category shape-tight is-upper">Skincare</span>
+            <span class="badge badge-category shape-tight is-upper">Haircare</span>
+            <span class="badge badge-category shape-tight is-upper">Home</span>
+            <span class="mono text-[10px] text-ink-tertiary">crisp, editorial, more "label" than "tag"</span>
+          </div>
+          <div class="shape-pick-row">
+            <span class="shape-pick-label">C. Pill (full)</span>
+            <span class="badge badge-category shape-pill is-upper">Skincare</span>
+            <span class="badge badge-category shape-pill is-upper">Haircare</span>
+            <span class="badge badge-category shape-pill is-upper">Home</span>
+            <span class="mono text-[10px] text-ink-tertiary">rounded-full · clashes with StatusBadge-as-pill</span>
+          </div>
+        </div>
+
+        <!-- ACCENT shapes -->
+        <div style="margin-top:22px;">
+          <div class="frame-label" style="margin-bottom:6px;">AccentBadge — options (on amethyst)</div>
+          <div class="shape-pick-row is-picked" style="background:#3F1F68; padding:16px; border-radius:12px; margin-top:6px; border-left:2px solid #C9EC2D;">
+            <span class="shape-pick-label" style="color:#C9EC2D;">A. Asymmetric</span>
+            <span class="badge badge-accent shape-asym is-upper">Editor's pick</span>
+            <span class="badge badge-accent shape-asym is-upper"><i class="ph-fill ph-star"></i>Premium</span>
+            <span class="mono text-[10px]" style="color:#ADA1BE;">rounded-asym-sm · echoes card signature shape</span>
+          </div>
+          <div class="shape-pick-row" style="background:#3F1F68; padding:16px; border-radius:12px;">
+            <span class="shape-pick-label" style="color:#ADA1BE;">B. Pill</span>
+            <span class="badge badge-accent shape-pill is-upper">Editor's pick</span>
+            <span class="badge badge-accent shape-pill is-upper"><i class="ph-fill ph-star"></i>Premium</span>
+            <span class="mono text-[10px]" style="color:#ADA1BE;">rounded-full · reads like a button</span>
+          </div>
+          <div class="shape-pick-row" style="background:#3F1F68; padding:16px; border-radius:12px;">
+            <span class="shape-pick-label" style="color:#ADA1BE;">C. Cut-corner</span>
+            <span class="badge badge-accent shape-cut is-upper">Editor's pick</span>
+            <span class="badge badge-accent shape-cut is-upper"><i class="ph-fill ph-star"></i>Premium</span>
+            <span class="mono text-[10px]" style="color:#ADA1BE;">ribbon/ticket feel · distinctive, editorial</span>
+          </div>
+          <div class="shape-pick-row" style="background:#3F1F68; padding:16px; border-radius:12px;">
+            <span class="shape-pick-label" style="color:#ADA1BE;">D. Soft (16px)</span>
+            <span class="badge badge-accent shape-soft is-upper">Editor's pick</span>
+            <span class="badge badge-accent shape-soft is-upper"><i class="ph-fill ph-star"></i>Premium</span>
+            <span class="mono text-[10px]" style="color:#ADA1BE;">rounded-card · safe, less signature</span>
+          </div>
+        </div>
+
+        <div class="d-note" style="margin-top:16px;">
+          <strong>My recommendation:</strong> Status = A (pill), Category = B (tight 4px), Accent = A (asymmetric). Rationale: Status gets the loudest shape because it carries safety meaning — pill is universally "badge-like" and readable at small sizes. Category gets the crispest, quietest shape (4px) so twelve category tags don't turn a listing page into a parade. Accent uses <code class="mono text-[12px]">rounded-asym-sm</code> so the lime premium moment echoes the card signature shape — ties the brand language together without reusing a shape already loaded with meaning elsewhere.
+          <div style="margin-top:10px;"><strong>What to avoid:</strong> Category at pill (option C) would clash with StatusBadge-as-pill and blur the hierarchy. Accent as a pill (option B) reads like a button — bad, since badges aren't interactive. Accent as 16px soft (D) is safe but gives up the chance to do something signature.</div>
+        </div>
+      </div>
+
+      <!-- BD-03 · Ingredient dot -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">BD-03</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Ingredient-row dot — StatusBadge variant, or separate <code class="mono text-[14px]">IngredientDot</code>?</div>
+        <div class="d-q">Ingredient lists show a small colored dot next to each ingredient name, indicating its individual safety rating. Is that a tiny StatusBadge (icon+label stripped), or a separate <code class="mono text-[12px]">IngredientDot</code> component?</div>
+
+        <div class="d-options">
+
+          <div class="d-opt">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">A. StatusBadge variant — a new <code class="mono text-[12px]">size="dot"</code></div>
+              <div class="d-opt-desc">StatusBadge grows a tiny dot-only size. Same component, same tokens.</div>
+            </div>
+            <div class="d-opt-preview frame" style="min-width:320px;">
+              <div class="frame-label">StatusBadge — dot size</div>
+              <div style="display:flex; gap:8px; align-items:center;">
+                <span class="ing-dot clean"></span>
+                <span class="ing-dot caution"></span>
+                <span class="ing-dot avoid"></span>
+                <span class="mono text-[10px] text-ink-tertiary ml-2">Reuses status tokens · same component</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-opt picked">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">B. Separate <code class="mono text-[12px]">IngredientDot</code> component</div>
+              <div class="d-opt-desc">A 6–8px colored dot next to an ingredient name isn't a "badge" — it's a list marker. Different semantics (no text label, announced via <code class="mono text-[12px]">aria-label</code> on parent row, not as a standalone element), different surface (dense list, not standalone), different scale. Keep StatusBadge opinionated about its full icon+label treatment.</div>
+            </div>
+            <div class="d-opt-preview frame" style="min-width:320px;">
+              <div class="frame-label">IngredientDot — in ingredient list context</div>
+              <div class="ing-row"><span class="ing-dot clean"></span><span>Aloe barbadensis leaf juice</span></div>
+              <div class="ing-row"><span class="ing-dot clean"></span><span>Glycerin</span></div>
+              <div class="ing-row"><span class="ing-dot caution"></span><span>Phenoxyethanol</span></div>
+              <div class="ing-row"><span class="ing-dot avoid"></span><span>Fragrance (parfum)</span></div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="d-note">
+          <strong>My recommendation: B (separate component).</strong> A dot-only indicator next to an ingredient name is conceptually different from a status badge — it's a list marker, not a badge. Overloading StatusBadge with a dot size muddies its responsibility ("what is StatusBadge? a badge? a dot? both?"). Separating lets StatusBadge stay tightly scoped to "product-level safety pill" and lets IngredientDot optimize for "inline list marker" (tiny, no label, accessible through row context). Both share the same color tokens (<code class="mono text-[12px]">clean-dot</code>, <code class="mono text-[12px]">caution-dot</code>, <code class="mono text-[12px]">avoid-dot</code>) — the design system already anticipated this split.
+          <span class="why-not"><strong>Why not A:</strong> you'd be adding a size that strips the icon, the label, the bg — at that point it's not the same component, just wearing the same name.</span>
+        </div>
+      </div>
+
+      <!-- BD-04 · Background tier -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">BD-04</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Background tier for StatusBadge — <code class="mono text-[14px]">-bg</code> or <code class="mono text-[14px]">-tint</code>?</div>
+        <div class="d-q">Each status tier has two background options: <code class="mono text-[12px]">-bg</code> (more saturated, e.g. clean-bg #D7E8E0) and <code class="mono text-[12px]">-tint</code> (very pale, e.g. clean-tint #E7F1ED). Which belongs on the badge itself? Here's the same badge on the three surfaces it actually lives on — compare.</div>
+
+        <!-- Scenario 1: Product card image overlay -->
+        <div style="margin-top:14px;">
+          <div class="frame-label" style="margin-bottom:6px;">Scenario 1 · Product card image overlay</div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div class="scene">
+              <div class="scene-img clean-img" style="padding:10px;">
+                <span class="badge badge-clean shape-pill is-upper" style="position:absolute; top:10px; left:10px;"><i class="ph-fill ph-check-circle"></i>Clean</span>
+              </div>
+              <div class="scene-paper"><div class="mono text-[10px] text-ink-tertiary">-bg (saturated)</div></div>
+            </div>
+            <div class="scene">
+              <div class="scene-img clean-img" style="padding:10px;">
+                <span class="badge badge-clean tier-tint shape-pill is-upper" style="position:absolute; top:10px; left:10px;"><i class="ph-fill ph-check-circle"></i>Clean</span>
+              </div>
+              <div class="scene-paper"><div class="mono text-[10px] text-ink-tertiary">-tint (pale)</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scenario 2: Inline on cream background -->
+        <div style="margin-top:18px;">
+          <div class="frame-label" style="margin-bottom:6px;">Scenario 2 · Inline on cream page surface</div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div class="scene">
+              <div class="scene-cream">
+                <div style="font-size:13px; color:#3F1F68;">This product is rated <span class="badge badge-clean shape-pill is-upper" style="vertical-align:middle;"><i class="ph-fill ph-check-circle"></i>Clean</span> based on ingredient analysis.</div>
+              </div>
+              <div class="scene-paper"><div class="mono text-[10px] text-ink-tertiary">-bg (saturated) · punchy inline</div></div>
+            </div>
+            <div class="scene">
+              <div class="scene-cream">
+                <div style="font-size:13px; color:#3F1F68;">This product is rated <span class="badge badge-clean tier-tint shape-pill is-upper" style="vertical-align:middle;"><i class="ph-fill ph-check-circle"></i>Clean</span> based on ingredient analysis.</div>
+              </div>
+              <div class="scene-paper"><div class="mono text-[10px] text-ink-tertiary">-tint (pale) · reads as whisper</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scenario 3: Listing page -->
+        <div style="margin-top:18px;">
+          <div class="frame-label" style="margin-bottom:6px;">Scenario 3 · Listing page — twelve badges at once</div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div class="scene">
+              <div class="scene-cream" style="display:flex; flex-wrap:wrap; gap:8px;">
+                <span class="badge badge-clean shape-pill is-upper"><i class="ph-fill ph-check-circle"></i>Clean</span>
+                <span class="badge badge-caution shape-pill is-upper"><i class="ph-fill ph-warning-circle"></i>Caution</span>
+                <span class="badge badge-clean shape-pill is-upper"><i class="ph-fill ph-check-circle"></i>Clean</span>
+                <span class="badge badge-avoid shape-pill is-upper"><i class="ph-fill ph-x-circle"></i>Avoid</span>
+                <span class="badge badge-clean shape-pill is-upper"><i class="ph-fill ph-check-circle"></i>Clean</span>
+                <span class="badge badge-caution shape-pill is-upper"><i class="ph-fill ph-warning-circle"></i>Caution</span>
+              </div>
+              <div class="scene-paper"><div class="mono text-[10px] text-ink-tertiary">-bg · risk of "parade"</div></div>
+            </div>
+            <div class="scene">
+              <div class="scene-cream" style="display:flex; flex-wrap:wrap; gap:8px;">
+                <span class="badge badge-clean tier-tint shape-pill is-upper"><i class="ph-fill ph-check-circle"></i>Clean</span>
+                <span class="badge badge-caution tier-tint shape-pill is-upper"><i class="ph-fill ph-warning-circle"></i>Caution</span>
+                <span class="badge badge-clean tier-tint shape-pill is-upper"><i class="ph-fill ph-check-circle"></i>Clean</span>
+                <span class="badge badge-avoid tier-tint shape-pill is-upper"><i class="ph-fill ph-x-circle"></i>Avoid</span>
+                <span class="badge badge-clean tier-tint shape-pill is-upper"><i class="ph-fill ph-check-circle"></i>Clean</span>
+                <span class="badge badge-caution tier-tint shape-pill is-upper"><i class="ph-fill ph-warning-circle"></i>Caution</span>
+              </div>
+              <div class="scene-paper"><div class="mono text-[10px] text-ink-tertiary">-tint · quieter at volume</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-note" style="margin-top:14px;">
+          <strong>My recommendation:</strong> StatusBadge always uses <code class="mono text-[12px]">-bg</code>. Single rule, no judgment calls. Rationale: a status badge is supposed to be legible at a glance — that's its whole job. <code class="mono text-[12px]">-tint</code> is too quiet against both photo overlays (gets lost on lighter images) and cream surfaces (reads as a whisper when the point is to communicate a rating). The "parade" problem on listing pages is real but is better solved by <em>design choice</em> (less dense layouts, rating visible only on hover or detail) than by neutering the badge.
+          <div style="margin-top:10px;"><strong>Where <code class="mono text-[12px]">-tint</code> still has a job:</strong> as a surface fill for larger highlight zones — e.g. an "Ingredients to watch" callout panel where the background is clean-tint at panel scale, with a StatusBadge-bg inside it. Tint = surface. Bg = the badge itself.</div>
+          <span class="why-not"><strong>Why not a contextual rule</strong> ("bg on images, tint on cream"): adds cognitive load every time a designer drops a badge. Simple rule wins unless we see real evidence the parade problem shows up.</span>
+        </div>
+      </div>
+
+      <!-- BD-05 · CategoryTag text color -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">BD-05</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">CategoryTag text color — what reads on <code class="mono text-[14px]">stone-tint</code>?</div>
+        <div class="d-q">Background is locked as <code class="mono text-[12px]">stone-tint</code> (#F0EAE0). But the obvious match — <code class="mono text-[12px]">stone</code> itself (#C9BDA8) — fails contrast (1.3:1, invisible). What's the foreground color? Four directions below. Compare legibility, tone match, and whether the tag still feels like it lives in its own "category" palette or gets absorbed into the amethyst ink system.</div>
+
+        <div class="d-options">
+
+          <div class="d-opt">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">A. <code class="mono text-[12px]">stone</code> (#C9BDA8) — the literal token</div>
+              <div class="d-opt-desc">The "category color" foregrounded on its own tint. Visually consistent with the palette doc, but contrast is ~1.3 : 1 — fails WCAG entirely. Text reads as ghost / invisible.</div>
+              <div class="mono text-[10px]" style="color:#B3240E; margin-top:4px;">✗ fails WCAG AA (needs 4.5 : 1)</div>
+            </div>
+            <div class="d-opt-preview frame" style="min-width:280px;">
+              <div class="frame-label">stone on stone-tint</div>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <span style="display:inline-flex; align-items:center; background:#F0EAE0; color:#C9BDA8; font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.16em; padding:4px 8px; border-radius:4px;">Skincare</span>
+                <span style="display:inline-flex; align-items:center; background:#F0EAE0; color:#C9BDA8; font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.16em; padding:4px 8px; border-radius:4px;">Haircare</span>
+                <span style="display:inline-flex; align-items:center; background:#F0EAE0; color:#C9BDA8; font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.16em; padding:4px 8px; border-radius:4px;">Home</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-opt">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">B. <code class="mono text-[12px]">ink-secondary</code> (#6B4F8F / amethyst-80)</div>
+              <div class="d-opt-desc">Readable, quiet, ties the tag into the amethyst ink hierarchy. Contrast ~6.4 : 1 (AAA). Downside: the category tag fully "belongs" to the amethyst ink system and stops feeling like its own palette family.</div>
+              <div class="mono text-[10px]" style="color:#2B5F4E; margin-top:4px;">✓ 6.4 : 1 AAA</div>
+            </div>
+            <div class="d-opt-preview frame" style="min-width:280px;">
+              <div class="frame-label">ink-secondary on stone-tint</div>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <span style="display:inline-flex; align-items:center; background:#F0EAE0; color:#6B4F8F; font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.16em; padding:4px 8px; border-radius:4px;">Skincare</span>
+                <span style="display:inline-flex; align-items:center; background:#F0EAE0; color:#6B4F8F; font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.16em; padding:4px 8px; border-radius:4px;">Haircare</span>
+                <span style="display:inline-flex; align-items:center; background:#F0EAE0; color:#6B4F8F; font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.16em; padding:4px 8px; border-radius:4px;">Home</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-opt">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">C. <code class="mono text-[12px]">ink-primary</code> (#3F1F68 / amethyst)</div>
+              <div class="d-opt-desc">Maximum legibility — same amethyst as body ink. ~9 : 1. Risk: carries too much weight; a row of tags starts reading as emphasized amethyst content rather than quiet metadata.</div>
+              <div class="mono text-[10px]" style="color:#2B5F4E; margin-top:4px;">✓ 9 : 1 AAA · but maybe too loud</div>
+            </div>
+            <div class="d-opt-preview frame" style="min-width:280px;">
+              <div class="frame-label">ink-primary on stone-tint</div>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <span style="display:inline-flex; align-items:center; background:#F0EAE0; color:#3F1F68; font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.16em; padding:4px 8px; border-radius:4px;">Skincare</span>
+                <span style="display:inline-flex; align-items:center; background:#F0EAE0; color:#3F1F68; font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.16em; padding:4px 8px; border-radius:4px;">Haircare</span>
+                <span style="display:inline-flex; align-items:center; background:#F0EAE0; color:#3F1F68; font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.16em; padding:4px 8px; border-radius:4px;">Home</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-opt picked">
+            <div class="d-opt-radio"></div>
+            <div>
+              <div class="d-opt-label">D. New token <code class="mono text-[12px]">stone-deep</code> (#5A4F3A)</div>
+              <div class="d-opt-desc">A darker stone — keeps the category tag in its own palette family instead of pulling from amethyst ink. Contrast ~8.2 : 1 (AAA). Costs one new token but makes the stone system self-contained: tint / base / deep. <strong>This is already the color used on design-system.html — as a raw hex, not a token.</strong> Picking D just names what we already built.</div>
+              <div class="mono text-[10px]" style="color:#2B5F4E; margin-top:4px;">✓ 8.2 : 1 AAA · already in use · needs token</div>
+            </div>
+            <div class="d-opt-preview frame" style="min-width:280px;">
+              <div class="frame-label">stone-deep on stone-tint</div>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <span style="display:inline-flex; align-items:center; background:#F0EAE0; color:#5A4F3A; font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.16em; padding:4px 8px; border-radius:4px;">Skincare</span>
+                <span style="display:inline-flex; align-items:center; background:#F0EAE0; color:#5A4F3A; font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.16em; padding:4px 8px; border-radius:4px;">Haircare</span>
+                <span style="display:inline-flex; align-items:center; background:#F0EAE0; color:#5A4F3A; font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.16em; padding:4px 8px; border-radius:4px;">Home</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- At-volume comparison -->
+        <div style="margin-top:18px;">
+          <div class="frame-label" style="margin-bottom:8px;">All four — at volume on a product card</div>
+          <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:10px;">
+            <div class="frame" style="padding:12px;">
+              <div class="mono text-[10px] text-ink-tertiary" style="margin-bottom:6px;">A · stone</div>
+              <div style="display:flex; gap:4px; flex-wrap:wrap;">
+                <span style="display:inline-flex; background:#F0EAE0; color:#C9BDA8; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.14em; padding:3px 6px; border-radius:4px;">Skincare</span>
+                <span style="display:inline-flex; background:#F0EAE0; color:#C9BDA8; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.14em; padding:3px 6px; border-radius:4px;">Serum</span>
+                <span style="display:inline-flex; background:#F0EAE0; color:#C9BDA8; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.14em; padding:3px 6px; border-radius:4px;">Face</span>
+              </div>
+            </div>
+            <div class="frame" style="padding:12px;">
+              <div class="mono text-[10px] text-ink-tertiary" style="margin-bottom:6px;">B · ink-secondary</div>
+              <div style="display:flex; gap:4px; flex-wrap:wrap;">
+                <span style="display:inline-flex; background:#F0EAE0; color:#6B4F8F; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.14em; padding:3px 6px; border-radius:4px;">Skincare</span>
+                <span style="display:inline-flex; background:#F0EAE0; color:#6B4F8F; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.14em; padding:3px 6px; border-radius:4px;">Serum</span>
+                <span style="display:inline-flex; background:#F0EAE0; color:#6B4F8F; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.14em; padding:3px 6px; border-radius:4px;">Face</span>
+              </div>
+            </div>
+            <div class="frame" style="padding:12px;">
+              <div class="mono text-[10px] text-ink-tertiary" style="margin-bottom:6px;">C · ink-primary</div>
+              <div style="display:flex; gap:4px; flex-wrap:wrap;">
+                <span style="display:inline-flex; background:#F0EAE0; color:#3F1F68; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.14em; padding:3px 6px; border-radius:4px;">Skincare</span>
+                <span style="display:inline-flex; background:#F0EAE0; color:#3F1F68; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.14em; padding:3px 6px; border-radius:4px;">Serum</span>
+                <span style="display:inline-flex; background:#F0EAE0; color:#3F1F68; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.14em; padding:3px 6px; border-radius:4px;">Face</span>
+              </div>
+            </div>
+            <div class="frame" style="padding:12px;">
+              <div class="mono text-[10px] text-ink-tertiary" style="margin-bottom:6px;">D · stone-deep</div>
+              <div style="display:flex; gap:4px; flex-wrap:wrap;">
+                <span style="display:inline-flex; background:#F0EAE0; color:#5A4F3A; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.14em; padding:3px 6px; border-radius:4px;">Skincare</span>
+                <span style="display:inline-flex; background:#F0EAE0; color:#5A4F3A; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.14em; padding:3px 6px; border-radius:4px;">Serum</span>
+                <span style="display:inline-flex; background:#F0EAE0; color:#5A4F3A; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.14em; padding:3px 6px; border-radius:4px;">Face</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-note" style="margin-top:16px;">
+          <strong>My recommendation: D (<code class="mono text-[12px]">stone-deep</code> ~#5A4F3A).</strong> It keeps the category system self-contained — tint / base / deep, all in the same warm-neutral family — and avoids borrowing from the amethyst ink ramp just to make the foreground readable. Borrowing ink-secondary (B) or ink-primary (C) works, but it means "category" stops having its own color identity and becomes "amethyst text on warm surface" — at which point <code class="mono text-[12px]">stone</code> as a role almost disappears from the system. The cost is one new token; the benefit is that CategoryTag reads as a complete, self-standing palette.
+          <span class="why-not"><strong>Why not A:</strong> fails contrast, full stop. <strong>Why not B:</strong> safe and cheap, but makes the stone family feel incomplete (tint exists only to host amethyst text). <strong>Why not C:</strong> legible but too loud — twelve amethyst tags start reading as emphasized content rather than quiet metadata.</span>
+        </div>
+      </div>
+
+      </div><!-- /panel:badge -->
+
+      <!-- ================= PRODUCT CARD ================= -->
+      <div class="tab-panel" data-panel="product-card">
+      <div class="section-head">
+        <div class="section-title">Product Card</div>
+        <div class="section-count">11 decided · 0 open</div>
+      </div>
+
+      <p class="text-sm text-ink-secondary max-w-[720px] leading-relaxed mb-6">
+        ProductCard is the flagship component — every search result, library entry, and picker row uses it. We're revisiting the v3 shape, hover, image aspect, and where the StatusBadge / heart / category tag live. Preview cards below are miniaturized for side-by-side comparison. Hover the real cards to feel the motion where it matters.
+      </p>
+
+      <!-- ───────────────────────────────────────────────────────────── -->
+      <!-- PC-01 · Card radius -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">PC-01</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Card corner radius</div>
+        <div class="d-q">The signature shape language is asymmetric (rounded top, flatter bottom). ProductCard is the highest-visibility surface in the product — if asymmetric corners live anywhere, they live here. Pick one.</div>
+
+        <div class="opt-grid-3">
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">A · Symmetric 16px</div>
+            <div class="pc-card r-symmetric" style="width:170px;">
+              <div class="pc-img ar-fixed" style="height:100px;">image</div>
+              <div class="pc-body"><div class="pc-name">Aesop Body Wash</div><div class="pc-brand">Aesop</div></div>
+            </div>
+            <div class="opt-card-desc">Current (v3). Safe, even, generic.</div>
+          </div>
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">B · Asymmetric SM (16/16/8/8)</div>
+            <div class="pc-card r-asym-sm" style="width:170px;">
+              <div class="pc-img ar-fixed" style="height:100px; border-radius:14px 14px 0 0;">image</div>
+              <div class="pc-body"><div class="pc-name">Aesop Body Wash</div><div class="pc-brand">Aesop</div></div>
+            </div>
+            <div class="opt-card-desc">Matches AccentBadge shape. Subtle signature.</div>
+          </div>
+          <div class="opt-card picked">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">C · Asymmetric (24/24/10/10)</div>
+            <div class="pc-card r-asym" style="width:170px;">
+              <div class="pc-img ar-fixed" style="height:100px; border-radius:22px 22px 0 0;">image</div>
+              <div class="pc-body"><div class="pc-name">Aesop Body Wash</div><div class="pc-brand">Aesop</div></div>
+            </div>
+            <div class="opt-card-desc">Full signature. Boldest shape read.</div>
+          </div>
+        </div>
+
+        <div class="d-note">
+          <strong>C — full asymmetric (24/24/10/10).</strong> ProductCard is the flagship surface; the signature shape belongs here. Option B is a compromise that reads as "almost symmetric" at card scale — the difference between 16 and 24 on the top corners is what makes the shape language obvious.
+          <span class="why-not"><strong>Why not A:</strong> leaves the signature unused on the most-viewed surface. <strong>Why not B:</strong> too subtle at card scale — reads as rounding error rather than intent.</span>
+        </div>
+      </div>
+
+      <!-- PC-02 · Hover treatment -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">PC-02</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Hover treatment — dialing down the pop</div>
+        <div class="d-q">First pass landed on flat-offset lime + 2px lift. You liked the lime but felt the interaction was too loud for a standard card hover. Below is a spectrum from "full pop" to "barely moves." Border-only (F) is the quietest. Hover each card to feel it.</div>
+
+        <div class="opt-grid-3">
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">A · Full pop (original)</div>
+            <div class="pc-card r-asym hv-flat-lime" style="width:170px;">
+              <div class="pc-img ar-fixed" style="height:100px; border-radius:22px 22px 0 0;">image</div>
+              <div class="pc-body"><div class="pc-name">Aesop Body Wash</div><div class="pc-brand">Aesop</div></div>
+            </div>
+            <div class="opt-card-desc">4px lime shadow + translate(-2,-2). Signature, loud.</div>
+          </div>
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">B · Lime shadow, no lift</div>
+            <div class="pc-card r-asym hv-lime-noshift" style="width:170px;">
+              <div class="pc-img ar-fixed" style="height:100px; border-radius:22px 22px 0 0;">image</div>
+              <div class="pc-body"><div class="pc-name">Aesop Body Wash</div><div class="pc-brand">Aesop</div></div>
+            </div>
+            <div class="opt-card-desc">Shadow fades in; card stays put. No motion.</div>
+          </div>
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">C · Smaller lime shadow + tiny lift</div>
+            <div class="pc-card r-asym hv-lime-small" style="width:170px;">
+              <div class="pc-img ar-fixed" style="height:100px; border-radius:22px 22px 0 0;">image</div>
+              <div class="pc-body"><div class="pc-name">Aesop Body Wash</div><div class="pc-brand">Aesop</div></div>
+            </div>
+            <div class="opt-card-desc">2px lime shadow + translate(-1,-1). Half the original motion.</div>
+          </div>
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">D · Smaller lime shadow, no lift</div>
+            <div class="pc-card r-asym hv-lime-small-nolift" style="width:170px;">
+              <div class="pc-img ar-fixed" style="height:100px; border-radius:22px 22px 0 0;">image</div>
+              <div class="pc-body"><div class="pc-name">Aesop Body Wash</div><div class="pc-brand">Aesop</div></div>
+            </div>
+            <div class="opt-card-desc">2px lime shadow. Whisper of signature. No motion.</div>
+          </div>
+          <div class="opt-card picked">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">E · Border + 2.5px lime accent</div>
+            <div class="pc-card r-asym hv-border-lime" style="width:170px;">
+              <div class="pc-img ar-fixed" style="height:100px; border-radius:22px 22px 0 0;">image</div>
+              <div class="pc-body"><div class="pc-name">Aesop Body Wash</div><div class="pc-brand">Aesop</div></div>
+            </div>
+            <div class="opt-card-desc">Border → amethyst + 2.5px lime flat-offset. Fractional px softens the edge slightly on non-retina.</div>
+          </div>
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">F · Border color shift only</div>
+            <div class="pc-card r-asym hv-border" style="width:170px;">
+              <div class="pc-img ar-fixed" style="height:100px; border-radius:22px 22px 0 0;">image</div>
+              <div class="pc-body"><div class="pc-name">Aesop Body Wash</div><div class="pc-brand">Aesop</div></div>
+            </div>
+            <div class="opt-card-desc">Border → amethyst. Most subtle. Dense-grid safe.</div>
+          </div>
+        </div>
+
+        <div class="d-note">
+          <strong>E — border shift + 2.5px lime flat-offset, no lift.</strong> Keeps the signature lime-on-amethyst pairing but at a whisper — no translate (so no button-press feel), fractional px offset that renders slightly soft. Works at scale because lime only appears when hovered, and the lack of motion means the grid stays calm even with 20+ cards on screen.
+          <span class="why-not"><strong>Why not A:</strong> too much motion at grid scale. <strong>Why not C/D:</strong> crisp 2px or 3px integer offsets feel a touch more aggressive than 2.5px — the difference is small but real. <strong>Why not F (border-only):</strong> loses the lime signature that ties ProductCard to the rest of the system.</span>
+          <span class="why-not" style="display:block;margin-top:8px;"><strong>Pressed state (B1+):</strong> <code class="mono text-[12px]">translate(1px, 1px)</code> + shadow shrinks to <code class="mono text-[12px]">1.5px 1.5px</code> (<code class="mono text-[12px]">--shadow-flat-lime-xs</code>), border stays amethyst. Shadow-locked: translate matches the shadow delta so the shadow's outer edge stays planted. Echoes the Button's press-into-shadow language at a whisper volume. Considered full-land (2.5px / 0px, too committed) and half-land (0.5px / 2px, too subtle to register); 1px / 1.5px was the right middle.</span>
+        </div>
+      </div>
+
+      <!-- PC-03 · Image aspect ratio -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">PC-03</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Image aspect ratio</div>
+        <div class="d-q">Products photograph in all kinds of ratios — a body wash is tall, a soap bar is wide, a candle is square-ish. We pick one canonical crop; real images get <code class="mono text-[12px]">object-cover</code>. Which aspect gives the most honest default?</div>
+
+        <div class="opt-grid-4">
+          <div class="opt-card picked">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">A · 1:1 square</div>
+            <div class="pc-card r-asym" style="width:160px;">
+              <div class="pc-img ar-1x1" style="border-radius:22px 22px 0 0;">1 : 1</div>
+              <div class="pc-body"><div class="pc-name">Aesop Body Wash</div><div class="pc-brand">Aesop</div></div>
+            </div>
+            <div class="opt-card-desc">Grids cleanly. Neutral crop.</div>
+          </div>
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">B · 4:3 landscape</div>
+            <div class="pc-card r-asym" style="width:160px;">
+              <div class="pc-img ar-4x3" style="border-radius:22px 22px 0 0;">4 : 3</div>
+              <div class="pc-body"><div class="pc-name">Aesop Body Wash</div><div class="pc-brand">Aesop</div></div>
+            </div>
+            <div class="opt-card-desc">Content-heavy card. Favors wide products.</div>
+          </div>
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">C · 3:2 landscape</div>
+            <div class="pc-card r-asym" style="width:160px;">
+              <div class="pc-img ar-3x2" style="border-radius:22px 22px 0 0;">3 : 2</div>
+              <div class="pc-body"><div class="pc-name">Aesop Body Wash</div><div class="pc-brand">Aesop</div></div>
+            </div>
+            <div class="opt-card-desc">Editorial. Feels more magazine.</div>
+          </div>
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">D · 4:5 portrait</div>
+            <div class="pc-card r-asym" style="width:160px;">
+              <div class="pc-img ar-4x5" style="border-radius:22px 22px 0 0;">4 : 5</div>
+              <div class="pc-body"><div class="pc-name">Aesop Body Wash</div><div class="pc-brand">Aesop</div></div>
+            </div>
+            <div class="opt-card-desc">Tall. Favors bottled products (most of our catalog).</div>
+          </div>
+        </div>
+
+        <div class="d-note">
+          <strong>A — 1:1 square.</strong> Of real product photography in this space (shampoos, lotions, home care), roughly half are tall bottles and half are tubs/bars/flats. Square is the least-dishonest default and grids perfectly at any column count (2, 3, 4). 4:5 is tempting for bottles but makes bars look awkwardly oversized.
+          <span class="why-not"><strong>Why not B/C:</strong> landscape crops chop the tops off bottles (the most photographed product type). <strong>Why not D:</strong> portrait favors bottles but mangles bars and tubs and creates very tall cards that limit how many fit above the fold.</span>
+        </div>
+      </div>
+
+      <!-- PC-04 · Image corner treatment -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">PC-04</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Image corner treatment</div>
+        <div class="d-q">Does the image follow the card's outer radius (full-bleed, top corners match card), or sit inset with its own smaller radius? Assumes PC-01 = asymmetric (large top, small bottom).</div>
+
+        <div class="opt-grid-2">
+          <div class="opt-card picked">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">A · Full-bleed, follows card top</div>
+            <div class="pc-card r-asym" style="width:180px;">
+              <div class="pc-img ar-1x1" style="border-radius:22px 22px 0 0;">full bleed</div>
+              <div class="pc-body"><div class="pc-name">Aesop Body Wash</div><div class="pc-brand">Aesop</div></div>
+            </div>
+            <div class="opt-card-desc">Image edges touch card edges. Photo feels integrated.</div>
+          </div>
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">B · Inset with own radius</div>
+            <div class="pc-card r-asym" style="width:180px;">
+              <div style="padding:10px 10px 0;">
+                <div class="pc-img ar-1x1" style="border-radius:12px;">inset 10px</div>
+              </div>
+              <div class="pc-body"><div class="pc-name">Aesop Body Wash</div><div class="pc-brand">Aesop</div></div>
+            </div>
+            <div class="opt-card-desc">Image floats inside card. Gallery feel.</div>
+          </div>
+        </div>
+
+        <div class="d-note">
+          <strong>A — full-bleed.</strong> Full-bleed images read as "product first, card second" and make the image do more work. Inset crops are a marketplace-editorial convention (Etsy, Shopify admin) — fine, but less punchy for a card whose primary job is "recognize this product in 0.5 seconds."
+          <span class="why-not"><strong>Why not B:</strong> adds visual chrome between user and photo, and with asymmetric radius it creates a weird "inset card on card" feel. Save inset crops for cases where the photo has a busy background and needs framing.</span>
+        </div>
+      </div>
+
+      <!-- PC-05 · StatusBadge placement -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">PC-05</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">StatusBadge placement</div>
+        <div class="d-q">StatusBadge is the single most important piece of information on a ProductCard — it tells you whether to care about this product. Where does it live?</div>
+
+        <div class="opt-grid-4">
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">A · Header top-right (v3)</div>
+            <div class="pc-card r-asym" style="width:170px;">
+              <div class="pc-img ar-1x1" style="border-radius:22px 22px 0 0;">image</div>
+              <div class="pc-body">
+                <div style="display:flex; justify-content:space-between; gap:6px; align-items:flex-start;">
+                  <div>
+                    <div class="pc-name">Aesop Body Wash</div>
+                    <div class="pc-brand">Aesop</div>
+                  </div>
+                  <span class="pc-status clean">Clean</span>
+                </div>
+              </div>
+            </div>
+            <div class="opt-card-desc">Current. Needs to read past the image first.</div>
+          </div>
+          <div class="opt-card picked">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">B · Overlay top-left</div>
+            <div class="pc-card r-asym" style="width:170px;">
+              <div class="pc-img ar-1x1" style="border-radius:22px 22px 0 0;">
+                <span class="pc-status clean pc-overlay-tl">Clean</span>
+              </div>
+              <div class="pc-body">
+                <div class="pc-name">Aesop Body Wash</div>
+                <div class="pc-brand">Aesop</div>
+              </div>
+            </div>
+            <div class="opt-card-desc">Scannable before you read. Newspaper pattern.</div>
+          </div>
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">C · Overlay top-right</div>
+            <div class="pc-card r-asym" style="width:170px;">
+              <div class="pc-img ar-1x1" style="border-radius:22px 22px 0 0;">
+                <span class="pc-status clean pc-overlay-tr">Clean</span>
+              </div>
+              <div class="pc-body">
+                <div class="pc-name">Aesop Body Wash</div>
+                <div class="pc-brand">Aesop</div>
+              </div>
+            </div>
+            <div class="opt-card-desc">Conflicts with heart (PC-06). Pick one.</div>
+          </div>
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">D · Inline below brand</div>
+            <div class="pc-card r-asym" style="width:170px;">
+              <div class="pc-img ar-1x1" style="border-radius:22px 22px 0 0;">image</div>
+              <div class="pc-body">
+                <div class="pc-name">Aesop Body Wash</div>
+                <div class="pc-brand">Aesop</div>
+                <span class="pc-status clean" style="align-self:flex-start;">Clean</span>
+              </div>
+            </div>
+            <div class="opt-card-desc">Structured. Quieter. Reads as content metadata.</div>
+          </div>
+        </div>
+
+        <div class="d-note">
+          <strong>B — overlay top-left.</strong> Safety rating is the primary scan signal. On the image it's visible before you even read the name. Top-left keeps top-right clear for the heart (PC-06), avoiding a corner collision.
+          <span class="why-not"><strong>Why not A:</strong> hidden behind the image on first pass. <strong>Why not C:</strong> collides with the heart. <strong>Why not D:</strong> makes rating feel like metadata instead of the headline — wrong for a safety-first app.</span>
+        </div>
+      </div>
+
+      <!-- PC-06 · Favorite heart placement -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">PC-06</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Favorite / save heart placement</div>
+        <div class="d-q">Save-to-library is the second-most-common card action. Where does the heart live?</div>
+
+        <div class="opt-grid-4">
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">A · Footer right (v3)</div>
+            <div class="pc-card r-asym" style="width:170px;">
+              <div class="pc-img ar-1x1" style="border-radius:22px 22px 0 0;">image</div>
+              <div class="pc-body">
+                <div class="pc-name">Aesop Body Wash</div>
+                <div class="pc-brand">Aesop</div>
+                <div class="pc-footer"><span class="pc-ctag">Body Care</span><span class="pc-icon-btn">♡</span></div>
+              </div>
+            </div>
+            <div class="opt-card-desc">Current. Click target tucked at bottom.</div>
+          </div>
+          <div class="opt-card picked">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">B · Overlay top-right, always visible</div>
+            <div class="pc-card r-asym" style="width:170px;">
+              <div class="pc-img ar-1x1" style="border-radius:22px 22px 0 0;">
+                <span class="pc-status clean pc-overlay-tl">Clean</span>
+                <button class="pc-heart"></button>
+              </div>
+              <div class="pc-body">
+                <div class="pc-name">Aesop Body Wash</div>
+                <div class="pc-brand">Aesop</div>
+              </div>
+            </div>
+            <div class="opt-card-desc">Always-tap target. Mirrors Status placement.</div>
+          </div>
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">C · Always visible in text header</div>
+            <div class="pc-card r-asym" style="width:170px;">
+              <div class="pc-img ar-1x1" style="border-radius:22px 22px 0 0;">
+                <span class="pc-status clean pc-overlay-tl">Clean</span>
+              </div>
+              <div class="pc-body">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                  <div><div class="pc-name">Aesop Body Wash</div><div class="pc-brand">Aesop</div></div>
+                  <span class="pc-icon-btn">♡</span>
+                </div>
+              </div>
+            </div>
+            <div class="opt-card-desc">Quieter. Harder to spot.</div>
+          </div>
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">D · Reveal on hover</div>
+            <div class="pc-card r-asym" style="width:170px;">
+              <div class="pc-img ar-1x1" style="border-radius:22px 22px 0 0;">
+                <span class="pc-status clean pc-overlay-tl">Clean</span>
+              </div>
+              <div class="pc-body">
+                <div class="pc-name">Aesop Body Wash</div>
+                <div class="pc-brand">Aesop</div>
+              </div>
+            </div>
+            <div class="opt-card-desc">Cleaner rest state. Breaks on touch devices.</div>
+          </div>
+        </div>
+
+        <div class="d-note">
+          <strong>B — overlay top-right, always visible.</strong> Mirrors StatusBadge at top-left (symmetric affordances). Always visible = no discoverability problem on touch. The frosted-white pill background reads as "interactive tap target" distinct from the static StatusBadge.
+          <span class="why-not"><strong>Why not A:</strong> buries the save — users who want to save-at-a-glance have to scan past the image, name, brand, and category first. <strong>Why not C:</strong> visually competes with brand text. <strong>Why not D:</strong> hover-reveal is an accessibility and touch-input anti-pattern for primary actions.</span>
+        </div>
+      </div>
+
+      <!-- PC-07 · CategoryTag placement -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">PC-07</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">CategoryTag placement</div>
+        <div class="d-q">Category is organizational metadata — quiet by design (see BD-02, BD-05). Where does it sit on the card?</div>
+
+        <div class="opt-grid-4">
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">A · Footer bottom-left (v3)</div>
+            <div class="pc-card r-asym" style="width:170px;">
+              <div class="pc-img ar-1x1" style="border-radius:22px 22px 0 0;"><span class="pc-status clean pc-overlay-tl">Clean</span><button class="pc-heart"></button></div>
+              <div class="pc-body">
+                <div class="pc-name">Aesop Body Wash</div>
+                <div class="pc-brand">Aesop</div>
+                <div class="pc-footer"><span class="pc-ctag">Body Care</span></div>
+              </div>
+            </div>
+            <div class="opt-card-desc">Current. Uses the footer row we're otherwise removing (PC-08).</div>
+          </div>
+          <div class="opt-card picked">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">B · Inline below brand</div>
+            <div class="pc-card r-asym" style="width:170px;">
+              <div class="pc-img ar-1x1" style="border-radius:22px 22px 0 0;"><span class="pc-status clean pc-overlay-tl">Clean</span><button class="pc-heart"></button></div>
+              <div class="pc-body">
+                <div class="pc-name">Aesop Body Wash</div>
+                <div class="pc-brand">Aesop</div>
+                <span class="pc-ctag" style="align-self:flex-start;">Body Care</span>
+              </div>
+            </div>
+            <div class="opt-card-desc">Content block: name → brand → category. Clean.</div>
+          </div>
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">C · Overlay bottom-left of image</div>
+            <div class="pc-card r-asym" style="width:170px;">
+              <div class="pc-img ar-1x1" style="border-radius:22px 22px 0 0;">
+                <span class="pc-status clean pc-overlay-tl">Clean</span>
+                <button class="pc-heart"></button>
+                <span class="pc-ctag pc-overlay-bl">Body Care</span>
+              </div>
+              <div class="pc-body">
+                <div class="pc-name">Aesop Body Wash</div>
+                <div class="pc-brand">Aesop</div>
+              </div>
+            </div>
+            <div class="opt-card-desc">Three overlays — busy image, cleanest body.</div>
+          </div>
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">D · Remove from card</div>
+            <div class="pc-card r-asym" style="width:170px;">
+              <div class="pc-img ar-1x1" style="border-radius:22px 22px 0 0;"><span class="pc-status clean pc-overlay-tl">Clean</span><button class="pc-heart"></button></div>
+              <div class="pc-body">
+                <div class="pc-name">Aesop Body Wash</div>
+                <div class="pc-brand">Aesop</div>
+              </div>
+            </div>
+            <div class="opt-card-desc">Category lives on PDP and in filters only. Card stays minimal.</div>
+          </div>
+        </div>
+
+        <div class="d-note">
+          <strong>B — inline below brand.</strong> Category is metadata; the stone palette (BD-05) is already tuned to recede. Inline keeps the content block coherent (name → brand → category) without crowding the image or requiring a second row.
+          <span class="why-not"><strong>Why not A:</strong> requires preserving the footer row just for this tag. <strong>Why not C:</strong> three image overlays (Status, heart, category) start to read as busy clutter. <strong>Why not D (remove):</strong> kept on the table as a future trim. Category already lives on PDP and in filter chips — if card-level CategoryTag stops earning its 22px of vertical space once real content is in view, revisit this. B is the reversible choice; removing later is cheap.</span>
+        </div>
+      </div>
+
+      <!-- PC-08 · Add-to-list button -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">PC-08</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Add-to-shopping-list button</div>
+        <div class="d-q">V3 puts a "+" icon button next to the heart in the footer. Adding to a shopping list is a deliberate intent action. Does it belong on the card, or only on the PDP?</div>
+
+        <div class="opt-grid-3">
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">A · Keep in footer (v3)</div>
+            <div class="pc-card r-asym" style="width:170px;">
+              <div class="pc-img ar-1x1" style="border-radius:22px 22px 0 0;"><span class="pc-status clean pc-overlay-tl">Clean</span><button class="pc-heart"></button></div>
+              <div class="pc-body">
+                <div class="pc-name">Aesop Body Wash</div>
+                <div class="pc-brand">Aesop</div>
+                <div class="pc-footer"><span class="pc-ctag">Body Care</span><span class="pc-icon-btn">＋</span></div>
+              </div>
+            </div>
+            <div class="opt-card-desc">Current. Two icon buttons on card.</div>
+          </div>
+          <div class="opt-card picked">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">B · Remove from card (PDP only)</div>
+            <div class="pc-card r-asym" style="width:170px;">
+              <div class="pc-img ar-1x1" style="border-radius:22px 22px 0 0;"><span class="pc-status clean pc-overlay-tl">Clean</span><button class="pc-heart"></button></div>
+              <div class="pc-body">
+                <div class="pc-name">Aesop Body Wash</div>
+                <div class="pc-brand">Aesop</div>
+                <span class="pc-ctag" style="align-self:flex-start;">Body Care</span>
+              </div>
+            </div>
+            <div class="opt-card-desc">Card stays minimal. Add-to-list = deliberate action on PDP.</div>
+          </div>
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">C · Reveal on hover</div>
+            <div class="pc-card r-asym" style="width:170px;">
+              <div class="pc-img ar-1x1" style="border-radius:22px 22px 0 0;"><span class="pc-status clean pc-overlay-tl">Clean</span><button class="pc-heart"></button></div>
+              <div class="pc-body">
+                <div class="pc-name">Aesop Body Wash</div>
+                <div class="pc-brand">Aesop</div>
+                <span class="pc-ctag" style="align-self:flex-start;">Body Care</span>
+              </div>
+            </div>
+            <div class="opt-card-desc">Shown only on hover. Breaks on touch.</div>
+          </div>
+        </div>
+
+        <div class="d-note">
+          <strong>B — remove from card. Card ships with heart only.</strong> On the card, heart = "save this for later." The deeper question — is "save to library" different from "add to shopping list," and could the heart in the future open a list picker (favorites / wishlist / shopping list / etc.) — is out of scope for this pass and will get its own decision set when we spec the save-flow.
+          <span class="why-not"><strong>Why not A:</strong> two icon buttons on the card look identical and invite misclicks — and if save/list consolidate later, one of them becomes orphaned anyway. <strong>Why not C:</strong> hover-reveal anti-pattern for primary actions.</span>
+          <div style="margin-top:10px; padding:10px 12px; background:rgba(63,31,104,0.05); border-radius:6px; font-size:12px; color:#6B4F8F;"><strong>Open thread → save-flow decisions:</strong> clarify whether "favorites" and "shopping list" are the same pile or two piles. Until that's answered, card UI stays minimal (heart only).</div>
+        </div>
+      </div>
+
+      <!-- PC-09 · Compact size -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">PC-09</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Compact size — does it show a thumbnail?</div>
+        <div class="d-q">The compact variant (shopping list rows, narrow sidebar lists) drops the image entirely in v3. Without a thumbnail, compact cards look like table rows. How much image does compact keep?</div>
+
+        <div class="opt-grid-3">
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">A · No thumbnail (v3)</div>
+            <div class="pc-compact">
+              <div class="pc-compact-thumb sz-none"></div>
+              <div class="pc-compact-body">
+                <div class="pc-name">Aesop Body Wash</div>
+                <div class="pc-brand">Aesop</div>
+              </div>
+              <span class="pc-status clean">Clean</span>
+            </div>
+            <div class="opt-card-desc">Pure data row. No visual anchor.</div>
+          </div>
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">B · 48×48 thumbnail</div>
+            <div class="pc-compact">
+              <div class="pc-compact-thumb sz-48"></div>
+              <div class="pc-compact-body">
+                <div class="pc-name">Aesop Body Wash</div>
+                <div class="pc-brand">Aesop</div>
+              </div>
+              <span class="pc-status clean">Clean</span>
+            </div>
+            <div class="opt-card-desc">Minimal photo anchor.</div>
+          </div>
+          <div class="opt-card picked">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">C · 56×56 thumbnail</div>
+            <div class="pc-compact">
+              <div class="pc-compact-thumb sz-56"></div>
+              <div class="pc-compact-body">
+                <div class="pc-name">Aesop Body Wash</div>
+                <div class="pc-brand">Aesop</div>
+              </div>
+              <span class="pc-status clean">Clean</span>
+            </div>
+            <div class="opt-card-desc">Bigger photo. Slightly more card-feel.</div>
+          </div>
+        </div>
+
+        <div class="d-note">
+          <strong>C — 56×56 thumbnail.</strong> A compact product card without a photo reads as a database table — a 56px square restores the "this is a product" anchor without costing vertical height (the row is driven by two lines of text, not the thumbnail). 48px feels stingy at the 14-16px text scale.
+          <span class="why-not"><strong>Why not A:</strong> too datatable, not enough product. <strong>Why not B:</strong> almost there but reads as "default image missing" rather than deliberate.</span>
+          <div style="margin-top:10px; padding:10px 12px; background:rgba(63,31,104,0.05); border-radius:6px; font-size:12px; color:#6B4F8F;"><strong>Open thread:</strong> where does StatusBadge sit on a compact row? The default shown above is a pill at the right end, but the real answer depends on the use case (shopping list? comparison picker? sidebar scan?). Revisit per-surface when compact ships.</div>
+        </div>
+      </div>
+
+      <!-- PC-10 · Ghost-reveal hover -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">PC-10</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Ghost-reveal hover content</div>
+        <div class="d-q">The spec index page copy for ProductCard describes a "ghost-reveal hover" — content (description snippet, last-updated date) fades in on hover. PC-02 handles the motion; this is whether additional <em>content</em> is revealed on hover.</div>
+
+        <div class="opt-grid-2">
+          <div class="opt-card picked">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">A · No content reveal (defer)</div>
+            <div class="pc-card r-asym hv-flat-lime" style="width:180px;">
+              <div class="pc-img ar-1x1" style="border-radius:22px 22px 0 0;"><span class="pc-status clean pc-overlay-tl">Clean</span><button class="pc-heart"></button></div>
+              <div class="pc-body">
+                <div class="pc-name">Aesop Body Wash</div>
+                <div class="pc-brand">Aesop</div>
+                <span class="pc-ctag" style="align-self:flex-start;">Body Care</span>
+              </div>
+            </div>
+            <div class="opt-card-desc">Motion only (PC-02). No new text on hover.</div>
+          </div>
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">B · Description fades in on hover</div>
+            <div class="pc-card r-asym hv-flat-lime" style="width:180px;">
+              <div class="pc-img ar-1x1" style="border-radius:22px 22px 0 0;"><span class="pc-status clean pc-overlay-tl">Clean</span><button class="pc-heart"></button></div>
+              <div class="pc-body">
+                <div class="pc-name">Aesop Body Wash</div>
+                <div class="pc-brand">Aesop</div>
+                <span class="pc-ctag" style="align-self:flex-start;">Body Care</span>
+                <div style="font-size:10px; color:#6B4F8F; line-height:1.45; opacity:0.6; font-style:italic;">"A rich, botanical body wash with bergamot and ylang ylang…"</div>
+              </div>
+            </div>
+            <div class="opt-card-desc">Short description fades in; adds content on hover.</div>
+          </div>
+        </div>
+
+        <div class="d-note">
+          <strong>A — defer for ProductCard.</strong> We don't currently store a one-line description worth revealing for every product, and the Claude-generated summaries are 2-3 sentences — too long for hover. Ship motion-only hover for V1.
+          <span class="why-not"><strong>Why not B:</strong> premature — no short-description field exists today. <strong>Future:</strong> ghost-reveal may earn its place on other card types (e.g. SwapCard showing the swap rationale, or ComparisonPanel row hover) where there's specific content to reveal and the scan pattern supports it. Open as a future decision for those components when they get built.</span>
+        </div>
+      </div>
+
+      <!-- PC-11 · Click target: modal vs PDP -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">PC-11</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Click target — modal or PDP?</div>
+        <div class="d-q">Currently clicking a ProductCard opens a Modal overlay with product details. This changes — clicking navigates to a dedicated PDP (product detail page) route. Confirms the behavior + flags the downstream work.</div>
+
+        <div class="opt-grid-2">
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">A · Modal overlay (v3)</div>
+            <div class="pdp-mock">opens &lt;Modal&gt; — stays on route</div>
+            <div class="opt-card-desc">Current. Fast to close. Can't link to a product. No browser back button.</div>
+          </div>
+          <div class="opt-card picked">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">B · PDP route (new)</div>
+            <div class="pdp-mock">navigates to /product/:id</div>
+            <div class="opt-card-desc">Shareable URL. Back button works. Room for full ingredient breakdown.</div>
+          </div>
+        </div>
+
+        <div class="d-note open">
+          <strong>Decision: B — PDP route.</strong> A product has enough information (ingredient safety breakdown, source citations, user notes, swap suggestions) that a modal can't hold it without scrolling-inside-scrolling. A route also makes products shareable and gives us a real URL to link to from shopping lists. Modal becomes reserved for transient actions (confirm, edit list, quick-save).
+          <span class="why-not"><strong>Why not A:</strong> modals can't deep-link, can't be browser-back-navigated, and force a cramped layout. The v3 modal was a shortcut for "no route yet" — we're now past that.</span>
+          <div style="margin-top:10px;"><strong>Downstream work this implies:</strong>
+            <ul style="list-style:disc; padding-left:20px; margin-top:6px; font-size:12px; color:#6B4F8F; line-height:1.6;">
+              <li>Add <code class="mono text-[11px]">/product/:id</code> route</li>
+              <li>Build <code class="mono text-[11px]">ProductDetailPage</code> (new component)</li>
+              <li>ProductCard <code class="mono text-[11px]">onClick</code> → navigate, not open modal</li>
+              <li>Retire Modal usage in BrowsePage, SearchPage, LibraryPage for product detail</li>
+              <li>Decide: keep Modal component for other uses, or remove entirely?</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      </div><!-- /panel:product-card -->
+
+      <footer class="pt-6 mt-12 border-t border-surf-divider flex items-center justify-between text-[11px] text-ink-tertiary mono">
+        <span>clean-shopper · decisions log</span>
+        <span>v4 · amethyst apothecary</span>
+      </footer>
+
+    </div>
+  </main>
+</div>
+<script>
+  (function () {
+    const tabs = document.querySelectorAll('.tab');
+    const panels = document.querySelectorAll('.tab-panel');
+    function activate(name) {
+      tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+      panels.forEach(p => p.classList.toggle('active', p.dataset.panel === name));
+    }
+    tabs.forEach(tab => tab.addEventListener('click', () => {
+      const name = tab.dataset.tab;
+      activate(name);
+      history.replaceState(null, '', '#' + name);
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }));
+    window.addEventListener('hashchange', () => {
+      activate(location.hash.slice(1) || 'button');
+    });
+    const valid = ['button', 'badge', 'product-card'];
+    const initial = location.hash.slice(1);
+    activate(valid.includes(initial) ? initial : 'button');
+  })();
+</script>
+</body>
+</html>

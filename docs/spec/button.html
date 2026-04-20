@@ -10,7 +10,103 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="_shell.css">
 <script src="https://unpkg.com/@phosphor-icons/web"></script>
-<style>.mono { font-family:'JetBrains Mono',monospace; }</style>
+<script>
+tailwind.config = {
+  theme: { extend: {
+    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] },
+    colors: {
+      amethyst: '#3F1F68', 'amethyst-110': '#2A1247', 'amethyst-80': '#6B4F8F', 'amethyst-40': '#ADA1BE', 'amethyst-20': '#DAD2E2', 'amethyst-5': '#F5F2F8',
+      slate: '#3B7080', 'slate-tint': '#E4EEF4',
+      lime: '#C9EC2D', 'lime-tint': '#F0F9C9',
+      cream: '#FCFBFA', paper: '#FFFFFF', 'surf-divider': '#E9E6ED',
+      'ink-primary': '#3F1F68', 'ink-secondary': '#6B4F8F', 'ink-tertiary': '#ADA1BE',
+    },
+  }}
+}
+</script>
+<style>
+  .mono { font-family:'JetBrains Mono',monospace; }
+  .code { font-family:'JetBrains Mono',monospace; font-size:11px; background:#F5F2F8; padding:2px 6px; border-radius:4px; color:#3F1F68; display:inline-block; }
+  .token-card { background:#FFFFFF; border:1.5px solid #E9E6ED; border-radius:16px; padding:20px; }
+
+  /* ══ Button primitives (live) ══════════════════════════════════════ */
+  .btn {
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    border-radius:9999px; border:none; cursor:pointer;
+    font-family:'Plus Jakarta Sans',sans-serif; font-weight:600;
+    transition:
+      background-color 200ms cubic-bezier(0.4, 0, 0.2, 1),
+      color            200ms cubic-bezier(0.4, 0, 0.2, 1),
+      border-color     200ms cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow       200ms cubic-bezier(0.4, 0, 0.2, 1),
+      transform        200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .btn:focus-visible { outline:2px solid #3B7080; outline-offset:2px; }
+
+  .btn-sm { font-size:12px; padding:4px 16px; height:32px; }
+  .btn-md { font-size:14px; padding:8px 24px; height:40px; }
+  .btn-lg { font-size:16px; padding:16px 32px; height:48px; }
+
+  .btn-primary   { background:#3F1F68; color:#FCFBFA; }
+  .btn-secondary { background:#FFFFFF; color:#3F1F68; border:2px solid #3F1F68; }
+  .btn-ghost     { background:transparent; color:#3F1F68; }
+
+  /* Hero = no shadow at rest */
+  .btn-hero-primary,
+  .btn-hero-secondary { box-shadow:none; }
+
+  /* Non-hero hover — darken to amethyst-110 */
+  .btn-primary:hover   { background:#2A1247; }
+  .btn-secondary:hover { background:#2A1247; color:#FCFBFA; border-color:#2A1247; }
+  .btn-ghost:hover     { background:#DAD2E2; }
+
+  /* Hero hover — shadow appears + lift. Fill does not change. */
+  .btn-hero-primary:hover {
+    background:#3F1F68; color:#FCFBFA; border-color:transparent;
+    box-shadow:4px 4px 0 0 #C9EC2D;
+    transform:translate(-2px,-2px);
+  }
+  .btn-hero-secondary:hover {
+    background:#FFFFFF; color:#3F1F68; border-color:#3F1F68;
+    box-shadow:4px 4px 0 0 #3F1F68;
+    transform:translate(-2px,-2px);
+  }
+
+  /* Press — scale(0.96), hover colors don't bleed */
+  .btn:active              { transform:scale(0.96); }
+  .btn-primary:active      { background:#3F1F68; }
+  .btn-secondary:active    { background:#FFFFFF; color:#3F1F68; border-color:#3F1F68; }
+  .btn-ghost:active        { background:transparent; color:#3F1F68; }
+  .btn-hero-primary:active,
+  .btn-hero-secondary:active { box-shadow:none; }
+
+  .btn:disabled            { opacity:0.5; cursor:not-allowed; transform:none !important; box-shadow:none !important; }
+  .btn:disabled:hover      { background:inherit; color:inherit; border-color:inherit; }
+
+  /* Loading spinner */
+  .btn-spinner {
+    width:14px; height:14px;
+    border:2px solid currentColor; border-right-color:transparent;
+    border-radius:50%;
+    animation:spin 700ms linear infinite;
+  }
+  @keyframes spin { to { transform:rotate(360deg); } }
+
+  /* State-forcing for the "states" matrix so every row is visible without user interaction */
+  .force-hover > .btn-primary                              { background:#2A1247 !important; }
+  .force-hover > .btn-secondary                            { background:#2A1247 !important; color:#FCFBFA !important; border-color:#2A1247 !important; }
+  .force-hover > .btn-ghost                                { background:#DAD2E2 !important; }
+  .force-hover > .btn-hero-primary                         { box-shadow:4px 4px 0 0 #C9EC2D !important; transform:translate(-2px,-2px) !important; }
+  .force-hover > .btn-hero-secondary                       { box-shadow:4px 4px 0 0 #3F1F68 !important; transform:translate(-2px,-2px) !important; }
+  .force-press > .btn                                      { transform:scale(0.96) !important; }
+  .force-focus > .btn                                      { outline:2px solid #3B7080 !important; outline-offset:2px !important; }
+
+  .frame { background:#FCFBFA; border:1px dashed #E9E6ED; border-radius:12px; padding:28px; }
+  .row   { display:flex; align-items:center; gap:20px; padding:10px 0; }
+  .row-label { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; color:#ADA1BE; letter-spacing:0.12em; text-transform:uppercase; width:110px; flex-shrink:0; }
+
+  .swatch { display:inline-block; width:12px; height:12px; border-radius:3px; vertical-align:middle; margin-right:4px; border:1px solid rgba(0,0,0,0.05); }
+</style>
 </head>
 <body>
 <div class="shell">
@@ -26,35 +122,288 @@
     <div class="nav-group">
       <div class="nav-label">Components</div>
       <a href="product-card.html" class="nav-link"><span class="nav-dot"></span>Product Card</a>
-      <a href="badge.html" class="nav-link placeholder"><span class="nav-dot"></span>Badge</a>
+      <a href="badge.html" class="nav-link"><span class="nav-dot"></span>Badge</a>
       <a href="button.html" class="nav-link active"><span class="nav-dot"></span>Button</a>
     </div>
-    <div class="sidebar-footer">v3 · apothecary</div>
+    <div class="nav-group">
+      <a href="decisions.html" class="nav-link"><span class="nav-dot"></span>Decisions log</a>
+    </div>
+    <div class="sidebar-footer">v4 · amethyst apothecary</div>
   </aside>
 
   <main class="main">
     <div class="main-inner">
+
+      <!-- ═══ HEADER ═══════════════════════════════════════════════════ -->
       <header class="mb-12">
         <div class="mono text-[11px] text-ink-tertiary tracking-[0.16em] uppercase mb-3">Component · Button</div>
-        <h1 class="text-5xl font-extrabold tracking-tighter leading-[0.95] mb-4" style="color:#ABA3B5;">Button.</h1>
-        <p class="text-base text-ink-secondary max-w-[600px] leading-relaxed">Not yet specced. Primary (signature amethyst + lime flat-shadow), secondary (steel-deep), tertiary, ghost. Sizes, states, loading, disabled.</p>
+        <h1 class="text-5xl font-extrabold tracking-tighter leading-[0.95] mb-4 text-amethyst">Button.</h1>
+        <p class="text-base text-ink-secondary max-w-[640px] leading-relaxed">
+          The commit control. Three variants (primary, secondary, ghost), three sizes, optional <span class="code">hero</span> for one-per-surface big moments. Pill-shaped always — asymmetric radii are reserved for cards. Flat-offset shadow is the brand signature, but it's an opt-in hero treatment that only appears on hover, not a default button decoration.
+        </p>
+        <div class="mt-6 flex items-center gap-3 text-xs">
+          <span class="mono text-ink-tertiary">Deep spec:</span>
+          <a href="../component-spec/button.md" class="code hover:underline">docs/component-spec/button.md</a>
+          <span class="mono text-ink-tertiary ml-4">Decisions:</span>
+          <a href="decisions.html" class="code hover:underline">B-01 → B-13</a>
+        </div>
       </header>
 
-      <div style="background:white; border:2px dashed #E9E6ED; border-radius:16px; padding:48px; text-align:center;">
-        <i class="ph ph-cursor-click" style="font-size:48px; color:#ABA3B5;"></i>
-        <div style="font-size:14px; font-weight:600; color:#56466C; margin-top:16px;">Coming soon</div>
-        <p style="font-size:12px; color:#ABA3B5; margin-top:4px; font-family:'JetBrains Mono',monospace;">/docs/spec/button.html</p>
-
-        <div style="margin-top:32px; padding-top:32px; border-top:1px solid #E9E6ED;">
-          <div style="font-size:11px; font-weight:800; letter-spacing:0.16em; text-transform:uppercase; color:#ABA3B5; margin-bottom:16px;">Signature preview</div>
-          <button style="background:#2C1847; color:#FCFBFA; font-weight:700; padding:12px 28px; border-radius:9999px; box-shadow:4px 4px 0 0 #C9EC2D; border:none; cursor:pointer;">Save to library</button>
+      <!-- ═══ LIVE PREVIEW ═════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Live — hover, click, tab</h2>
+        <div class="frame">
+          <div class="row">
+            <span class="row-label">Primary</span>
+            <button class="btn btn-primary btn-md">Save to library</button>
+            <button class="btn btn-primary btn-md"><i class="ph ph-heart" aria-hidden="true"></i>Save</button>
+            <button class="btn btn-primary btn-md" disabled>Disabled</button>
+            <button class="btn btn-primary btn-md"><span class="btn-spinner"></span>Saving</button>
+          </div>
+          <div class="row">
+            <span class="row-label">Secondary</span>
+            <button class="btn btn-secondary btn-md">Compare</button>
+            <button class="btn btn-secondary btn-md"><i class="ph ph-scales" aria-hidden="true"></i>Compare</button>
+            <button class="btn btn-secondary btn-md" disabled>Disabled</button>
+          </div>
+          <div class="row">
+            <span class="row-label">Ghost</span>
+            <button class="btn btn-ghost btn-md">Clear filters</button>
+            <button class="btn btn-ghost btn-md"><i class="ph ph-x" aria-hidden="true"></i>Dismiss</button>
+            <button class="btn btn-ghost btn-md" disabled>Disabled</button>
+          </div>
+          <div class="row" style="border-top:1px dashed #E9E6ED; margin-top:12px; padding-top:20px;">
+            <span class="row-label">Hero 1°</span>
+            <button class="btn btn-primary btn-hero-primary btn-lg">Shop the edit</button>
+            <span class="mono text-[11px] text-ink-tertiary">shadow appears on hover · lime</span>
+          </div>
+          <div class="row">
+            <span class="row-label">Hero 2°</span>
+            <button class="btn btn-secondary btn-hero-secondary btn-lg">Read the research</button>
+            <span class="mono text-[11px] text-ink-tertiary">shadow appears on hover · amethyst</span>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <footer class="pt-6 mt-12 border-t border-surf-divider flex items-center justify-between text-[11px] text-ink-tertiary mono">
+      <!-- ═══ VARIANTS ═════════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Variants</h2>
+        <div class="grid grid-cols-3 gap-4">
+          <div class="token-card">
+            <button class="btn btn-primary btn-md mb-4">Primary</button>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-1">Primary</div>
+            <p class="text-xs text-ink-secondary leading-relaxed mb-3">The single most important commit action on a surface. One per view.</p>
+            <div class="text-[10px] mono text-ink-tertiary">
+              bg <span class="swatch" style="background:#3F1F68;"></span>amethyst<br>
+              text <span class="swatch" style="background:#FCFBFA;"></span>cream
+            </div>
+          </div>
+          <div class="token-card">
+            <button class="btn btn-secondary btn-md mb-4">Secondary</button>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-1">Secondary</div>
+            <p class="text-xs text-ink-secondary leading-relaxed mb-3">Supporting action that pairs with a primary. Knockout style — border, not fill.</p>
+            <div class="text-[10px] mono text-ink-tertiary">
+              bg <span class="swatch" style="background:#FFFFFF; border-color:#DAD2E2;"></span>paper<br>
+              border 2px <span class="swatch" style="background:#3F1F68;"></span>amethyst<br>
+              text <span class="swatch" style="background:#3F1F68;"></span>amethyst
+            </div>
+          </div>
+          <div class="token-card">
+            <button class="btn btn-ghost btn-md mb-4">Ghost</button>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-1">Ghost</div>
+            <p class="text-xs text-ink-secondary leading-relaxed mb-3">Tertiary / inline action. Reads like a link until you hover it.</p>
+            <div class="text-[10px] mono text-ink-tertiary">
+              bg transparent<br>
+              text <span class="swatch" style="background:#3F1F68;"></span>amethyst
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ SIZES ════════════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Sizes</h2>
+        <div class="frame">
+          <div class="row">
+            <span class="row-label">sm · 32px</span>
+            <button class="btn btn-primary btn-sm">Save</button>
+            <button class="btn btn-secondary btn-sm">Compare</button>
+            <button class="btn btn-ghost btn-sm">Clear</button>
+            <span class="mono text-[11px] text-ink-tertiary ml-4">Dense toolbars, filter rows</span>
+          </div>
+          <div class="row">
+            <span class="row-label">md · 40px <strong>default</strong></span>
+            <button class="btn btn-primary btn-md">Save to library</button>
+            <button class="btn btn-secondary btn-md">Compare</button>
+            <button class="btn btn-ghost btn-md">Clear filters</button>
+            <span class="mono text-[11px] text-ink-tertiary ml-4">Most surfaces</span>
+          </div>
+          <div class="row">
+            <span class="row-label">lg · 48px</span>
+            <button class="btn btn-primary btn-lg">Save to library</button>
+            <button class="btn btn-secondary btn-lg">Compare</button>
+            <span class="mono text-[11px] text-ink-tertiary ml-4">Hero CTAs, empty-state, auth</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ STATES — NON-HERO ════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">States — non-hero</h2>
+        <div class="frame">
+          <div class="row">
+            <span class="row-label">Rest</span>
+            <button class="btn btn-primary btn-md">Primary</button>
+            <button class="btn btn-secondary btn-md">Secondary</button>
+            <button class="btn btn-ghost btn-md">Ghost</button>
+          </div>
+          <div class="row force-hover">
+            <span class="row-label">Hover</span>
+            <button class="btn btn-primary btn-md">Primary</button>
+            <button class="btn btn-secondary btn-md">Secondary</button>
+            <button class="btn btn-ghost btn-md">Ghost</button>
+            <span class="mono text-[11px] text-ink-tertiary ml-4">Primary + 2° → <span class="code">amethyst-110</span> · Ghost → <span class="code">amethyst-20</span></span>
+          </div>
+          <div class="row force-press">
+            <span class="row-label">Press</span>
+            <button class="btn btn-primary btn-md">Primary</button>
+            <button class="btn btn-secondary btn-md">Secondary</button>
+            <button class="btn btn-ghost btn-md">Ghost</button>
+            <span class="mono text-[11px] text-ink-tertiary ml-4"><span class="code">scale(0.96)</span> · hover color dismissed</span>
+          </div>
+          <div class="row force-focus">
+            <span class="row-label">Focus</span>
+            <button class="btn btn-primary btn-md">Primary</button>
+            <button class="btn btn-secondary btn-md">Secondary</button>
+            <button class="btn btn-ghost btn-md">Ghost</button>
+            <span class="mono text-[11px] text-ink-tertiary ml-4">2px slate outline · +2px offset · kb only</span>
+          </div>
+          <div class="row">
+            <span class="row-label">Disabled</span>
+            <button class="btn btn-primary btn-md" disabled>Primary</button>
+            <button class="btn btn-secondary btn-md" disabled>Secondary</button>
+            <button class="btn btn-ghost btn-md" disabled>Ghost</button>
+            <span class="mono text-[11px] text-ink-tertiary ml-4">opacity 0.5 · not in tab order</span>
+          </div>
+          <div class="row">
+            <span class="row-label">Loading</span>
+            <button class="btn btn-primary btn-md"><span class="btn-spinner"></span>Saving</button>
+            <button class="btn btn-secondary btn-md"><span class="btn-spinner"></span>Loading</button>
+            <button class="btn btn-ghost btn-md"><span class="btn-spinner"></span>Working</button>
+            <span class="mono text-[11px] text-ink-tertiary ml-4">spinner replaces icon · label stays · <span class="code">aria-busy</span></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ STATES — HERO ════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">States — hero</h2>
+        <div class="frame">
+          <div class="row">
+            <span class="row-label">Rest</span>
+            <button class="btn btn-primary btn-hero-primary btn-lg">Shop the edit</button>
+            <button class="btn btn-secondary btn-hero-secondary btn-lg">Read the research</button>
+            <span class="mono text-[11px] text-ink-tertiary ml-4">No shadow at rest — same as non-hero</span>
+          </div>
+          <div class="row force-hover">
+            <span class="row-label">Hover</span>
+            <button class="btn btn-primary btn-hero-primary btn-lg">Shop the edit</button>
+            <button class="btn btn-secondary btn-hero-secondary btn-lg">Read the research</button>
+            <span class="mono text-[11px] text-ink-tertiary ml-4">Shadow appears + <span class="code">translate(-2px,-2px)</span></span>
+          </div>
+          <div class="row force-press">
+            <span class="row-label">Press</span>
+            <button class="btn btn-primary btn-hero-primary btn-lg">Shop the edit</button>
+            <button class="btn btn-secondary btn-hero-secondary btn-lg">Read the research</button>
+            <span class="mono text-[11px] text-ink-tertiary ml-4"><span class="code">scale(0.96)</span> · shadow dismisses</span>
+          </div>
+        </div>
+        <div class="token-card mt-4">
+          <div class="flex items-start gap-3">
+            <i class="ph ph-info text-xl text-slate flex-shrink-0 mt-0.5"></i>
+            <div>
+              <div class="font-bold text-sm mb-1">Why no resting shadow on hero?</div>
+              <p class="text-xs text-ink-secondary leading-relaxed">The flat-offset amethyst shadow is the brand's loudest signal. If it's always on, it competes with card shadows across dense screens. Turning it into a <em>response to hover</em> keeps hero quiet at baseline and makes the interaction feel earned. Hero still communicates importance through layout position, size, and copy — not a resting shadow.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ ICONS ════════════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Icons</h2>
+        <div class="frame">
+          <div class="row">
+            <span class="row-label">Leading</span>
+            <button class="btn btn-primary btn-md"><i class="ph ph-heart" aria-hidden="true"></i>Save to library</button>
+            <button class="btn btn-secondary btn-md"><i class="ph ph-scales" aria-hidden="true"></i>Compare</button>
+            <button class="btn btn-ghost btn-md"><i class="ph ph-x" aria-hidden="true"></i>Clear filters</button>
+          </div>
+          <div class="row">
+            <span class="row-label">Trailing</span>
+            <button class="btn btn-primary btn-md">Continue<i class="ph ph-arrow-right" aria-hidden="true"></i></button>
+            <button class="btn btn-secondary btn-md">See details<i class="ph ph-caret-right" aria-hidden="true"></i></button>
+            <button class="btn btn-ghost btn-md">See all<i class="ph ph-arrow-up-right" aria-hidden="true"></i></button>
+          </div>
+        </div>
+        <p class="text-xs text-ink-tertiary mt-3"><strong>Icon-only</strong> is not supported by Button — route to <span class="code">IconButton</span> which enforces <span class="code">aria-label</span> and uses a square shape.</p>
+      </section>
+
+      <!-- ═══ TOKENS ═══════════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Tokens</h2>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="token-card">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-ink-secondary mb-2">Color</div>
+            <div class="text-[11px] mono text-ink-primary leading-relaxed">
+              <span class="swatch" style="background:#3F1F68;"></span>amethyst — primary fill, secondary border/text, ghost text<br>
+              <span class="swatch" style="background:#2A1247;"></span>amethyst-110 — primary + 2° hover <span class="text-ink-tertiary">NEW</span><br>
+              <span class="swatch" style="background:#DAD2E2;"></span>amethyst-20 — ghost hover<br>
+              <span class="swatch" style="background:#FCFBFA;"></span>cream — text on amethyst<br>
+              <span class="swatch" style="background:#FFFFFF; border-color:#DAD2E2;"></span>paper — secondary fill<br>
+              <span class="swatch" style="background:#C9EC2D;"></span>lime — hero 1° shadow<br>
+              <span class="swatch" style="background:#3B7080;"></span>slate — focus ring
+            </div>
+          </div>
+          <div class="token-card">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-ink-secondary mb-2">Spacing · radius · motion</div>
+            <div class="text-[11px] mono text-ink-primary leading-relaxed">
+              radius <span class="code">rounded-full</span> (9999px)<br>
+              shadow (hero hover) <span class="code">4px 4px 0</span><br>
+              padding sm <span class="code">py-xs px-md</span><br>
+              padding md <span class="code">py-sm px-lg</span><br>
+              padding lg <span class="code">py-md px-xl</span><br>
+              duration <span class="code">200ms</span><br>
+              ease <span class="code">ease-out-soft</span> + <span class="code">ease-spring</span> (press)
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ A11Y ═════════════════════════════════════════════════════ -->
+      <section class="mb-16 token-card">
+        <div class="flex items-start gap-3">
+          <i class="ph ph-accessible text-xl text-slate flex-shrink-0 mt-0.5"></i>
+          <div class="flex-1">
+            <div class="font-bold text-sm mb-2">Accessibility</div>
+            <ul class="text-xs text-ink-secondary leading-relaxed space-y-1 list-disc pl-4">
+              <li>Native <span class="code">&lt;button&gt;</span> — Tab, Enter, Space work for free</li>
+              <li>Focus ring: 2px slate outline, +2px offset, <span class="code">:focus-visible</span> only (keyboard nav)</li>
+              <li>Loading: <span class="code">aria-busy="true"</span>, clicks suppressed, label remains as the announced name</li>
+              <li>Icons are decorative: wrap with <span class="code">aria-hidden="true"</span></li>
+              <li>Icon-only use case should not occur — route to <span class="code">IconButton</span> which enforces <span class="code">aria-label</span></li>
+              <li>All color pairs pass WCAG AA (most pass AAA) — see <a href="../component-spec/button.md" class="underline">button.md</a> for the contrast matrix</li>
+              <li>Honors <span class="code">prefers-reduced-motion</span>: drops scale + translate, uses instant color swaps</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <footer class="pt-6 border-t border-surf-divider flex items-center justify-between text-[11px] text-ink-tertiary mono">
         <span>clean-shopper · button spec</span>
-        <span>placeholder · v3</span>
+        <span>v4 · amethyst apothecary</span>
       </footer>
+
     </div>
   </main>
 </div>

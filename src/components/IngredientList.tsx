@@ -1,5 +1,3 @@
-import Badge from './Badge'
-
 type Rating = 'clean' | 'caution' | 'avoid'
 
 const ratingDotColors: Record<Rating, string> = {
@@ -56,7 +54,14 @@ export default function IngredientList({
               <div className="flex items-center gap-sm">
                 <span className="text-h4 text-text-primary">{ingredient.name}</span>
                 {highlightAvoided && ingredient.isUserAvoided && (
-                  <Badge variant="avoid">In your avoid list</Badge>
+                  // TODO(v4): migrate to PreferenceTag when IngredientList cluster is refactored.
+                  // This is a personal-preference flag, not a safety rating (StatusBadge) or
+                  // category (CategoryTag). Inline markup preserves shape until PreferenceTag exists.
+                  <span
+                    className="inline-flex items-center rounded-tag bg-avoid-tint text-avoid h-[22px] px-sm py-xs text-label font-extrabold uppercase tracking-[0.16em] whitespace-nowrap flex-shrink-0"
+                  >
+                    In your avoid list
+                  </span>
                 )}
               </div>
               <p className="text-small text-text-secondary mt-xs">{ingredient.reason}</p>

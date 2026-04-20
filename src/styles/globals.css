@@ -14,10 +14,17 @@
 
   /* Amethyst — signature. Ink, borders, primary CTA, flat-shadow.
      Only brand color with a full ramp (carries ink hierarchy). */
-  --color-amethyst:    #3F1F68;
+  --color-amethyst-110: #2A1247;  /* deep — primary/secondary hover */
+  --color-amethyst:     #3F1F68;  /* 100 — signature */
+  --color-amethyst-90:  #4E2D73;
   --color-amethyst-80: #6B4F8F;
+  --color-amethyst-70: #7B639A;
+  --color-amethyst-60: #8C78A6;
+  --color-amethyst-50: #9C8CB2;
   --color-amethyst-40: #ADA1BE;
+  --color-amethyst-30: #C3B9D0;
   --color-amethyst-20: #DAD2E2;
+  --color-amethyst-10: #E7E2ED;
   --color-amethyst-5:  #F5F2F8;
 
   /* Lime — accent. Hero moments, premium badges. One per screen.
@@ -34,9 +41,11 @@
   --color-lilac:      #ADA8B6;
   --color-lilac-tint: #E4E2E7;
 
-  /* Stone — category tags. One color for ALL categories (no judgment). */
+  /* Stone — category tags. One color for ALL categories (no judgment).
+     Self-contained family: tint (surface) / base (reserved) / deep (foreground). */
   --color-stone:      #C9BDA8;
   --color-stone-tint: #F0EAE0;
+  --color-stone-deep: #5A4F3A;
 
   /* ══════════════════════════════════════════════════════════════════════
      SURFACES
@@ -141,6 +150,7 @@
      RADIUS — asymmetric is the signature shape language
      ══════════════════════════════════════════════════════════════════════ */
   --radius-badge:   6px;
+  --radius-tag:     4px;
   --radius-card:    16px;
   --radius-asym-sm: 16px 16px 8px 8px;
   --radius-asym:    24px 24px 10px 10px;
@@ -154,6 +164,8 @@
   --shadow-flat-amethyst:    4px 4px 0 0 #3F1F68;
   --shadow-flat-amethyst-lg: 6px 6px 0 0 #3F1F68;
   --shadow-flat-lime:        4px 4px 0 0 #C9EC2D;
+  --shadow-flat-lime-sm:     2.5px 2.5px 0 0 #C9EC2D;  /* ProductCard hover — PC-02 */
+  --shadow-flat-lime-xs:     1.5px 1.5px 0 0 #C9EC2D;  /* ProductCard pressed — PC-02 */
   --shadow-flat-slate:       4px 4px 0 0 #3B7080;
 
   --shadow-hover: 0 4px 16px rgba(63, 31, 104, 0.08);

@@ -10,7 +10,73 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="_shell.css">
 <script src="https://unpkg.com/@phosphor-icons/web"></script>
-<style>.mono { font-family:'JetBrains Mono',monospace; }</style>
+<script>
+tailwind.config = {
+  theme: { extend: {
+    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] },
+    colors: {
+      amethyst: '#3F1F68', 'amethyst-110': '#2A1247', 'amethyst-80': '#6B4F8F', 'amethyst-40': '#ADA1BE', 'amethyst-20': '#DAD2E2', 'amethyst-5': '#F5F2F8',
+      slate: '#3B7080',
+      lime: '#C9EC2D',
+      cream: '#FCFBFA', paper: '#FFFFFF', 'surf-divider': '#E9E6ED',
+      'ink-primary': '#3F1F68', 'ink-secondary': '#6B4F8F', 'ink-tertiary': '#ADA1BE',
+      clean: '#2B5F4E', 'clean-bg': '#D7E8E0',
+      caution: '#7A6115', 'caution-bg': '#F5E9B8',
+      avoid: '#B3240E', 'avoid-bg': '#FFD9D2',
+      stone: '#C9BDA8', 'stone-tint': '#F0EAE0', 'stone-deep': '#5A4F3A',
+    },
+  }}
+}
+</script>
+<style>
+  .mono { font-family:'JetBrains Mono',monospace; }
+  .code { font-family:'JetBrains Mono',monospace; font-size:11px; background:#F5F2F8; padding:2px 6px; border-radius:4px; color:#3F1F68; display:inline-block; }
+  .token-card { background:#FFFFFF; border:1.5px solid #E9E6ED; border-radius:16px; padding:20px; }
+
+  /* Badge primitives (live) — shared base, components differ in shape + palette. */
+  .bdg {
+    display:inline-flex; align-items:center; gap:6px;
+    font-family:'Plus Jakarta Sans',sans-serif;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:0.16em;
+    white-space:nowrap;
+    user-select:none;
+  }
+  .bdg-sm { font-size:10px; padding:3px 8px; letter-spacing:0.14em; }
+  .bdg-md { font-size:11px; padding:4px 12px; }
+
+  /* StatusBadge */
+  .status { border-radius:9999px; }
+  .status .ph, .status [class^="ph-"] { font-size:1.25em; }
+  .status-clean   { background:#D7E8E0; color:#2B5F4E; }
+  .status-caution { background:#F5E9B8; color:#7A6115; }
+  .status-avoid   { background:#FFD9D2; color:#B3240E; }
+
+  /* CategoryTag */
+  .ctag { border-radius:4px; background:#F0EAE0; color:#5A4F3A; }
+
+  /* AccentBadge */
+  .accent {
+    border-radius:16px 16px 8px 8px;
+    background:#C9EC2D; color:#3F1F68;
+    padding:4px 12px; font-size:11px;
+  }
+  .accent [class^="ph-"] { font-size:1.2em; }
+
+  .scene-amethyst { background:#3F1F68; border-radius:16px; padding:24px; color:#FCFBFA; }
+  .scene-cream { background:#FCFBFA; border:1px dashed #E9E6ED; border-radius:12px; padding:20px; }
+
+  .card-mock { background:#FFFFFF; border-radius:16px 16px 8px 8px; padding:14px; border:1px solid #E9E6ED; }
+  .card-mock .thumb { height:110px; border-radius:12px 12px 6px 6px; background:linear-gradient(135deg, #F5F2F8 0%, #DAD2E2 100%); margin-bottom:10px; position:relative; }
+  .card-title { font-size:13px; font-weight:700; color:#3F1F68; margin-bottom:4px; }
+
+  .frame { background:#FCFBFA; border:1px dashed #E9E6ED; border-radius:12px; padding:28px; }
+  .row { display:flex; align-items:center; flex-wrap:wrap; gap:16px; padding:10px 0; }
+  .row-label { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; color:#ADA1BE; letter-spacing:0.12em; text-transform:uppercase; width:110px; flex-shrink:0; }
+
+  .swatch { display:inline-block; width:12px; height:12px; border-radius:3px; vertical-align:middle; margin-right:4px; border:1px solid rgba(0,0,0,0.05); }
+</style>
 </head>
 <body>
 <div class="shell">
@@ -27,29 +93,365 @@
       <div class="nav-label">Components</div>
       <a href="product-card.html" class="nav-link"><span class="nav-dot"></span>Product Card</a>
       <a href="badge.html" class="nav-link active"><span class="nav-dot"></span>Badge</a>
-      <a href="button.html" class="nav-link placeholder"><span class="nav-dot"></span>Button</a>
+      <a href="button.html" class="nav-link"><span class="nav-dot"></span>Button</a>
     </div>
-    <div class="sidebar-footer">v3 · apothecary</div>
+    <div class="nav-group">
+      <a href="decisions.html" class="nav-link"><span class="nav-dot"></span>Decisions log</a>
+    </div>
+    <div class="sidebar-footer">v4 · amethyst apothecary</div>
   </aside>
 
   <main class="main">
     <div class="main-inner">
+
+      <!-- ═══ HEADER ═══════════════════════════════════════════════════ -->
       <header class="mb-12">
         <div class="mono text-[11px] text-ink-tertiary tracking-[0.16em] uppercase mb-3">Component · Badge</div>
-        <h1 class="text-5xl font-extrabold tracking-tighter leading-[0.95] mb-4" style="color:#ABA3B5;">Badge.</h1>
-        <p class="text-base text-ink-secondary max-w-[600px] leading-relaxed">Not yet specced. Rating chips, status labels, category tags — all will live here with variants, sizes, and accessibility notes.</p>
+        <h1 class="text-5xl font-extrabold tracking-tighter leading-[0.95] mb-4 text-amethyst">Badge.</h1>
+        <p class="text-base text-ink-secondary max-w-[640px] leading-relaxed">
+          Three components, not one. <span class="code">StatusBadge</span> carries safety ratings and is loud. <span class="code">CategoryTag</span> labels categories and stays quiet. <span class="code">AccentBadge</span> marks editorial moments on amethyst surfaces only. Each has its own shape so visual weight maps to role — none of them are interactive.
+        </p>
+        <div class="mt-6 flex items-center gap-3 text-xs">
+          <span class="mono text-ink-tertiary">Deep spec:</span>
+          <a href="../component-spec/badge.md" class="code hover:underline">docs/component-spec/badge.md</a>
+          <span class="mono text-ink-tertiary ml-4">Decisions:</span>
+          <a href="decisions.html#badge" class="code hover:underline">BD-01 → BD-05</a>
+        </div>
       </header>
 
-      <div style="background:white; border:2px dashed #E9E6ED; border-radius:16px; padding:48px; text-align:center;">
-        <i class="ph ph-shapes" style="font-size:48px; color:#ABA3B5;"></i>
-        <div style="font-size:14px; font-weight:600; color:#56466C; margin-top:16px;">Coming soon</div>
-        <p style="font-size:12px; color:#ABA3B5; margin-top:4px; font-family:'JetBrains Mono',monospace;">/docs/spec/badge.html</p>
-      </div>
+      <!-- ═══ OVERVIEW ═════════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Three components at a glance</h2>
+        <div class="grid grid-cols-3 gap-4">
+          <div class="token-card">
+            <div class="mb-4 flex gap-2 flex-wrap">
+              <span class="bdg bdg-md status status-clean"><i class="ph-fill ph-check-circle" aria-hidden="true"></i>Clean</span>
+            </div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-1">StatusBadge</div>
+            <p class="text-xs text-ink-secondary leading-relaxed mb-3">Product safety rating — clean / caution / avoid. One per product. Loud by design.</p>
+            <div class="text-[10px] mono text-ink-tertiary">
+              shape <span class="code">rounded-full</span><br>
+              palette clean/caution/avoid <span class="code">-bg</span>
+            </div>
+          </div>
+          <div class="token-card">
+            <div class="mb-4 flex gap-2 flex-wrap">
+              <span class="bdg bdg-md ctag">Skincare</span>
+              <span class="bdg bdg-md ctag">Haircare</span>
+            </div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-1">CategoryTag</div>
+            <p class="text-xs text-ink-secondary leading-relaxed mb-3">Category label — one color for every category. No ranking.</p>
+            <div class="text-[10px] mono text-ink-tertiary">
+              shape <span class="code">rounded-tag</span> (4px)<br>
+              palette <span class="code">stone-tint</span> / <span class="code">stone-deep</span>
+            </div>
+          </div>
+          <div class="token-card" style="background:#3F1F68; border-color:transparent;">
+            <div class="mb-4 flex gap-2 flex-wrap">
+              <span class="bdg accent"><i class="ph-fill ph-star" aria-hidden="true"></i>Editor's pick</span>
+            </div>
+            <div class="text-[11px] font-bold uppercase tracking-wider mb-1" style="color:#C9EC2D;">AccentBadge</div>
+            <p class="text-xs leading-relaxed mb-3" style="color:#ADA1BE;">Editorial moment — Editor's pick, Premium, New. One per screen. Amethyst surface only.</p>
+            <div class="text-[10px] mono" style="color:#8C78A6;">
+              shape <span style="background:#4E2D73; color:#C9EC2D; padding:2px 6px; border-radius:4px;">rounded-asym-sm</span><br>
+              palette lime on amethyst
+            </div>
+          </div>
+        </div>
+      </section>
 
-      <footer class="pt-6 mt-12 border-t border-surf-divider flex items-center justify-between text-[11px] text-ink-tertiary mono">
+      <!-- ═══ STATUSBADGE ══════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <div class="flex items-baseline justify-between mb-4">
+          <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary">StatusBadge</h2>
+          <span class="mono text-[11px] text-ink-tertiary">loud · pill · one per product</span>
+        </div>
+
+        <div class="frame">
+          <div class="row">
+            <span class="row-label">Tiers · md</span>
+            <span class="bdg bdg-md status status-clean"><i class="ph-fill ph-check-circle" aria-hidden="true"></i>Clean</span>
+            <span class="bdg bdg-md status status-caution"><i class="ph-fill ph-warning-circle" aria-hidden="true"></i>Caution</span>
+            <span class="bdg bdg-md status status-avoid"><i class="ph-fill ph-x-circle" aria-hidden="true"></i>Avoid</span>
+          </div>
+          <div class="row">
+            <span class="row-label">Tiers · sm</span>
+            <span class="bdg bdg-sm status status-clean"><i class="ph-fill ph-check-circle" aria-hidden="true"></i>Clean</span>
+            <span class="bdg bdg-sm status status-caution"><i class="ph-fill ph-warning-circle" aria-hidden="true"></i>Caution</span>
+            <span class="bdg bdg-sm status status-avoid"><i class="ph-fill ph-x-circle" aria-hidden="true"></i>Avoid</span>
+            <span class="mono text-[11px] text-ink-tertiary ml-4">Product card overlays, dense tables</span>
+          </div>
+          <div class="row">
+            <span class="row-label">No icon</span>
+            <span class="bdg bdg-md status status-clean">Clean</span>
+            <span class="bdg bdg-md status status-caution">Caution</span>
+            <span class="bdg bdg-md status status-avoid">Avoid</span>
+            <span class="mono text-[11px] text-ink-tertiary ml-4"><span class="code">showIcon={false}</span> · dense tables only</span>
+          </div>
+        </div>
+
+        <div class="mt-6">
+          <h3 class="mono text-[10px] font-bold tracking-[0.12em] uppercase text-ink-tertiary mb-3">In context</h3>
+          <div class="grid grid-cols-3 gap-4">
+            <div class="card-mock">
+              <div class="thumb">
+                <span class="bdg bdg-sm status status-clean" style="position:absolute; top:10px; left:10px;"><i class="ph-fill ph-check-circle" aria-hidden="true"></i>Clean</span>
+              </div>
+              <div class="card-title">Aesop body wash</div>
+              <div class="mono text-[10px] text-ink-tertiary">Overlay on card image</div>
+            </div>
+            <div class="scene-cream">
+              <div style="font-size:13px; color:#3F1F68; line-height:1.6;">This product is rated <span class="bdg bdg-md status status-caution" style="vertical-align:middle;"><i class="ph-fill ph-warning-circle" aria-hidden="true"></i>Caution</span> based on ingredient analysis.</div>
+              <div class="mono text-[10px] text-ink-tertiary mt-3">Inline in body copy</div>
+            </div>
+            <div class="scene-cream">
+              <div class="mono text-[10px] text-ink-tertiary uppercase tracking-wider mb-1">Rating</div>
+              <div style="font-size:18px; font-weight:800; color:#3F1F68; margin-bottom:10px; line-height:1.2;">This contains flagged ingredients.</div>
+              <span class="bdg bdg-md status status-avoid"><i class="ph-fill ph-x-circle" aria-hidden="true"></i>Avoid</span>
+              <div class="mono text-[10px] text-ink-tertiary mt-3">Product detail header</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ CATEGORYTAG ══════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <div class="flex items-baseline justify-between mb-4">
+          <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary">CategoryTag</h2>
+          <span class="mono text-[11px] text-ink-tertiary">quiet · 4px · one color for every category</span>
+        </div>
+
+        <div class="frame">
+          <div class="row">
+            <span class="row-label">Default · md</span>
+            <span class="bdg bdg-md ctag">Skincare</span>
+            <span class="bdg bdg-md ctag">Haircare</span>
+            <span class="bdg bdg-md ctag">Body</span>
+            <span class="bdg bdg-md ctag">Makeup</span>
+            <span class="bdg bdg-md ctag">Oral care</span>
+            <span class="bdg bdg-md ctag">Home</span>
+          </div>
+          <div class="row">
+            <span class="row-label">Dense · sm</span>
+            <span class="bdg bdg-sm ctag">Skincare</span>
+            <span class="bdg bdg-sm ctag">Haircare</span>
+            <span class="bdg bdg-sm ctag">Body</span>
+            <span class="bdg bdg-sm ctag">Makeup</span>
+            <span class="bdg bdg-sm ctag">Oral care</span>
+            <span class="bdg bdg-sm ctag">Home</span>
+            <span class="mono text-[11px] text-ink-tertiary ml-4">Dense listing pages</span>
+          </div>
+        </div>
+
+        <div class="mt-6">
+          <h3 class="mono text-[10px] font-bold tracking-[0.12em] uppercase text-ink-tertiary mb-3">At volume — listing row</h3>
+          <div class="grid grid-cols-4 gap-3">
+            <div class="card-mock">
+              <div class="thumb"></div>
+              <div class="card-title">Aesop body wash</div>
+              <div style="display:flex; gap:4px; flex-wrap:wrap; margin-top:6px;">
+                <span class="bdg bdg-sm ctag">Skincare</span>
+                <span class="bdg bdg-sm ctag">Body</span>
+              </div>
+            </div>
+            <div class="card-mock">
+              <div class="thumb"></div>
+              <div class="card-title">Hair mask</div>
+              <div style="display:flex; gap:4px; flex-wrap:wrap; margin-top:6px;">
+                <span class="bdg bdg-sm ctag">Haircare</span>
+                <span class="bdg bdg-sm ctag">Repair</span>
+              </div>
+            </div>
+            <div class="card-mock">
+              <div class="thumb"></div>
+              <div class="card-title">Toothpaste</div>
+              <div style="display:flex; gap:4px; flex-wrap:wrap; margin-top:6px;">
+                <span class="bdg bdg-sm ctag">Oral care</span>
+              </div>
+            </div>
+            <div class="card-mock">
+              <div class="thumb"></div>
+              <div class="card-title">Cleaning spray</div>
+              <div style="display:flex; gap:4px; flex-wrap:wrap; margin-top:6px;">
+                <span class="bdg bdg-sm ctag">Home</span>
+                <span class="bdg bdg-sm ctag">Surface</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="token-card mt-4">
+          <div class="flex items-start gap-3">
+            <i class="ph ph-info text-xl text-slate flex-shrink-0 mt-0.5"></i>
+            <div>
+              <div class="font-bold text-sm mb-1">One color, not twelve</div>
+              <p class="text-xs text-ink-secondary leading-relaxed">Every category uses the same <span class="code">stone-tint</span> background and <span class="code">stone-deep</span> text. Per-category colors would imply a ranking Clean Shopper does not make. Differentiation comes from the label, not the hue.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ ACCENTBADGE ══════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <div class="flex items-baseline justify-between mb-4">
+          <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary">AccentBadge</h2>
+          <span class="mono text-[11px] text-ink-tertiary">editorial · asymmetric · amethyst only</span>
+        </div>
+
+        <div class="frame" style="background:#3F1F68; border-color:transparent;">
+          <div class="row">
+            <span class="row-label" style="color:#8C78A6;">Labels</span>
+            <span class="bdg accent">Editor's pick</span>
+            <span class="bdg accent">Premium</span>
+            <span class="bdg accent">New</span>
+            <span class="bdg accent">Limited</span>
+          </div>
+          <div class="row">
+            <span class="row-label" style="color:#8C78A6;">+ icon</span>
+            <span class="bdg accent"><i class="ph-fill ph-star" aria-hidden="true"></i>Editor's pick</span>
+            <span class="bdg accent"><i class="ph-fill ph-sparkle" aria-hidden="true"></i>Premium</span>
+            <span class="bdg accent"><i class="ph-fill ph-lightning" aria-hidden="true"></i>New</span>
+          </div>
+        </div>
+
+        <div class="mt-6">
+          <h3 class="mono text-[10px] font-bold tracking-[0.12em] uppercase text-ink-tertiary mb-3">In context — on amethyst surface</h3>
+          <div class="scene-amethyst">
+            <span class="bdg accent"><i class="ph-fill ph-star" aria-hidden="true"></i>Editor's pick</span>
+            <div style="font-size:24px; font-weight:800; letter-spacing:-0.02em; line-height:1.1; margin-top:14px; color:#FCFBFA;">The cleanest body wash<br>we've ever tested.</div>
+            <div style="font-size:13px; color:#ADA1BE; margin-top:8px;">From the April edit · Aesop</div>
+          </div>
+        </div>
+
+        <div class="token-card mt-4">
+          <div class="flex items-start gap-3">
+            <i class="ph ph-warning text-xl text-slate flex-shrink-0 mt-0.5"></i>
+            <div>
+              <div class="font-bold text-sm mb-1">Amethyst surfaces only</div>
+              <p class="text-xs text-ink-secondary leading-relaxed">Lime on cream or paper fails contrast, and the design system pivots on lime being the signature accent-on-amethyst pairing. If the surface isn't amethyst, reach for StatusBadge or CategoryTag instead. One AccentBadge per screen, max — the whole point is that it's rare.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ NOT THIS ═════════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Not this</h2>
+        <div class="grid grid-cols-3 gap-4">
+          <div class="token-card" style="border-color:#FFD9D2;">
+            <div class="mb-3"><span class="bdg bdg-md" style="border-radius:9999px; background:#E7F1ED; color:#2B5F4E;"><i class="ph-fill ph-check-circle" aria-hidden="true"></i>Clean</span></div>
+            <div class="text-[11px] font-bold uppercase tracking-wider mb-1" style="color:#B3240E;">Don't — StatusBadge on -tint</div>
+            <p class="text-xs text-ink-secondary leading-relaxed">Tint is too quiet. StatusBadge always uses the saturated <span class="code">-bg</span>. Tint is reserved for larger callout panels that <em>contain</em> a badge.</p>
+          </div>
+          <div class="token-card" style="border-color:#FFD9D2;">
+            <div class="mb-3 flex gap-2 flex-wrap">
+              <span class="bdg bdg-sm" style="border-radius:9999px; background:#D7E8E0; color:#2B5F4E;">Skincare</span>
+              <span class="bdg bdg-sm" style="border-radius:9999px; background:#F5E9B8; color:#7A6115;">Haircare</span>
+              <span class="bdg bdg-sm" style="border-radius:9999px; background:#FFD9D2; color:#B3240E;">Home</span>
+            </div>
+            <div class="text-[11px] font-bold uppercase tracking-wider mb-1" style="color:#B3240E;">Don't — CategoryTag as pill w/ status colors</div>
+            <p class="text-xs text-ink-secondary leading-relaxed">Pills collide with StatusBadge shape. Status palette on categories implies category = safety. Neither should happen.</p>
+          </div>
+          <div class="token-card" style="border-color:#FFD9D2;">
+            <div class="mb-3" style="background:#FCFBFA; padding:10px; border-radius:8px; border:1px dashed #DAD2E2;">
+              <span class="bdg accent">Editor's pick</span>
+            </div>
+            <div class="text-[11px] font-bold uppercase tracking-wider mb-1" style="color:#B3240E;">Don't — AccentBadge on cream</div>
+            <p class="text-xs text-ink-secondary leading-relaxed">Lime on cream fails contrast. AccentBadge lives on amethyst only.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ TOKENS ═══════════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Tokens</h2>
+        <div class="grid grid-cols-3 gap-4">
+          <div class="token-card">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-ink-secondary mb-2">StatusBadge</div>
+            <div class="text-[11px] mono text-ink-primary leading-relaxed">
+              <span class="swatch" style="background:#D7E8E0;"></span>clean-bg · #D7E8E0<br>
+              <span class="swatch" style="background:#2B5F4E;"></span>clean · #2B5F4E<br>
+              <span class="swatch" style="background:#F5E9B8;"></span>caution-bg · #F5E9B8<br>
+              <span class="swatch" style="background:#7A6115;"></span>caution · #7A6115<br>
+              <span class="swatch" style="background:#FFD9D2;"></span>avoid-bg · #FFD9D2<br>
+              <span class="swatch" style="background:#B3240E;"></span>avoid · #B3240E<br>
+              <br>
+              radius <span class="code">rounded-full</span>
+            </div>
+          </div>
+          <div class="token-card">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-ink-secondary mb-2">CategoryTag</div>
+            <div class="text-[11px] mono text-ink-primary leading-relaxed">
+              <span class="swatch" style="background:#F0EAE0;"></span>stone-tint · #F0EAE0<br>
+              <span class="swatch" style="background:#5A4F3A;"></span>stone-deep · #5A4F3A <span class="text-ink-tertiary">NEW</span><br>
+              <br>
+              radius <span class="code">rounded-tag</span> (4px) <span class="text-ink-tertiary">NEW</span><br>
+              <br>
+              <span class="text-ink-tertiary">stone-deep is the missing foreground for the stone family — already used as a raw hex in design-system.html, now tokenized.</span>
+            </div>
+          </div>
+          <div class="token-card">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-ink-secondary mb-2">AccentBadge</div>
+            <div class="text-[11px] mono text-ink-primary leading-relaxed">
+              <span class="swatch" style="background:#C9EC2D;"></span>lime · #C9EC2D<br>
+              <span class="swatch" style="background:#3F1F68;"></span>amethyst · #3F1F68<br>
+              <br>
+              radius <span class="code">rounded-asym-sm</span><br>
+              (16 16 8 8)<br>
+              <br>
+              <span class="text-ink-tertiary">Surface constraint: amethyst only. Enforced at the component level.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 mt-4">
+          <div class="token-card">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-ink-secondary mb-2">Typography (all three)</div>
+            <div class="text-[11px] mono text-ink-primary leading-relaxed">
+              font <span class="code">Plus Jakarta Sans</span><br>
+              weight 800<br>
+              case UPPERCASE<br>
+              tracking 0.16em<br>
+              sm <span class="code">text-micro</span> (10px)<br>
+              md <span class="code">text-label</span> (11px)
+            </div>
+          </div>
+          <div class="token-card">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-ink-secondary mb-2">Spacing &amp; motion</div>
+            <div class="text-[11px] mono text-ink-primary leading-relaxed">
+              padding sm <span class="code">3px 8px</span><br>
+              padding md <span class="code">4px 12px</span><br>
+              icon gap <span class="code">6px</span><br>
+              <br>
+              motion <strong>none</strong> — badges don't animate, don't transition, don't respond to pointer events.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ A11Y ═════════════════════════════════════════════════════ -->
+      <section class="mb-16 token-card">
+        <div class="flex items-start gap-3">
+          <i class="ph ph-accessible text-xl text-slate flex-shrink-0 mt-0.5"></i>
+          <div class="flex-1">
+            <div class="font-bold text-sm mb-2">Accessibility</div>
+            <ul class="text-xs text-ink-secondary leading-relaxed space-y-1 list-disc pl-4">
+              <li><strong>Not interactive.</strong> Badges have no focus, no hover, no press, no disabled state. If you need clickable, use a Button (ghost) or a filter chip.</li>
+              <li><strong>StatusBadge:</strong> icons are <span class="code">aria-hidden="true"</span>. Label text is the announced name. For product context, wrap with <span class="code">aria-label="Rated Clean — Aesop body wash"</span>.</li>
+              <li><strong>CategoryTag:</strong> label text is the announced name. If used as filter selection state, the parent element owns the interactive semantics.</li>
+              <li><strong>AccentBadge:</strong> decorative by default. If it carries meaning, expose in parent <span class="code">aria-label</span> or adjacent text.</li>
+              <li>All color pairs pass WCAG AA — most pass AAA. See <a href="../component-spec/badge.md" class="underline">badge.md</a> for the full contrast matrix.</li>
+              <li>No motion. Respects <span class="code">prefers-reduced-motion</span> by default (nothing to disable).</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <footer class="pt-6 border-t border-surf-divider flex items-center justify-between text-[11px] text-ink-tertiary mono">
         <span>clean-shopper · badge spec</span>
-        <span>placeholder · v3</span>
+        <span>v4 · amethyst apothecary</span>
       </footer>
+
     </div>
   </main>
 </div>

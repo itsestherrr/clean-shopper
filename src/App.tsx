@@ -9,13 +9,11 @@ import SignUpPage from './features/auth/SignUpPage'
 import { supabase } from './lib/supabase'
 import { useSession } from './lib/use-session'
 import SpecLayout from './features/spec/SpecLayout'
-import BadgeSpecPage from './features/spec/BadgeSpecPage'
 import IconButtonSpecPage from './features/spec/IconButtonSpecPage'
 import IngredientBarSpecPage from './features/spec/IngredientBarSpecPage'
 import IngredientListSpecPage from './features/spec/IngredientListSpecPage'
 import ModalSpecPage from './features/spec/ModalSpecPage'
 import ProductCardSpecPage from './features/spec/ProductCardSpecPage'
-import RatingBadgeSpecPage from './features/spec/RatingBadgeSpecPage'
 import ToastSpecPage from './features/spec/ToastSpecPage'
 
 const AUTH_ROUTES = ['/signin', '/signup']
@@ -93,14 +91,12 @@ function App() {
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/spec" element={<SpecLayout />}>
-            <Route index element={<Navigate to="/spec/badge" replace />} />
-            <Route path="badge" element={<BadgeSpecPage />} />
+            <Route index element={<Navigate to="/spec/product-card" replace />} />
             <Route path="icon-button" element={<IconButtonSpecPage />} />
             <Route path="ingredient-bar" element={<IngredientBarSpecPage />} />
             <Route path="ingredient-list" element={<IngredientListSpecPage />} />
             <Route path="modal" element={<ModalSpecPage />} />
             <Route path="product-card" element={<ProductCardSpecPage />} />
-            <Route path="rating-badge" element={<RatingBadgeSpecPage />} />
             <Route path="toast" element={<ToastSpecPage />} />
           </Route>
         </Routes>
