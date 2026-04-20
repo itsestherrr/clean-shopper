@@ -7,10 +7,6 @@ import { useSavedProducts } from '../../lib/use-saved-products'
 import ProductCard from '../../components/ProductCard'
 import SearchInput from '../../components/SearchInput'
 import EmptyState from '../../components/EmptyState'
-import Modal from '../../components/Modal'
-import IngredientList from '../../components/IngredientList'
-import IngredientBar from '../../components/IngredientBar'
-import RatingBadge from '../../components/RatingBadge'
 
 export default function SearchPage() {
   const [allProducts, setAllProducts] = useState<Product[]>([])
@@ -18,7 +14,6 @@ export default function SearchPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const { savedIds, toggle: toggleSave } = useSavedProducts()
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [categoryFilter, setCategoryFilter] = useState<Set<string>>(new Set())
   const [ratingFilter, setRatingFilter] = useState<Set<Rating>>(new Set())
 
@@ -62,16 +57,6 @@ export default function SearchPage() {
     next.has(value) ? next.delete(value) : next.add(value)
     return next
   }
-
-  const hasStructuredIngredients = (selectedProduct?.ingredients.length ?? 0) > 0
-
-  // Parse raw ingredient text into a display list when AI analysis isn't available yet
-  const rawIngredientNames = selectedProduct?.description
-    ? selectedProduct.description
-        .split(',')
-        .map((s) => s.trim())
-        .filter(Boolean)
-    : []
 
   return (
     <div>
@@ -153,7 +138,7 @@ export default function SearchPage() {
           {loading && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
               {Array.from({ length: 6 }).map((_, i) => (
-                <ProductCard key={i} loading name="" brand="" rating="clean" category="" description="" />
+                <ProductCard key={i} loading id="" name="" brand="" rating="clean" category="" />
               ))}
             </div>
           )}
@@ -172,15 +157,14 @@ export default function SearchPage() {
               {displayed.map((product) => (
                 <ProductCard
                   key={product.id}
+                  id={product.id}
                   name={product.name}
                   brand={product.brand}
                   rating={product.rating}
                   category={product.category}
-                  description={product.description}
                   imageUrl={product.imageUrl}
                   saved={savedIds.has(product.id)}
-                  onSave={() => toggleSave(product.id)}
-                  onClick={() => setSelectedProduct(product)}
+                  onSaveToggle={() => toggleSave(product.id)}
                 />
               ))}
             </div>
@@ -196,58 +180,6 @@ export default function SearchPage() {
           )}
         </div>
       </div>
-
-      {/* Product detail modal */}
-      <Modal
-        open={selectedProduct !== null}
-        onClose={() => setSelectedProduct(null)}
-        title={selectedProduct?.name}
-      >
-        {selectedProduct && (
-          <div>
-            <div className="flex items-center gap-sm mb-md">
-              <span className="text-body text-text-secondary">{selectedProduct.brand}</span>
-              <RatingBadge rating={selectedProduct.rating} />
-            </div>
-
-            {hasStructuredIngredients ? (
-              <>
-                <IngredientBar
-                  counts={{
-                    clean: selectedProduct.ingredients.filter((i) => i.rating === 'clean').length,
-                    caution: selectedProduct.ingredients.filter((i) => i.rating === 'caution').length,
-                    avoid: selectedProduct.ingredients.filter((i) => i.rating === 'avoid').length,
-                  }}
-                />
-                <div className="mt-lg">
-                  <IngredientList ingredients={selectedProduct.ingredients} />
-                </div>
-              </>
-            ) : rawIngredientNames.length > 0 ? (
-              <div>
-                <p className="text-label uppercase text-text-tertiary mb-md">Ingredients</p>
-                <div className="flex flex-col">
-                  {rawIngredientNames.map((name, i) => (
-                    <div
-                      key={i}
-                      className="py-sm border-b border-surface-divider last:border-none"
-                    >
-                      <span className="text-h4 text-text-primary">{name}</span>
-                    </div>
-                  ))}
-                </div>
-                <p className="text-small text-text-tertiary mt-lg">
-                  Safety ratings coming once AI analysis is run.
-                </p>
-              </div>
-            ) : (
-              <p className="text-small text-text-tertiary">
-                No ingredient information available for this product.
-              </p>
-            )}
-          </div>
-        )}
-      </Modal>
     </div>
   )
 }

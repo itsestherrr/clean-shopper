@@ -1,9 +1,5 @@
 import { useEffect, useState } from 'react'
 import ProductCard from '../../components/ProductCard'
-import Modal from '../../components/Modal'
-import IngredientList from '../../components/IngredientList'
-import IngredientBar from '../../components/IngredientBar'
-import RatingBadge from '../../components/RatingBadge'
 import EmptyState from '../../components/EmptyState'
 import { supabase } from '../../lib/supabase'
 import { useSavedProducts } from '../../lib/use-saved-products'
@@ -14,7 +10,6 @@ export default function LibraryPage() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
 
   useEffect(() => {
     if (savedLoading) return
@@ -63,7 +58,7 @@ export default function LibraryPage() {
       {(loading || savedLoading) && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
           {Array.from({ length: 3 }).map((_, i) => (
-            <ProductCard key={i} loading name="" brand="" rating="clean" category="" description="" />
+            <ProductCard key={i} loading id="" name="" brand="" rating="clean" category="" />
           ))}
         </div>
       )}
@@ -81,50 +76,18 @@ export default function LibraryPage() {
           {displayed.map((product) => (
             <ProductCard
               key={product.id}
+              id={product.id}
               name={product.name}
               brand={product.brand}
               rating={product.rating}
               category={product.category}
-              description={product.description}
               imageUrl={product.imageUrl}
               saved={savedIds.has(product.id)}
-              onSave={() => toggleSave(product.id)}
-              onClick={() => setSelectedProduct(product)}
+              onSaveToggle={() => toggleSave(product.id)}
             />
           ))}
         </div>
       )}
-
-      <Modal
-        open={selectedProduct !== null}
-        onClose={() => setSelectedProduct(null)}
-        title={selectedProduct?.name}
-      >
-        {selectedProduct && (
-          <div>
-            <div className="flex items-center gap-sm mb-md">
-              <span className="text-body text-text-secondary">{selectedProduct.brand}</span>
-              <RatingBadge rating={selectedProduct.rating} />
-            </div>
-            <p className="text-body text-text-secondary mb-lg">{selectedProduct.description}</p>
-
-            {selectedProduct.ingredients.length > 0 && (
-              <>
-                <IngredientBar
-                  counts={{
-                    clean: selectedProduct.ingredients.filter((i) => i.rating === 'clean').length,
-                    caution: selectedProduct.ingredients.filter((i) => i.rating === 'caution').length,
-                    avoid: selectedProduct.ingredients.filter((i) => i.rating === 'avoid').length,
-                  }}
-                />
-                <div className="mt-lg">
-                  <IngredientList ingredients={selectedProduct.ingredients} />
-                </div>
-              </>
-            )}
-          </div>
-        )}
-      </Modal>
     </div>
   )
 }

@@ -336,7 +336,7 @@ export default function ProductCardSpecPage() {
               rows={[
                 ['Default announces', '"{name}, by {brand}, rated {rating}, category {category}. Button."'],
                 ['Selectable announces', '"{name}, by {brand}, rated {rating}. Checkbox, {checked|not checked}."'],
-                ['RatingBadge', 'Speaks its rating word ("Clean", "Caution", "Avoid"), not just color'],
+                ['StatusBadge', 'Speaks its rating word ("Clean", "Caution", "Avoid"), not just color'],
                 ['Save button', 'aria-label="Save to library" or "Remove from library"'],
               ]}
             />

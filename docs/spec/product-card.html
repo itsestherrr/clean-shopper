@@ -15,43 +15,204 @@ tailwind.config = {
   theme: { extend: {
     fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] },
     colors: {
-      /* brand */
-      amethyst: '#3F1F68', 'amethyst-80': '#6B4F8F', 'amethyst-40': '#ADA1BE', 'amethyst-20': '#DAD2E2', 'amethyst-5': '#F5F2F8',
+      amethyst: '#3F1F68', 'amethyst-110': '#2A1247', 'amethyst-80': '#6B4F8F', 'amethyst-40': '#ADA1BE', 'amethyst-20': '#DAD2E2', 'amethyst-10': '#E7E2ED', 'amethyst-5': '#F5F2F8',
       slate: '#3B7080', 'slate-tint': '#E4EEF4',
       lime: '#C9EC2D', 'lime-tint': '#F0F9C9',
-      lilac: '#ADA8B6', 'lilac-tint': '#E4E2E7',
-      stone: '#C9BDA8', 'stone-tint': '#F0EAE0',
-      /* surfaces + ink */
-      cream: '#FCFBFA', 'surf-divider': '#E9E6ED',
+      stone: '#C9BDA8', 'stone-tint': '#F0EAE0', 'stone-deep': '#5A4F3A',
+      cream: '#FCFBFA', 'surf-divider': '#E9E6ED', 'surf-muted': '#F5F2F8',
       'ink-primary': '#3F1F68', 'ink-secondary': '#6B4F8F', 'ink-tertiary': '#ADA1BE',
-      /* semantic status */
-      'clean': '#2B5F4E', 'clean-dot': '#7DBFA8', 'clean-bg': '#D7E8E0',
-      'caution': '#7A6115', 'caution-dot': '#C9A227', 'caution-bg': '#F5E9B8',
-      'avoid': '#B3240E', 'avoid-dot': '#FF3A20', 'avoid-bg': '#FFD9D2',
+      'clean': '#2B5F4E', 'clean-bg': '#D7E8E0', 'clean-tint': '#E7F1ED',
+      'caution': '#7A6115', 'caution-bg': '#F5E9B8', 'caution-tint': '#FCF6DF',
+      'avoid': '#B3240E', 'avoid-bg': '#FFD9D2', 'avoid-tint': '#FFEBE7',
     },
-    borderRadius: { 'asym': '24px 24px 10px 10px', 'card': '16px' },
+    borderRadius: { 'asym': '24px 24px 10px 10px', 'asym-sm': '16px 16px 8px 8px', 'tag': '4px' },
     boxShadow: {
-      'flat-amethyst':    '4px 4px 0 0 #3F1F68',
-      'flat-amethyst-lg': '6px 6px 0 0 #3F1F68',
+      'flat-lime-sm':  '2.5px 2.5px 0 0 #C9EC2D',
+      'flat-amethyst': '4px 4px 0 0 #3F1F68',
     },
+    transitionTimingFunction: { 'out-soft': 'cubic-bezier(0.4,0,0.2,1)' },
   }}
 }
 </script>
 <style>
   .mono { font-family:'JetBrains Mono',monospace; }
   .code { font-family:'JetBrains Mono',monospace; font-size:11px; background:#F5F2F8; padding:2px 6px; border-radius:4px; color:#3F1F68; display:inline-block; }
-  .token-card { background:white; border:1.5px solid #E9E6ED; border-radius:16px; padding:16px; }
 
-  .ghost-panel { display:grid; grid-template-rows:0fr; transition:grid-template-rows 400ms cubic-bezier(0.4,0,0.2,1); }
-  .ghost-inner { overflow:hidden; opacity:0; transition:opacity 300ms ease 100ms; }
-  .card-lift { box-shadow:4px 4px 0 0 #3F1F68; transition:transform 300ms cubic-bezier(0.34,1.56,0.64,1), box-shadow 300ms cubic-bezier(0.34,1.56,0.64,1); }
-  .card-lift:hover { transform:translate(-2px,-2px); box-shadow:6px 6px 0 0 #3F1F68; }
-  .card-lift:hover .zoom-img { transform:scale(1.10); }
-  .card-lift:hover .title-shift { color:#3B7080; }
-  .card-lift:hover .ghost-panel { grid-template-rows:1fr; }
-  .card-lift:hover .ghost-inner { opacity:1; }
-  .zoom-img { transition:transform 700ms cubic-bezier(0.4,0,0.2,1); }
-  .title-shift { transition:color 300ms cubic-bezier(0.4,0,0.2,1); }
+  /* ══════════════════════════════════════════════════════════════
+     PRODUCT CARD — v4 (PC-01 through PC-11)
+     ══════════════════════════════════════════════════════════════ */
+  .pcard {
+    background:#FFFFFF;
+    border:1.5px solid #E9E6ED;
+    border-radius:24px 24px 10px 10px;
+    overflow:hidden;
+    display:flex; flex-direction:column;
+    transition:border-color 200ms cubic-bezier(0.4,0,0.2,1), box-shadow 200ms cubic-bezier(0.4,0,0.2,1);
+    position:relative;
+    text-decoration:none;
+    color:inherit;
+  }
+  .pcard:hover {
+    border-color:#3F1F68;
+    box-shadow:2.5px 2.5px 0 0 #C9EC2D;
+  }
+  .pcard.force-hover {
+    border-color:#3F1F68;
+    box-shadow:2.5px 2.5px 0 0 #C9EC2D;
+  }
+  .pcard:focus-visible {
+    outline:2px solid #3F1F68;
+    outline-offset:2px;
+  }
+  .pcard.force-focus {
+    outline:2px solid #3F1F68;
+    outline-offset:2px;
+  }
+  .pcard.force-pressed {
+    transform:translate(1px, 1px);
+    box-shadow:1.5px 1.5px 0 0 #C9EC2D;
+    border-color:#3F1F68;
+  }
+  /* Live press (for the main Rest card — allows feeling the lock) */
+  .pcard:active {
+    transform:translate(1px, 1px);
+    box-shadow:1.5px 1.5px 0 0 #C9EC2D;
+    border-color:#3F1F68;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pcard:active { transform:none; box-shadow:2.5px 2.5px 0 0 #C9EC2D; }
+  }
+  .pcard.force-disabled { opacity:0.50; pointer-events:none; }
+  @media (prefers-reduced-motion: reduce) {
+    .pcard { transition:none; }
+  }
+
+  .pcard-img {
+    position:relative;
+    aspect-ratio:1/1;
+    background:linear-gradient(135deg, #DAD2E2 0%, #8A7560 100%);
+    overflow:hidden;
+    border-radius:22px 22px 0 0;  /* 24 - 1.5 border = ~22 inner */
+  }
+  .pcard-img img { width:100%; height:100%; object-fit:cover; display:block; }
+  .pcard-img-placeholder {
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    color:rgba(255,255,255,0.5);
+    font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase;
+  }
+
+  .pcard-body {
+    padding:24px;
+    display:flex; flex-direction:column;
+    gap:8px;
+  }
+  .pcard-name   { font-size:16px; font-weight:700; color:#3F1F68; line-height:1.3; letter-spacing:-0.008em; }
+  .pcard-brand  { font-size:12px; color:#ADA1BE; font-weight:500; }
+
+  /* Status overlay (top-left) */
+  .pcard-status {
+    position:absolute; top:10px; left:10px;
+    display:inline-flex; align-items:center; gap:3px;
+    padding:4px 9px;
+    border-radius:9999px;
+    font-size:10px; font-weight:800; letter-spacing:0.16em; text-transform:uppercase;
+    white-space:nowrap;
+    z-index:2;
+  }
+  .pcard-status.clean   { background:#D7E8E0; color:#2B5F4E; }
+  .pcard-status.caution { background:#F5E9B8; color:#7A6115; }
+  .pcard-status.avoid   { background:#FFD9D2; color:#B3240E; }
+  .pcard-status i { font-size:12px; }
+
+  /* Heart overlay (top-right) */
+  .pcard-heart {
+    position:absolute; top:10px; right:10px;
+    width:32px; height:32px;
+    border-radius:9999px;
+    background:rgba(255,255,255,0.85);
+    backdrop-filter:blur(6px);
+    -webkit-backdrop-filter:blur(6px);
+    display:flex; align-items:center; justify-content:center;
+    color:#3F1F68;
+    font-size:16px; line-height:1;
+    border:none;
+    cursor:pointer;
+    z-index:2;
+    transition:background-color 150ms ease;
+  }
+  .pcard-heart:hover { background:rgba(255,255,255,0.95); }
+  .pcard-heart.saved { color:#B79BD3; }
+  .pcard-heart.saved::before { content:"♥"; }
+  .pcard-heart:not(.saved)::before { content:"♡"; }
+
+  /* Category tag inline */
+  .pcard-ctag {
+    display:inline-flex; align-items:center;
+    padding:3px 8px;
+    border-radius:4px;
+    background:#F0EAE0; color:#5A4F3A;
+    font-size:10px; font-weight:800; letter-spacing:0.14em; text-transform:uppercase;
+    white-space:nowrap;
+    align-self:flex-start;
+  }
+
+  /* Selectable variant */
+  .pcard.is-selectable { cursor:pointer; }
+  .pcard.is-selected  { border-color:#3F1F68; box-shadow:2.5px 2.5px 0 0 #C9EC2D; }
+  .pcard-check {
+    position:absolute; top:10px; right:10px;
+    width:26px; height:26px;
+    border-radius:9999px;
+    background:#FFFFFF; border:2px solid #DAD2E2;
+    display:flex; align-items:center; justify-content:center;
+    font-size:13px; color:transparent; line-height:1;
+    z-index:2;
+  }
+  .is-selected .pcard-check { background:#3F1F68; border-color:#3F1F68; color:#C9EC2D; }
+  .is-selected .pcard-check::before { content:"✓"; font-weight:800; }
+
+  /* Compact row variant */
+  .pcompact {
+    background:#FFFFFF; border:1.5px solid #E9E6ED; border-radius:12px;
+    display:flex; align-items:center; gap:12px; padding:10px 12px;
+    transition:background-color 150ms ease, border-color 150ms ease;
+    text-decoration:none; color:inherit;
+  }
+  .pcompact:hover { background:#F5F2F8; border-color:#DAD2E2; }
+  .pcompact-thumb {
+    flex-shrink:0; width:56px; height:56px;
+    border-radius:8px; overflow:hidden;
+    background:linear-gradient(135deg, #DAD2E2 0%, #8A7560 100%);
+  }
+  .pcompact-body { flex:1; min-width:0; }
+  .pcompact-name { font-size:14px; font-weight:700; color:#3F1F68; line-height:1.3; margin-bottom:2px; }
+  .pcompact-brand { font-size:11px; color:#ADA1BE; }
+
+  /* spec page layout helpers */
+  .spec-section { margin-bottom:64px; }
+  .spec-h2 { font-size:11px; font-weight:800; letter-spacing:0.16em; text-transform:uppercase; color:#6B4F8F; margin-bottom:14px; }
+  .spec-note { background:#F5F2F8; border-left:3px solid #3F1F68; border-radius:0 8px 8px 0; padding:12px 16px; font-size:13px; color:#3F1F68; line-height:1.55; }
+
+  .state-panel { background:#FFFFFF; border:1.5px solid #E9E6ED; border-radius:16px; padding:20px; }
+  .state-label { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:800; letter-spacing:0.16em; text-transform:uppercase; color:#ADA1BE; margin-bottom:12px; }
+
+  .token-table { width:100%; border-collapse:collapse; font-size:12px; }
+  .token-table th, .token-table td { text-align:left; padding:8px 12px; border-bottom:1px solid #E9E6ED; }
+  .token-table th { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#6B4F8F; }
+  .token-table td { color:#3F1F68; }
+  .token-table code { font-family:'JetBrains Mono',monospace; font-size:11px; background:#F5F2F8; padding:2px 6px; border-radius:4px; }
+
+  .a11y-table { width:100%; border-collapse:collapse; font-size:12px; font-family:'JetBrains Mono',monospace; }
+  .a11y-table th, .a11y-table td { padding:6px 10px; border-bottom:1px solid #E9E6ED; text-align:left; }
+  .a11y-table th { color:#6B4F8F; font-size:10px; letter-spacing:0.08em; text-transform:uppercase; }
+  .a11y-table td { color:#3F1F68; }
+  .a11y-table .pass { color:#2B5F4E; font-weight:700; }
+
+  .dont-card { background:#FFFFFF; border:1.5px solid #FFD9D2; border-radius:12px; padding:16px; }
+  .dont-label { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:800; letter-spacing:0.16em; text-transform:uppercase; color:#B3240E; margin-bottom:12px; }
+  .dont-reason { font-size:12px; color:#6B4F8F; margin-top:12px; line-height:1.5; }
 </style>
 </head>
 <body>
@@ -68,8 +229,11 @@ tailwind.config = {
     <div class="nav-group">
       <div class="nav-label">Components</div>
       <a href="product-card.html" class="nav-link active"><span class="nav-dot"></span>Product Card</a>
-      <a href="badge.html" class="nav-link placeholder"><span class="nav-dot"></span>Badge</a>
-      <a href="button.html" class="nav-link placeholder"><span class="nav-dot"></span>Button</a>
+      <a href="badge.html" class="nav-link"><span class="nav-dot"></span>Badge</a>
+      <a href="button.html" class="nav-link"><span class="nav-dot"></span>Button</a>
+    </div>
+    <div class="nav-group">
+      <a href="decisions.html" class="nav-link"><span class="nav-dot"></span>Decisions log</a>
     </div>
     <div class="sidebar-footer">v4 · amethyst apothecary</div>
   </aside>
@@ -80,80 +244,381 @@ tailwind.config = {
       <header class="mb-12">
         <div class="mono text-[11px] text-ink-tertiary tracking-[0.16em] uppercase mb-3">Component · Product Card</div>
         <h1 class="text-5xl font-extrabold tracking-tighter leading-[0.95] mb-4 text-amethyst">Product Card.</h1>
-        <p class="text-base text-ink-secondary max-w-[600px] leading-relaxed">The flagship card. Displays a product with rating badge, brand, title, price, and a ghost-reveal panel on hover showing key ingredients. Amethyst border + signature amethyst flat-shadow at rest; shadow grows on lift.</p>
+        <p class="text-base text-ink-secondary max-w-[620px] leading-relaxed">
+          Flagship scan surface. 1:1 square image, StatusBadge overlay top-left, save heart top-right, content block below. Hover adds a 2.5px lime accent shadow + amethyst border — no translate. Click navigates to the PDP at <code class="code">/product/:id</code>.
+        </p>
         <div class="mt-6 flex items-center gap-3 text-xs">
           <span class="mono text-ink-tertiary">Deep spec:</span>
           <a href="../component-spec/product-card.md" class="code hover:underline">docs/component-spec/product-card.md</a>
+          <span class="mono text-ink-tertiary ml-2">Decisions:</span>
+          <a href="decisions.html#product-card" class="code hover:underline">PC-01 → PC-11</a>
         </div>
       </header>
 
-      <!-- Live preview -->
-      <section class="mb-16">
-        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Live — hover to test</h2>
+      <!-- ═════════════════════ OVERVIEW — hover to test ═════════════════════ -->
+      <section class="spec-section">
+        <h2 class="spec-h2">Overview — hover any card</h2>
         <div class="grid grid-cols-3 gap-6">
-          <article class="card-lift group relative bg-white border-2 border-amethyst rounded-asym overflow-hidden cursor-pointer">
-            <div class="relative h-40 overflow-hidden border-b-2 border-amethyst/10">
-              <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&q=80&w=500" class="zoom-img w-full h-full object-cover">
-              <div class="absolute top-3 left-3 bg-clean-bg text-clean border border-clean-dot/40 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase flex items-center gap-1"><i class="ph-fill ph-check-circle"></i> Clean</div>
+
+          <a href="#" class="pcard">
+            <div class="pcard-img">
+              <div class="pcard-img-placeholder">image</div>
+              <span class="pcard-status clean"><i class="ph-fill ph-check-circle"></i>Clean</span>
+              <button class="pcard-heart" aria-label="Save"></button>
             </div>
-            <div class="p-4"><p class="text-[10px] font-bold tracking-widest text-ink-tertiary uppercase mb-1">Aesop</p><h3 class="title-shift text-sm font-bold mb-2">Parsley Seed Serum</h3><div class="flex justify-between items-center text-xs"><span class="font-semibold">$85</span><div class="w-5 h-5 rounded-full bg-clean-bg border border-clean-dot/40 flex items-center justify-center text-clean text-[10px]"><i class="ph ph-leaf"></i></div></div></div>
-            <div class="ghost-panel bg-amethyst-5 border-t border-surf-divider"><div class="ghost-inner"><div class="p-3"><span class="text-[10px] font-bold uppercase">Key ingredients</span><p class="text-[11px] text-ink-secondary mt-1">Aloe, Water, Glycerin…</p></div></div></div>
-          </article>
-          <article class="card-lift group relative bg-white border-2 border-amethyst rounded-asym overflow-hidden cursor-pointer">
-            <div class="relative h-40 overflow-hidden border-b-2 border-amethyst/10">
-              <img src="https://images.unsplash.com/photo-1629198688000-71f23e745b6e?auto=format&fit=crop&q=80&w=500" class="zoom-img w-full h-full object-cover">
-              <div class="absolute top-3 left-3 bg-caution-bg text-caution border border-caution-dot/50 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase flex items-center gap-1"><i class="ph-fill ph-warning-circle"></i> Caution</div>
+            <div class="pcard-body">
+              <div class="pcard-name">Parsley Seed Serum</div>
+              <div class="pcard-brand">Aesop</div>
+              <span class="pcard-ctag">Skincare</span>
             </div>
-            <div class="p-4"><p class="text-[10px] font-bold tracking-widest text-ink-tertiary uppercase mb-1">YTTP</p><h3 class="title-shift text-sm font-bold mb-2">Moisture Cream</h3><div class="flex justify-between items-center text-xs"><span class="font-semibold">$48</span><div class="w-5 h-5 rounded-full bg-caution-bg border border-caution-dot/50 flex items-center justify-center text-caution text-[10px]"><i class="ph ph-warning"></i></div></div></div>
-            <div class="ghost-panel bg-amethyst-5 border-t border-surf-divider"><div class="ghost-inner"><div class="p-3"><span class="text-[10px] font-bold uppercase">Key ingredients</span><p class="text-[11px] text-ink-secondary mt-1">Kale, SLS, Phenoxyethanol…</p></div></div></div>
-          </article>
-          <article class="card-lift group relative bg-white border-2 border-amethyst rounded-asym overflow-hidden cursor-pointer">
-            <div class="relative h-40 overflow-hidden border-b-2 border-amethyst/10">
-              <img src="https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?auto=format&fit=crop&q=80&w=500" class="zoom-img w-full h-full object-cover">
-              <div class="absolute top-3 left-3 bg-avoid-bg text-avoid border border-avoid-dot/40 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase flex items-center gap-1"><i class="ph-fill ph-x-circle"></i> Avoid</div>
+          </a>
+
+          <a href="#" class="pcard">
+            <div class="pcard-img">
+              <div class="pcard-img-placeholder">image</div>
+              <span class="pcard-status caution"><i class="ph-fill ph-warning-circle"></i>Caution</span>
+              <button class="pcard-heart saved" aria-label="Remove from library"></button>
             </div>
-            <div class="p-4"><p class="text-[10px] font-bold tracking-widest text-ink-tertiary uppercase mb-1">Generic</p><h3 class="title-shift text-sm font-bold mb-2">Scented Body Wash</h3><div class="flex justify-between items-center text-xs"><span class="font-semibold">$12</span><div class="w-5 h-5 rounded-full bg-avoid-bg border border-avoid-dot/40 flex items-center justify-center text-avoid text-[10px]"><i class="ph ph-x"></i></div></div></div>
-            <div class="ghost-panel bg-amethyst-5 border-t border-surf-divider"><div class="ghost-inner"><div class="p-3"><span class="text-[10px] font-bold uppercase">Key ingredients</span><p class="text-[11px] text-ink-secondary mt-1">Parabens, Phthalates, Fragrance…</p></div></div></div>
-          </article>
+            <div class="pcard-body">
+              <div class="pcard-name">Moisture Cream</div>
+              <div class="pcard-brand">Youth to the People</div>
+              <span class="pcard-ctag">Skincare</span>
+            </div>
+          </a>
+
+          <a href="#" class="pcard">
+            <div class="pcard-img">
+              <div class="pcard-img-placeholder">image</div>
+              <span class="pcard-status avoid"><i class="ph-fill ph-x-circle"></i>Avoid</span>
+              <button class="pcard-heart" aria-label="Save"></button>
+            </div>
+            <div class="pcard-body">
+              <div class="pcard-name">Scented Body Wash</div>
+              <div class="pcard-brand">Generic Brand</div>
+              <span class="pcard-ctag">Body Care</span>
+            </div>
+          </a>
+
         </div>
       </section>
 
-      <!-- Hover spec -->
-      <section class="mb-16">
-        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Hover interactions</h2>
-        <div class="token-card">
-          <div class="grid grid-cols-2 gap-6 text-sm">
-            <div>
-              <div class="font-bold text-[10px] uppercase tracking-wider text-ink-secondary mb-1">① Card lift</div>
-              <p class="text-ink-primary">translate(-2px, -2px) + <span class="code">shadow-flat-amethyst-lg</span></p>
-              <p class="text-ink-tertiary text-xs mt-1"><span class="code">300ms spring</span></p>
+      <!-- ═════════════════════ ANATOMY ═════════════════════ -->
+      <section class="spec-section">
+        <h2 class="spec-h2">Anatomy</h2>
+        <div class="grid grid-cols-[280px_1fr] gap-8 items-start">
+          <a href="#" class="pcard">
+            <div class="pcard-img">
+              <div class="pcard-img-placeholder">image</div>
+              <span class="pcard-status clean"><i class="ph-fill ph-check-circle"></i>Clean</span>
+              <button class="pcard-heart" aria-label="Save"></button>
             </div>
-            <div>
-              <div class="font-bold text-[10px] uppercase tracking-wider text-ink-secondary mb-1">② Image zoom</div>
-              <p class="text-ink-primary">scale(1.10)</p>
-              <p class="text-ink-tertiary text-xs mt-1"><span class="code">700ms out-soft</span></p>
+            <div class="pcard-body">
+              <div class="pcard-name">Parsley Seed Serum</div>
+              <div class="pcard-brand">Aesop</div>
+              <span class="pcard-ctag">Skincare</span>
             </div>
-            <div>
-              <div class="font-bold text-[10px] uppercase tracking-wider text-ink-secondary mb-1">③ Title shift</div>
-              <p class="text-ink-primary">amethyst → slate</p>
-              <p class="text-ink-tertiary text-xs mt-1"><span class="code">300ms out-soft</span></p>
-            </div>
-            <div>
-              <div class="font-bold text-[10px] uppercase tracking-wider text-ink-secondary mb-1">④ Ghost panel reveal</div>
-              <p class="text-ink-primary">grid-rows 0fr → 1fr, opacity 0 → 1</p>
-              <p class="text-ink-tertiary text-xs mt-1"><span class="code">400ms out-soft</span> · 100ms opacity delay</p>
-            </div>
+          </a>
+          <div class="state-panel">
+            <table class="token-table">
+              <thead><tr><th>Region</th><th>Spec</th><th>Decision</th></tr></thead>
+              <tbody>
+                <tr><td>Card shape</td><td><code>rounded-asym</code> (24/24/10/10)</td><td>PC-01</td></tr>
+                <tr><td>Image aspect</td><td>1:1, full-bleed, top corners inner 22px</td><td>PC-03 / PC-04</td></tr>
+                <tr><td>StatusBadge</td><td>Overlay top-left, 10px inset</td><td>PC-05</td></tr>
+                <tr><td>Heart</td><td>Overlay top-right, 32×32 frosted pill</td><td>PC-06</td></tr>
+                <tr><td>Name / brand / category</td><td>Stacked in content block, <code>p-lg</code></td><td>PC-07</td></tr>
+                <tr><td>Footer row</td><td>Removed — no add-to-list icon on card</td><td>PC-08</td></tr>
+                <tr><td>Click target</td><td>Navigates to <code>/product/:id</code></td><td>PC-11</td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
 
-      <!-- Rest state spec -->
-      <section class="mb-12 token-card">
-        <div class="flex items-start gap-3">
-          <i class="ph ph-info text-xl text-slate flex-shrink-0 mt-0.5"></i>
+      <!-- ═════════════════════ STATES ═════════════════════ -->
+      <section class="spec-section">
+        <h2 class="spec-h2">States</h2>
+        <div class="grid grid-cols-3 gap-6">
+
+          <div class="state-panel">
+            <div class="state-label">Rest</div>
+            <a href="#" class="pcard">
+              <div class="pcard-img">
+                <div class="pcard-img-placeholder">image</div>
+                <span class="pcard-status clean"><i class="ph-fill ph-check-circle"></i>Clean</span>
+                <button class="pcard-heart" aria-label="Save"></button>
+              </div>
+              <div class="pcard-body">
+                <div class="pcard-name">Parsley Seed Serum</div>
+                <div class="pcard-brand">Aesop</div>
+                <span class="pcard-ctag">Skincare</span>
+              </div>
+            </a>
+            <p class="text-xs text-ink-tertiary mt-3 leading-relaxed">1.5px <code class="code">surf-divider</code> border. No shadow.</p>
+          </div>
+
+          <div class="state-panel">
+            <div class="state-label">Hover (forced)</div>
+            <a href="#" class="pcard force-hover">
+              <div class="pcard-img">
+                <div class="pcard-img-placeholder">image</div>
+                <span class="pcard-status clean"><i class="ph-fill ph-check-circle"></i>Clean</span>
+                <button class="pcard-heart" aria-label="Save"></button>
+              </div>
+              <div class="pcard-body">
+                <div class="pcard-name">Parsley Seed Serum</div>
+                <div class="pcard-brand">Aesop</div>
+                <span class="pcard-ctag">Skincare</span>
+              </div>
+            </a>
+            <p class="text-xs text-ink-tertiary mt-3 leading-relaxed">Border → <code class="code">amethyst</code>. <code class="code">shadow-flat-lime-sm</code> (2.5px). No translate.</p>
+          </div>
+
+          <div class="state-panel">
+            <div class="state-label">Pressed (forced)</div>
+            <a href="#" class="pcard force-pressed">
+              <div class="pcard-img">
+                <div class="pcard-img-placeholder">image</div>
+                <span class="pcard-status clean"><i class="ph-fill ph-check-circle"></i>Clean</span>
+                <button class="pcard-heart" aria-label="Save"></button>
+              </div>
+              <div class="pcard-body">
+                <div class="pcard-name">Parsley Seed Serum</div>
+                <div class="pcard-brand">Aesop</div>
+                <span class="pcard-ctag">Skincare</span>
+              </div>
+            </a>
+            <p class="text-xs text-ink-tertiary mt-3 leading-relaxed"><code class="code">translate(1px, 1px)</code> + shadow → <code class="code">1.5px 1.5px</code> lime. Border stays amethyst. Shadow-locked motion.</p>
+          </div>
+
+          <div class="state-panel">
+            <div class="state-label">Focus-visible (forced)</div>
+            <a href="#" class="pcard force-focus">
+              <div class="pcard-img">
+                <div class="pcard-img-placeholder">image</div>
+                <span class="pcard-status clean"><i class="ph-fill ph-check-circle"></i>Clean</span>
+                <button class="pcard-heart" aria-label="Save"></button>
+              </div>
+              <div class="pcard-body">
+                <div class="pcard-name">Parsley Seed Serum</div>
+                <div class="pcard-brand">Aesop</div>
+                <span class="pcard-ctag">Skincare</span>
+              </div>
+            </a>
+            <p class="text-xs text-ink-tertiary mt-3 leading-relaxed"><code class="code">outline-2 amethyst</code> + <code class="code">outline-offset-2</code>. Keyboard only.</p>
+          </div>
+
+          <div class="state-panel">
+            <div class="state-label">Disabled</div>
+            <a href="#" class="pcard force-disabled">
+              <div class="pcard-img">
+                <div class="pcard-img-placeholder">image</div>
+                <span class="pcard-status clean"><i class="ph-fill ph-check-circle"></i>Clean</span>
+                <button class="pcard-heart" aria-label="Save"></button>
+              </div>
+              <div class="pcard-body">
+                <div class="pcard-name">Parsley Seed Serum</div>
+                <div class="pcard-brand">Aesop</div>
+                <span class="pcard-ctag">Skincare</span>
+              </div>
+            </a>
+            <p class="text-xs text-ink-tertiary mt-3 leading-relaxed">Opacity <code class="code">0.50</code>. No pointer. Not tabbable. <code class="code">aria-disabled</code>.</p>
+          </div>
+
+          <div class="state-panel">
+            <div class="state-label">Loading (skeleton)</div>
+            <div class="pcard" style="min-height:280px;">
+              <div class="pcard-img bg-surf-muted animate-pulse" style="background:#F5F2F8;">
+                <div></div>
+              </div>
+              <div class="pcard-body">
+                <div class="animate-pulse" style="height:14px; width:70%; background:#F5F2F8; border-radius:4px;"></div>
+                <div class="animate-pulse" style="height:10px; width:40%; background:#F5F2F8; border-radius:4px;"></div>
+              </div>
+            </div>
+            <p class="text-xs text-ink-tertiary mt-3 leading-relaxed">Pulsing <code class="code">surface-muted</code>. No content rendered.</p>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ═════════════════════ VARIANT: SELECTABLE ═════════════════════ -->
+      <section class="spec-section">
+        <h2 class="spec-h2">Selectable variant — comparison pickers</h2>
+        <div class="grid grid-cols-3 gap-6 items-start">
           <div>
-            <div class="font-bold text-sm mb-1">Rest state</div>
-            <p class="text-xs text-ink-secondary leading-relaxed">Default card state: <span class="code">border-2 border-amethyst</span> + <span class="code">shadow-flat-amethyst</span> + <span class="code">rounded-asym</span>. Every product card carries the signature at rest — no "shadow on hover only" pattern. This is what makes Clean Shopper feel like Clean Shopper.</p>
+            <div class="state-label">Unselected</div>
+            <a href="#" class="pcard is-selectable">
+              <div class="pcard-img">
+                <div class="pcard-img-placeholder">image</div>
+                <span class="pcard-status clean"><i class="ph-fill ph-check-circle"></i>Clean</span>
+                <span class="pcard-check" aria-hidden="true"></span>
+              </div>
+              <div class="pcard-body">
+                <div class="pcard-name">Parsley Seed Serum</div>
+                <div class="pcard-brand">Aesop</div>
+                <span class="pcard-ctag">Skincare</span>
+              </div>
+            </a>
+          </div>
+          <div>
+            <div class="state-label">Selected</div>
+            <a href="#" class="pcard is-selectable is-selected">
+              <div class="pcard-img">
+                <div class="pcard-img-placeholder">image</div>
+                <span class="pcard-status caution"><i class="ph-fill ph-warning-circle"></i>Caution</span>
+                <span class="pcard-check" aria-hidden="true"></span>
+              </div>
+              <div class="pcard-body">
+                <div class="pcard-name">Moisture Cream</div>
+                <div class="pcard-brand">Youth to the People</div>
+                <span class="pcard-ctag">Skincare</span>
+              </div>
+            </a>
+          </div>
+          <div class="state-panel">
+            <div class="state-label">Behavior</div>
+            <ul class="text-xs text-ink-secondary leading-relaxed space-y-2 list-disc pl-4">
+              <li>Heart is replaced by a checkbox indicator in top-right</li>
+              <li>Click toggles selection via <code class="code">onSelectChange</code> — does not navigate</li>
+              <li>Rendered as <code class="code">&lt;button role="checkbox" aria-checked&gt;</code></li>
+              <li>Selected state borrows the lime-accent hover styling as a persistent selection read</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═════════════════════ SIZE: COMPACT ═════════════════════ -->
+      <section class="spec-section">
+        <h2 class="spec-h2">Compact size</h2>
+        <div class="grid grid-cols-[1fr_320px] gap-8 items-start">
+          <div class="state-panel">
+            <div class="state-label">Compact rows</div>
+            <div class="flex flex-col gap-3">
+              <a href="#" class="pcompact">
+                <div class="pcompact-thumb"></div>
+                <div class="pcompact-body">
+                  <div class="pcompact-name">Parsley Seed Serum</div>
+                  <div class="pcompact-brand">Aesop</div>
+                </div>
+                <span class="pcard-status clean" style="position:static;"><i class="ph-fill ph-check-circle"></i>Clean</span>
+              </a>
+              <a href="#" class="pcompact">
+                <div class="pcompact-thumb"></div>
+                <div class="pcompact-body">
+                  <div class="pcompact-name">Moisture Cream</div>
+                  <div class="pcompact-brand">Youth to the People</div>
+                </div>
+                <span class="pcard-status caution" style="position:static;"><i class="ph-fill ph-warning-circle"></i>Caution</span>
+              </a>
+              <a href="#" class="pcompact">
+                <div class="pcompact-thumb"></div>
+                <div class="pcompact-body">
+                  <div class="pcompact-name">Scented Body Wash</div>
+                  <div class="pcompact-brand">Generic Brand</div>
+                </div>
+                <span class="pcard-status avoid" style="position:static;"><i class="ph-fill ph-x-circle"></i>Avoid</span>
+              </a>
+            </div>
+          </div>
+          <div class="state-panel">
+            <div class="state-label">Spec</div>
+            <ul class="text-xs text-ink-secondary leading-relaxed space-y-2 list-disc pl-4">
+              <li>56×56 thumbnail left, <code class="code">rounded-[8px]</code></li>
+              <li>Two lines of text: name (14px / 700), brand (11px / tertiary)</li>
+              <li>StatusBadge <code class="code">sm</code> at end of row</li>
+              <li>No CategoryTag, no heart — shown at <a href="#" class="code hover:underline">PDP</a> level</li>
+              <li>Hover: soft <code class="code">amethyst-5</code> tint on the row</li>
+              <li>Radius: <code class="code">rounded-[12px]</code> (symmetric — asymmetric doesn't read at row height)</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═════════════════════ "NOT THIS" ═════════════════════ -->
+      <section class="spec-section">
+        <h2 class="spec-h2">Not this</h2>
+        <div class="grid grid-cols-3 gap-6">
+          <div class="dont-card">
+            <div class="dont-label">✗ Don't · open a modal on click</div>
+            <p class="text-xs text-ink-secondary">Clicking the card navigates to <code class="code">/product/:id</code>. No modal overlay. Back-button, deep-link, share — all must work. (PC-11)</p>
+            <p class="dont-reason">Modal overlay for product detail was the v3 pattern; it's deprecated.</p>
+          </div>
+          <div class="dont-card">
+            <div class="dont-label">✗ Don't · hide the heart behind hover</div>
+            <p class="text-xs text-ink-secondary">The save heart is always visible. No <code class="code">opacity-0 group-hover:opacity-100</code>. (PC-06)</p>
+            <p class="dont-reason">Hover-reveal fails on touch devices and breaks discoverability.</p>
+          </div>
+          <div class="dont-card">
+            <div class="dont-label">✗ Don't · add per-card action icons</div>
+            <p class="text-xs text-ink-secondary">No add-to-list "+" button, no share icon, no compare toggle. Card surface stays minimal. (PC-08)</p>
+            <p class="dont-reason">Multi-step actions live on the PDP. Card is a scan surface, not an action panel.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═════════════════════ TOKENS ═════════════════════ -->
+      <section class="spec-section">
+        <h2 class="spec-h2">Tokens</h2>
+        <div class="grid grid-cols-2 gap-6">
+          <div class="state-panel">
+            <div class="state-label">Color</div>
+            <table class="token-table">
+              <tbody>
+                <tr><td>Surface</td><td><code>surface-card</code></td></tr>
+                <tr><td>Border rest</td><td><code>surface-divider</code></td></tr>
+                <tr><td>Border hover / selected</td><td><code>amethyst</code></td></tr>
+                <tr><td>Name</td><td><code>ink-primary</code></td></tr>
+                <tr><td>Brand</td><td><code>ink-tertiary</code></td></tr>
+                <tr><td>Focus ring</td><td><code>amethyst</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="state-panel">
+            <div class="state-label">Radius · Shadow · Motion</div>
+            <table class="token-table">
+              <tbody>
+                <tr><td>Card radius</td><td><code>rounded-asym</code> (24/24/10/10)</td></tr>
+                <tr><td>Image top inner</td><td>22px (24 − 1.5 border × ~1.3)</td></tr>
+                <tr><td>Heart pill</td><td><code>rounded-full</code></td></tr>
+                <tr><td>Compact thumb</td><td><code>rounded-[8px]</code></td></tr>
+                <tr><td>Hover shadow</td><td><code>shadow-flat-lime-sm</code> (2.5px 2.5px 0 lime)</td></tr>
+                <tr><td>Transition</td><td><code>200ms ease-out-soft</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═════════════════════ ACCESSIBILITY ═════════════════════ -->
+      <section class="spec-section">
+        <h2 class="spec-h2">Accessibility</h2>
+        <div class="grid grid-cols-2 gap-6">
+          <div class="state-panel">
+            <div class="state-label">Screen readers & keyboard</div>
+            <table class="a11y-table">
+              <tbody>
+                <tr><td>Default</td><td><code>role=link</code>, in tab order, Enter/Space navigates</td></tr>
+                <tr><td>Selectable</td><td><code>role=checkbox</code> + <code>aria-checked</code></td></tr>
+                <tr><td>Disabled</td><td><code>aria-disabled</code>, <code>tabIndex=-1</code></td></tr>
+                <tr><td>StatusBadge</td><td>Announces rating word ("Clean")</td></tr>
+                <tr><td>Heart</td><td><code>aria-label</code> swaps per saved state</td></tr>
+                <tr><td>Motion</td><td>Respects <code>prefers-reduced-motion</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="state-panel">
+            <div class="state-label">Color contrast</div>
+            <table class="a11y-table">
+              <tbody>
+                <tr><td>Name on card</td><td>amethyst on white</td><td class="pass">AAA ✓</td></tr>
+                <tr><td>Brand on card</td><td>ink-tertiary on white</td><td class="pass">AA ✓</td></tr>
+                <tr><td>StatusBadge (any tier)</td><td>over white pill → over image</td><td class="pass">AA ✓</td></tr>
+                <tr><td>Heart icon</td><td>amethyst on frosted white</td><td class="pass">AAA ✓</td></tr>
+                <tr><td>Focus ring</td><td>amethyst on cream</td><td class="pass">3:1 ✓</td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </section>

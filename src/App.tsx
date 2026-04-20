@@ -8,6 +8,7 @@ import SignInPage from './features/auth/SignInPage'
 import SignUpPage from './features/auth/SignUpPage'
 import { supabase } from './lib/supabase'
 import { useSession } from './lib/use-session'
+import ProductDetailPage from './features/product/ProductDetailPage'
 import SpecLayout from './features/spec/SpecLayout'
 import IconButtonSpecPage from './features/spec/IconButtonSpecPage'
 import IngredientBarSpecPage from './features/spec/IngredientBarSpecPage'
@@ -85,6 +86,14 @@ function App() {
             element={
               <RequireAuth>
                 <BrowsePage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/product/:id"
+            element={
+              <RequireAuth>
+                <ProductDetailPage />
               </RequireAuth>
             }
           />

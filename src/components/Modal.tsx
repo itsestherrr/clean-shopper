@@ -81,7 +81,7 @@ export default function Modal({
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-backdrop z-overlay transition-opacity duration-slow ease-enter"
+        className="fixed inset-0 bg-backdrop z-overlay transition-opacity duration-slow ease-out-soft"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -93,7 +93,7 @@ export default function Modal({
         aria-modal="true"
         aria-label={title}
         className={`
-          fixed z-modal bg-surface-card rounded-card shadow-modal
+          fixed z-modal bg-surface-card rounded-[24px] shadow-modal
           top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
           p-lg max-h-[85vh] overflow-y-auto
           max-w-[calc(100vw-48px)]
@@ -103,7 +103,7 @@ export default function Modal({
         {/* Header */}
         {title && (
           <div className="flex justify-between items-center mb-md">
-            <h2 className="text-h2 text-text-primary">{title}</h2>
+            <h2 className="text-h2 text-ink-primary">{title}</h2>
             <IconButton
               icon="×"
               onClick={() => onClose()}
