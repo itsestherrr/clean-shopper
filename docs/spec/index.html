@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spec · Clean Shopper</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_shell.css">
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
+<style>
+  .mono { font-family:'JetBrains Mono',monospace; }
+  .entry {
+    display: block;
+    background: white;
+    border: 1.5px solid #E9E6ED;
+    border-radius: 16px 16px 8px 8px;
+    padding: 20px;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 300ms cubic-bezier(0.4,0,0.2,1), box-shadow 300ms cubic-bezier(0.4,0,0.2,1), border-color 200ms ease;
+  }
+  .entry:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 0 #C9EC2D;
+    border-color: #2C1847;
+  }
+  .entry.placeholder { border-style: dashed; opacity: 0.7; }
+  .entry.placeholder:hover { box-shadow: 4px 4px 0 0 #E9E6ED; border-color: #ABA3B5; }
+  .pill {
+    display:inline-flex; align-items:center; gap:4px;
+    font-size:10px; font-weight:700; padding:3px 8px;
+    border-radius:9999px; letter-spacing:.06em; text-transform:uppercase;
+  }
+  .pill-live { background:#E7F1ED; color:#2B5F4E; }
+  .pill-soon { background:#F5F4F6; color:#56466C; }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="mark">C</div>
+      <div><span class="name">Clean Shopper</span><span class="tag">spec</span></div>
+    </div>
+    <div class="nav-group">
+      <a href="design-system.html" class="nav-link"><span class="nav-dot"></span>Design System</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-label">Components</div>
+      <a href="product-card.html" class="nav-link"><span class="nav-dot"></span>Product Card</a>
+      <a href="badge.html" class="nav-link placeholder"><span class="nav-dot"></span>Badge</a>
+      <a href="button.html" class="nav-link placeholder"><span class="nav-dot"></span>Button</a>
+    </div>
+    <div class="sidebar-footer">v3 · apothecary</div>
+  </aside>
+
+  <main class="main">
+    <div class="main-inner">
+
+      <header class="mb-12">
+        <div class="mono text-[11px] text-ink-tertiary tracking-[0.16em] uppercase mb-3">Clean Shopper · Documentation</div>
+        <h1 class="text-5xl font-extrabold tracking-tighter leading-[0.95] mb-4">
+          Spec.
+        </h1>
+        <p class="text-base text-ink-secondary max-w-[600px] leading-relaxed">
+          Design system tokens and component specifications. Every visual decision documented, every component has a page. Start with the design system to understand the foundation, then explore individual components.
+        </p>
+      </header>
+
+      <!-- Design System -->
+      <section class="mb-12">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Foundation</h2>
+        <a href="design-system.html" class="entry" style="background:#2C1847; color:#FCFBFA; border-color:#2C1847;">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-2 mb-2">
+                <span class="pill" style="background:#C9EC2D; color:#2C1847;">Live</span>
+                <span class="mono text-[10px] text-amethyst-40">/spec/design-system</span>
+              </div>
+              <h3 class="text-2xl font-extrabold tracking-tight mb-1" style="color:#C9EC2D;">Design System</h3>
+              <p class="text-sm opacity-80 max-w-[500px]">Palette, surfaces, semantic ratings, text hierarchy, typography, spacing, radius, shadow, motion.</p>
+            </div>
+            <i class="ph ph-arrow-right text-xl" style="color:#C9EC2D;"></i>
+          </div>
+        </a>
+      </section>
+
+      <!-- Components -->
+      <section>
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Components</h2>
+        <div class="grid grid-cols-2 gap-4">
+
+          <a href="product-card.html" class="entry">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="pill pill-live">Live</span>
+              <span class="mono text-[10px] text-ink-tertiary">/spec/product-card</span>
+            </div>
+            <h3 class="text-lg font-bold mb-1">Product Card</h3>
+            <p class="text-xs text-ink-secondary">Flagship card with ghost-reveal hover, lift animation, and all three rating states.</p>
+          </a>
+
+          <a href="badge.html" class="entry placeholder">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="pill pill-soon">Soon</span>
+              <span class="mono text-[10px] text-ink-tertiary">/spec/badge</span>
+            </div>
+            <h3 class="text-lg font-bold mb-1">Badge</h3>
+            <p class="text-xs text-ink-secondary">Rating chips, status labels, category tags.</p>
+          </a>
+
+          <a href="button.html" class="entry placeholder">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="pill pill-soon">Soon</span>
+              <span class="mono text-[10px] text-ink-tertiary">/spec/button</span>
+            </div>
+            <h3 class="text-lg font-bold mb-1">Button</h3>
+            <p class="text-xs text-ink-secondary">Primary (signature lime-shadow), secondary, tertiary, ghost, sizes.</p>
+          </a>
+
+        </div>
+      </section>
+
+      <footer class="pt-8 mt-12 border-t border-surf-divider text-[11px] text-ink-tertiary mono flex items-center justify-between">
+        <span>clean-shopper · spec index</span>
+        <span>apothecary · v3</span>
+      </footer>
+
+    </div>
+  </main>
+</div>
+</body>
+</html>

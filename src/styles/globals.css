@@ -1,96 +1,134 @@
-/* Clean Shopper — Global Styles
+/* Clean Shopper — Global Styles (v4 · Amethyst Apothecary)
    Tailwind v4: tokens live in @theme, which generates utilities AND outputs CSS vars to :root.
-   Import this file in main.tsx before anything else. */
+   Import this file in main.tsx before anything else.
+   Source of truth: docs/spec/design-system.html + docs/design-system.md */
 
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 
 @theme {
 
-  /* ── Surfaces ──────────────────────────────────────────────────────── */
-  --color-surface-bg:      #FAF7F2;
+  /* ══════════════════════════════════════════════════════════════════════
+     BRAND — role-locked. Each color has one job.
+     ══════════════════════════════════════════════════════════════════════ */
+
+  /* Amethyst — signature. Ink, borders, primary CTA, flat-shadow.
+     Only brand color with a full ramp (carries ink hierarchy). */
+  --color-amethyst:    #3F1F68;
+  --color-amethyst-80: #6B4F8F;
+  --color-amethyst-40: #ADA1BE;
+  --color-amethyst-20: #DAD2E2;
+  --color-amethyst-5:  #F5F2F8;
+
+  /* Lime — accent. Hero moments, premium badges. One per screen.
+     Foreground only on amethyst surfaces (fails contrast on white/cream). */
+  --color-lime:      #C9EC2D;
+  --color-lime-tint: #F0F9C9;
+
+  /* Slate — interactive. Links, focus rings, info banners. Never a card shadow. */
+  --color-slate:       #3B7080;
+  --color-slate-deep:  #2B5667;
+  --color-slate-tint:  #E4EEF4;
+
+  /* Lilac — favorite heart only. Tone-on-tone, quiet saved states. */
+  --color-lilac:      #ADA8B6;
+  --color-lilac-tint: #E4E2E7;
+
+  /* Stone — category tags. One color for ALL categories (no judgment). */
+  --color-stone:      #C9BDA8;
+  --color-stone-tint: #F0EAE0;
+
+  /* ══════════════════════════════════════════════════════════════════════
+     SURFACES
+     ══════════════════════════════════════════════════════════════════════ */
+  --color-cream: #FCFBFA;
+  --color-paper: #FFFFFF;
+
+  --color-surface-bg:      #FCFBFA;
   --color-surface-card:    #FFFFFF;
-  --color-surface-muted:   #F0ECE6;
-  --color-surface-divider: #EBE7E0;
+  --color-surface-muted:   #F5F2F8;
+  --color-surface-divider: #E9E6ED;
 
-  /* ── Primary ───────────────────────────────────────────────────────── */
-  --color-primary:       #5A8384;
-  --color-primary-dark:  #4A7273;
-  --color-primary-light: #DDEAEB;
+  /* ══════════════════════════════════════════════════════════════════════
+     INK — reads from the amethyst ramp
+     ══════════════════════════════════════════════════════════════════════ */
+  --color-ink-primary:     #3F1F68;
+  --color-ink-secondary:   #6B4F8F;
+  --color-ink-tertiary:    #ADA1BE;
+  --color-ink-placeholder: #C8C4CE;
 
-  /* ── Semantic — Clean ──────────────────────────────────────────────── */
-  --color-clean:      #3A5C35;
-  --color-clean-dot:  #8AAE82;
-  --color-clean-bg:   #DCE6D8;
-  --color-clean-tint: #E6EDE2;
+  /* ══════════════════════════════════════════════════════════════════════
+     SEMANTIC STATUS — rating only. Never decorative.
+     Every product has exactly one status. Four shades per tier.
+     ══════════════════════════════════════════════════════════════════════ */
 
-  /* ── Semantic — Caution ────────────────────────────────────────────── */
-  --color-caution:      #6B5020;
-  --color-caution-dot:  #C8A44E;
-  --color-caution-bg:   #F0E4C8;
-  --color-caution-tint: #F5EDD8;
+  /* Clean · sage */
+  --color-clean:       #2B5F4E;
+  --color-clean-dot:   #7DBFA8;
+  --color-clean-bg:    #D7E8E0;
+  --color-clean-tint:  #E7F1ED;
 
-  /* ── Semantic — Avoid ──────────────────────────────────────────────── */
-  --color-avoid:      #6B3535;
-  --color-avoid-dot:  #C08A8A;
-  --color-avoid-bg:   #ECDCDC;
-  --color-avoid-tint: #F2E6E6;
+  /* Caution · amber */
+  --color-caution:       #7A6115;
+  --color-caution-dot:   #C9A227;
+  --color-caution-bg:    #F5E9B8;
+  --color-caution-tint:  #FCF6DF;
 
-  /* ── Text ──────────────────────────────────────────────────────────── */
-  --color-text-primary:     #1D1D1D;
-  --color-text-secondary:   #6B6B6B;
-  --color-text-tertiary:    #767676;
-  --color-text-placeholder: #B5B0A8;
+  /* Avoid · scarlet */
+  --color-avoid:       #B3240E;
+  --color-avoid-dot:   #FF3A20;
+  --color-avoid-bg:    #FFD9D2;
+  --color-avoid-tint:  #FFEBE7;
 
-  /* ── Accents ───────────────────────────────────────────────────────── */
-  --color-accent-lavender: #7A6A8A;
-  --color-accent-taupe:    #8A7060;
-  --color-accent-moss:     #6A8362;
-  --color-accent-slate:    #5A6A7A;
+  /* ══════════════════════════════════════════════════════════════════════
+     TYPOGRAPHY
+     ══════════════════════════════════════════════════════════════════════ */
+  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 
-  /* ── Font Family ───────────────────────────────────────────────────── */
-  --font-sans: 'Inter', system-ui, sans-serif;
+  --text-display: 48px;
+  --text-display--line-height: 1.0;
+  --text-display--letter-spacing: -0.05em;
+  --text-display--font-weight: 800;
 
-  /* ── Font Sizes (--text-* generates text-{name} utilities) ────────── */
-  --text-display: 36px;
-  --text-display--line-height: 1.1;
-  --text-display--letter-spacing: -0.03em;
-  --text-display--font-weight: 700;
+  --text-h1: 30px;
+  --text-h1--line-height: 1.1;
+  --text-h1--letter-spacing: -0.02em;
+  --text-h1--font-weight: 800;
 
-  --text-h1: 28px;
-  --text-h1--line-height: 1.2;
-  --text-h1--letter-spacing: -0.025em;
-  --text-h1--font-weight: 600;
+  --text-h2: 24px;
+  --text-h2--line-height: 1.2;
+  --text-h2--letter-spacing: -0.015em;
+  --text-h2--font-weight: 700;
 
-  --text-h2: 22px;
-  --text-h2--line-height: 1.25;
-  --text-h2--letter-spacing: -0.02em;
-  --text-h2--font-weight: 600;
-
-  --text-h3: 16px;
+  --text-h3: 18px;
   --text-h3--line-height: 1.3;
-  --text-h3--letter-spacing: -0.01em;
-  --text-h3--font-weight: 500;
+  --text-h3--letter-spacing: -0.008em;
+  --text-h3--font-weight: 700;
 
-  --text-h4: 14px;
+  --text-h4: 16px;
   --text-h4--line-height: 1.35;
-  --text-h4--font-weight: 500;
+  --text-h4--font-weight: 600;
 
   --text-body: 14px;
-  --text-body--line-height: 1.65;
+  --text-body--line-height: 1.55;
 
   --text-small: 12px;
   --text-small--line-height: 1.5;
 
   --text-label: 11px;
   --text-label--line-height: 1.4;
-  --text-label--letter-spacing: 0.06em;
-  --text-label--font-weight: 500;
+  --text-label--letter-spacing: 0.16em;
+  --text-label--font-weight: 800;
 
   --text-micro: 10px;
   --text-micro--line-height: 1.4;
 
-  /* ── Spacing (--spacing-* generates p-*, m-*, gap-* etc.) ─────────── */
+  /* ══════════════════════════════════════════════════════════════════════
+     SPACING — 4px base.
+     NOTE: these names collide with Tailwind's default max-w-* sizes.
+     Use max-w-[600px] or max-w-screen-md for layout widths.
+     ══════════════════════════════════════════════════════════════════════ */
   --spacing-xs:  4px;
   --spacing-sm:  8px;
   --spacing-md:  16px;
@@ -99,29 +137,45 @@
   --spacing-2xl: 48px;
   --spacing-3xl: 64px;
 
-  /* ── Border Radius ─────────────────────────────────────────────────── */
-  --radius-badge: 6px;
-  --radius-card:  16px;
-  --radius-full:  999px;
+  /* ══════════════════════════════════════════════════════════════════════
+     RADIUS — asymmetric is the signature shape language
+     ══════════════════════════════════════════════════════════════════════ */
+  --radius-badge:   6px;
+  --radius-card:    16px;
+  --radius-asym-sm: 16px 16px 8px 8px;
+  --radius-asym:    24px 24px 10px 10px;
+  --radius-asym-lg: 36px 36px 12px 12px;
+  --radius-full:    9999px;
 
-  /* ── Shadows ───────────────────────────────────────────────────────── */
-  --shadow-hover: 0 4px 16px rgba(100, 80, 50, 0.10);
-  --shadow-modal: 0 8px 32px rgba(100, 80, 50, 0.14);
+  /* ══════════════════════════════════════════════════════════════════════
+     SHADOWS
+     Signature = flat-offset decorative. Functional = soft lift.
+     ══════════════════════════════════════════════════════════════════════ */
+  --shadow-flat-amethyst:    4px 4px 0 0 #3F1F68;
+  --shadow-flat-amethyst-lg: 6px 6px 0 0 #3F1F68;
+  --shadow-flat-lime:        4px 4px 0 0 #C9EC2D;
+  --shadow-flat-slate:       4px 4px 0 0 #3B7080;
 
-  /* ── Backdrop ─────────────────────────────────────────────────────── */
-  --color-backdrop: rgba(100, 80, 50, 0.40);
+  --shadow-hover: 0 4px 16px rgba(63, 31, 104, 0.08);
+  --shadow-modal: 0 12px 40px rgba(63, 31, 104, 0.12);
 
-  /* ── Motion ────────────────────────────────────────────────────────── */
+  /* Backdrop (modal scrim) — amethyst-tinted */
+  --color-backdrop: rgba(63, 31, 104, 0.40);
+
+  /* ══════════════════════════════════════════════════════════════════════
+     MOTION
+     ══════════════════════════════════════════════════════════════════════ */
   --transition-duration-fast:   100ms;
-  --transition-duration-base:   150ms;
-  --transition-duration-slow:   250ms;
-  --transition-duration-slower: 350ms;
+  --transition-duration-base:   200ms;
+  --transition-duration-slow:   300ms;
+  --transition-duration-slower: 400ms;
 
-  --transition-timing-function-default: cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-timing-function-enter:   cubic-bezier(0, 0, 0.2, 1);
-  --transition-timing-function-exit:    cubic-bezier(0.4, 0, 1, 1);
+  --transition-timing-function-out-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-timing-function-spring:   cubic-bezier(0.34, 1.56, 0.64, 1);
 
-  /* ── Z-Index ───────────────────────────────────────────────────────── */
+  /* ══════════════════════════════════════════════════════════════════════
+     Z-INDEX
+     ══════════════════════════════════════════════════════════════════════ */
   --z-base:     0;
   --z-raised:   10;
   --z-dropdown: 100;
@@ -133,14 +187,13 @@
 
 @layer base {
 
-  /* ── Base resets ─────────────────────────────────────────────────────── */
   *, *::before, *::after {
     box-sizing: border-box;
   }
 
   html {
     font-family: var(--font-sans);
-    color: var(--color-text-primary);
+    color: var(--color-ink-primary);
     background-color: var(--color-surface-bg);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -153,13 +206,13 @@
 
 /* ── Spec page state forcing (used only in /spec/product-card) ─────── */
 .spec-force-hover > * {
-  box-shadow: var(--shadow-hover) !important;
+  box-shadow: var(--shadow-flat-amethyst-lg) !important;
 }
 .spec-force-pressed > * {
-  transform: scale(0.98) !important;
-  box-shadow: var(--shadow-hover) !important;
+  transform: translate(2px, 2px) !important;
+  box-shadow: 2px 2px 0 0 var(--color-amethyst) !important;
 }
 .spec-force-focus > * {
-  outline: 2px solid var(--color-primary) !important;
+  outline: 2px solid var(--color-slate) !important;
   outline-offset: 2px !important;
 }

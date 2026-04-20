@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Card · Clean Shopper Spec</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_shell.css">
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
+<script>
+tailwind.config = {
+  theme: { extend: {
+    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] },
+    colors: {
+      /* brand */
+      amethyst: '#3F1F68', 'amethyst-80': '#6B4F8F', 'amethyst-40': '#ADA1BE', 'amethyst-20': '#DAD2E2', 'amethyst-5': '#F5F2F8',
+      slate: '#3B7080', 'slate-tint': '#E4EEF4',
+      lime: '#C9EC2D', 'lime-tint': '#F0F9C9',
+      lilac: '#ADA8B6', 'lilac-tint': '#E4E2E7',
+      stone: '#C9BDA8', 'stone-tint': '#F0EAE0',
+      /* surfaces + ink */
+      cream: '#FCFBFA', 'surf-divider': '#E9E6ED',
+      'ink-primary': '#3F1F68', 'ink-secondary': '#6B4F8F', 'ink-tertiary': '#ADA1BE',
+      /* semantic status */
+      'clean': '#2B5F4E', 'clean-dot': '#7DBFA8', 'clean-bg': '#D7E8E0',
+      'caution': '#7A6115', 'caution-dot': '#C9A227', 'caution-bg': '#F5E9B8',
+      'avoid': '#B3240E', 'avoid-dot': '#FF3A20', 'avoid-bg': '#FFD9D2',
+    },
+    borderRadius: { 'asym': '24px 24px 10px 10px', 'card': '16px' },
+    boxShadow: {
+      'flat-amethyst':    '4px 4px 0 0 #3F1F68',
+      'flat-amethyst-lg': '6px 6px 0 0 #3F1F68',
+    },
+  }}
+}
+</script>
+<style>
+  .mono { font-family:'JetBrains Mono',monospace; }
+  .code { font-family:'JetBrains Mono',monospace; font-size:11px; background:#F5F2F8; padding:2px 6px; border-radius:4px; color:#3F1F68; display:inline-block; }
+  .token-card { background:white; border:1.5px solid #E9E6ED; border-radius:16px; padding:16px; }
+
+  .ghost-panel { display:grid; grid-template-rows:0fr; transition:grid-template-rows 400ms cubic-bezier(0.4,0,0.2,1); }
+  .ghost-inner { overflow:hidden; opacity:0; transition:opacity 300ms ease 100ms; }
+  .card-lift { box-shadow:4px 4px 0 0 #3F1F68; transition:transform 300ms cubic-bezier(0.34,1.56,0.64,1), box-shadow 300ms cubic-bezier(0.34,1.56,0.64,1); }
+  .card-lift:hover { transform:translate(-2px,-2px); box-shadow:6px 6px 0 0 #3F1F68; }
+  .card-lift:hover .zoom-img { transform:scale(1.10); }
+  .card-lift:hover .title-shift { color:#3B7080; }
+  .card-lift:hover .ghost-panel { grid-template-rows:1fr; }
+  .card-lift:hover .ghost-inner { opacity:1; }
+  .zoom-img { transition:transform 700ms cubic-bezier(0.4,0,0.2,1); }
+  .title-shift { transition:color 300ms cubic-bezier(0.4,0,0.2,1); }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="mark">C</div>
+      <div><span class="name">Clean Shopper</span><span class="tag">spec</span></div>
+    </div>
+    <div class="nav-group">
+      <a href="design-system.html" class="nav-link"><span class="nav-dot"></span>Design System</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-label">Components</div>
+      <a href="product-card.html" class="nav-link active"><span class="nav-dot"></span>Product Card</a>
+      <a href="badge.html" class="nav-link placeholder"><span class="nav-dot"></span>Badge</a>
+      <a href="button.html" class="nav-link placeholder"><span class="nav-dot"></span>Button</a>
+    </div>
+    <div class="sidebar-footer">v4 · amethyst apothecary</div>
+  </aside>
+
+  <main class="main">
+    <div class="main-inner">
+
+      <header class="mb-12">
+        <div class="mono text-[11px] text-ink-tertiary tracking-[0.16em] uppercase mb-3">Component · Product Card</div>
+        <h1 class="text-5xl font-extrabold tracking-tighter leading-[0.95] mb-4 text-amethyst">Product Card.</h1>
+        <p class="text-base text-ink-secondary max-w-[600px] leading-relaxed">The flagship card. Displays a product with rating badge, brand, title, price, and a ghost-reveal panel on hover showing key ingredients. Amethyst border + signature amethyst flat-shadow at rest; shadow grows on lift.</p>
+        <div class="mt-6 flex items-center gap-3 text-xs">
+          <span class="mono text-ink-tertiary">Deep spec:</span>
+          <a href="../component-spec/product-card.md" class="code hover:underline">docs/component-spec/product-card.md</a>
+        </div>
+      </header>
+
+      <!-- Live preview -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Live — hover to test</h2>
+        <div class="grid grid-cols-3 gap-6">
+          <article class="card-lift group relative bg-white border-2 border-amethyst rounded-asym overflow-hidden cursor-pointer">
+            <div class="relative h-40 overflow-hidden border-b-2 border-amethyst/10">
+              <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&q=80&w=500" class="zoom-img w-full h-full object-cover">
+              <div class="absolute top-3 left-3 bg-clean-bg text-clean border border-clean-dot/40 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase flex items-center gap-1"><i class="ph-fill ph-check-circle"></i> Clean</div>
+            </div>
+            <div class="p-4"><p class="text-[10px] font-bold tracking-widest text-ink-tertiary uppercase mb-1">Aesop</p><h3 class="title-shift text-sm font-bold mb-2">Parsley Seed Serum</h3><div class="flex justify-between items-center text-xs"><span class="font-semibold">$85</span><div class="w-5 h-5 rounded-full bg-clean-bg border border-clean-dot/40 flex items-center justify-center text-clean text-[10px]"><i class="ph ph-leaf"></i></div></div></div>
+            <div class="ghost-panel bg-amethyst-5 border-t border-surf-divider"><div class="ghost-inner"><div class="p-3"><span class="text-[10px] font-bold uppercase">Key ingredients</span><p class="text-[11px] text-ink-secondary mt-1">Aloe, Water, Glycerin…</p></div></div></div>
+          </article>
+          <article class="card-lift group relative bg-white border-2 border-amethyst rounded-asym overflow-hidden cursor-pointer">
+            <div class="relative h-40 overflow-hidden border-b-2 border-amethyst/10">
+              <img src="https://images.unsplash.com/photo-1629198688000-71f23e745b6e?auto=format&fit=crop&q=80&w=500" class="zoom-img w-full h-full object-cover">
+              <div class="absolute top-3 left-3 bg-caution-bg text-caution border border-caution-dot/50 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase flex items-center gap-1"><i class="ph-fill ph-warning-circle"></i> Caution</div>
+            </div>
+            <div class="p-4"><p class="text-[10px] font-bold tracking-widest text-ink-tertiary uppercase mb-1">YTTP</p><h3 class="title-shift text-sm font-bold mb-2">Moisture Cream</h3><div class="flex justify-between items-center text-xs"><span class="font-semibold">$48</span><div class="w-5 h-5 rounded-full bg-caution-bg border border-caution-dot/50 flex items-center justify-center text-caution text-[10px]"><i class="ph ph-warning"></i></div></div></div>
+            <div class="ghost-panel bg-amethyst-5 border-t border-surf-divider"><div class="ghost-inner"><div class="p-3"><span class="text-[10px] font-bold uppercase">Key ingredients</span><p class="text-[11px] text-ink-secondary mt-1">Kale, SLS, Phenoxyethanol…</p></div></div></div>
+          </article>
+          <article class="card-lift group relative bg-white border-2 border-amethyst rounded-asym overflow-hidden cursor-pointer">
+            <div class="relative h-40 overflow-hidden border-b-2 border-amethyst/10">
+              <img src="https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?auto=format&fit=crop&q=80&w=500" class="zoom-img w-full h-full object-cover">
+              <div class="absolute top-3 left-3 bg-avoid-bg text-avoid border border-avoid-dot/40 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase flex items-center gap-1"><i class="ph-fill ph-x-circle"></i> Avoid</div>
+            </div>
+            <div class="p-4"><p class="text-[10px] font-bold tracking-widest text-ink-tertiary uppercase mb-1">Generic</p><h3 class="title-shift text-sm font-bold mb-2">Scented Body Wash</h3><div class="flex justify-between items-center text-xs"><span class="font-semibold">$12</span><div class="w-5 h-5 rounded-full bg-avoid-bg border border-avoid-dot/40 flex items-center justify-center text-avoid text-[10px]"><i class="ph ph-x"></i></div></div></div>
+            <div class="ghost-panel bg-amethyst-5 border-t border-surf-divider"><div class="ghost-inner"><div class="p-3"><span class="text-[10px] font-bold uppercase">Key ingredients</span><p class="text-[11px] text-ink-secondary mt-1">Parabens, Phthalates, Fragrance…</p></div></div></div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Hover spec -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Hover interactions</h2>
+        <div class="token-card">
+          <div class="grid grid-cols-2 gap-6 text-sm">
+            <div>
+              <div class="font-bold text-[10px] uppercase tracking-wider text-ink-secondary mb-1">① Card lift</div>
+              <p class="text-ink-primary">translate(-2px, -2px) + <span class="code">shadow-flat-amethyst-lg</span></p>
+              <p class="text-ink-tertiary text-xs mt-1"><span class="code">300ms spring</span></p>
+            </div>
+            <div>
+              <div class="font-bold text-[10px] uppercase tracking-wider text-ink-secondary mb-1">② Image zoom</div>
+              <p class="text-ink-primary">scale(1.10)</p>
+              <p class="text-ink-tertiary text-xs mt-1"><span class="code">700ms out-soft</span></p>
+            </div>
+            <div>
+              <div class="font-bold text-[10px] uppercase tracking-wider text-ink-secondary mb-1">③ Title shift</div>
+              <p class="text-ink-primary">amethyst → slate</p>
+              <p class="text-ink-tertiary text-xs mt-1"><span class="code">300ms out-soft</span></p>
+            </div>
+            <div>
+              <div class="font-bold text-[10px] uppercase tracking-wider text-ink-secondary mb-1">④ Ghost panel reveal</div>
+              <p class="text-ink-primary">grid-rows 0fr → 1fr, opacity 0 → 1</p>
+              <p class="text-ink-tertiary text-xs mt-1"><span class="code">400ms out-soft</span> · 100ms opacity delay</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Rest state spec -->
+      <section class="mb-12 token-card">
+        <div class="flex items-start gap-3">
+          <i class="ph ph-info text-xl text-slate flex-shrink-0 mt-0.5"></i>
+          <div>
+            <div class="font-bold text-sm mb-1">Rest state</div>
+            <p class="text-xs text-ink-secondary leading-relaxed">Default card state: <span class="code">border-2 border-amethyst</span> + <span class="code">shadow-flat-amethyst</span> + <span class="code">rounded-asym</span>. Every product card carries the signature at rest — no "shadow on hover only" pattern. This is what makes Clean Shopper feel like Clean Shopper.</p>
+          </div>
+        </div>
+      </section>
+
+      <footer class="pt-6 border-t border-surf-divider flex items-center justify-between text-[11px] text-ink-tertiary mono">
+        <span>clean-shopper · product card spec</span>
+        <span>v4 · amethyst apothecary</span>
+      </footer>
+
+    </div>
+  </main>
+</div>
+</body>
+</html>
