@@ -11,7 +11,7 @@ type FieldErrors = {
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 const INPUT_BASE =
-  'w-full bg-surface-card rounded-card px-md py-sm text-body text-text-primary placeholder:text-text-placeholder focus:outline-none transition-shadow duration-fast ease-default'
+  'w-full bg-surface-card rounded-card px-md py-sm text-body text-ink-primary placeholder:text-ink-placeholder focus:outline-none transition-shadow duration-fast ease-out-soft'
 const INPUT_DEFAULT =
   'shadow-[inset_0_0_0_1.5px_var(--color-surface-divider)] focus:shadow-[inset_0_0_0_1.5px_var(--color-primary)]'
 const INPUT_ERROR =
@@ -89,8 +89,8 @@ export default function SignUpPage() {
   return (
     <div className="min-h-screen flex items-center justify-center p-2xl">
       <div className="w-full max-w-[420px] bg-surface-card rounded-card p-2xl">
-        <h1 className="text-h1 text-text-primary mb-sm">Create an account</h1>
-        <p className="text-body text-text-secondary mb-xl">
+        <h1 className="text-h1 text-ink-primary mb-sm">Create an account</h1>
+        <p className="text-body text-ink-secondary mb-xl">
           Sign up to save products and build your shopping list.
         </p>
 
@@ -98,7 +98,7 @@ export default function SignUpPage() {
           <div>
             <label
               htmlFor="signup-email"
-              className="block text-label uppercase text-text-tertiary mb-xs"
+              className="block text-label uppercase text-ink-tertiary mb-xs"
             >
               Email
             </label>
@@ -125,7 +125,7 @@ export default function SignUpPage() {
           <div>
             <label
               htmlFor="signup-password"
-              className="block text-label uppercase text-text-tertiary mb-xs"
+              className="block text-label uppercase text-ink-tertiary mb-xs"
             >
               Password
             </label>
@@ -165,9 +165,9 @@ export default function SignUpPage() {
           </Button>
         </form>
 
-        <p className="text-small text-text-secondary text-center mt-lg">
+        <p className="text-small text-ink-secondary text-center mt-lg">
           Already have an account?{' '}
-          <Link to="/signin" className="text-primary hover:text-primary-dark">
+          <Link to="/signin" className="text-amethyst hover:text-amethyst-110">
             Sign in
           </Link>
         </p>

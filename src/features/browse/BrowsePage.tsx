@@ -32,13 +32,13 @@ export default function BrowsePage() {
 
   return (
     <div>
-      <h1 className="text-h1 text-text-primary mb-sm">Browse Products</h1>
-      <p className="text-body text-text-secondary mb-2xl">
+      <h1 className="text-h1 text-ink-primary mb-sm">Browse Products</h1>
+      <p className="text-body text-ink-secondary mb-2xl">
         Explore facial cleansers, moisturizers, body wash, and deodorant rated by ingredient safety.
       </p>
 
       {loading && (
-        <p className="text-body text-text-secondary">Loading products…</p>
+        <p className="text-body text-ink-secondary">Loading products…</p>
       )}
 
       {error && (
@@ -46,7 +46,7 @@ export default function BrowsePage() {
       )}
 
       {!loading && !error && products.length === 0 && (
-        <p className="text-body text-text-secondary">No products found.</p>
+        <p className="text-body text-ink-secondary">No products found.</p>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">

@@ -13,7 +13,7 @@ export default function SpecLayout() {
   return (
     <div className="flex gap-2xl max-w-[1200px]">
       <aside className="w-[180px] shrink-0 sticky top-2xl self-start hidden lg:block">
-        <p className="text-label text-text-tertiary uppercase mb-sm">Components</p>
+        <p className="text-label text-ink-tertiary uppercase mb-sm">Components</p>
         <nav className="flex flex-col gap-xs">
           {SPEC_PAGES.map((c) => (
             <NavLink
@@ -22,8 +22,8 @@ export default function SpecLayout() {
               className={({ isActive }) =>
                 `text-small transition-colors ${
                   isActive
-                    ? 'text-primary font-medium'
-                    : 'text-text-secondary hover:text-primary'
+                    ? 'text-amethyst font-medium'
+                    : 'text-ink-secondary hover:text-amethyst'
                 }`
               }
             >

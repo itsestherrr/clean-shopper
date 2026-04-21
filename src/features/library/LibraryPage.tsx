@@ -46,8 +46,8 @@ export default function LibraryPage() {
 
   return (
     <div>
-      <h1 className="text-h1 text-text-primary mb-sm">Library</h1>
-      <p className="text-body text-text-secondary mb-2xl">
+      <h1 className="text-h1 text-ink-primary mb-sm">Library</h1>
+      <p className="text-body text-ink-secondary mb-2xl">
         Products you&rsquo;ve saved for later.
       </p>
 

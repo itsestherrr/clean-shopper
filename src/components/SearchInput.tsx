@@ -27,7 +27,7 @@ export default function SearchInput({
     <div className="relative flex items-center">
 
       {/* Left icon: spinner when loading, search icon otherwise */}
-      <div className="absolute left-md text-text-tertiary pointer-events-none">
+      <div className="absolute left-md text-ink-tertiary pointer-events-none">
         {loading ? (
           <svg
             className="animate-spin w-4 h-4"
@@ -64,12 +64,12 @@ export default function SearchInput({
           'w-full bg-surface-card rounded-full',
           'pl-[44px] py-sm',
           value ? 'pr-[44px]' : 'pr-lg',
-          'text-body text-text-primary',
-          'placeholder:text-text-placeholder',
+          'text-body text-ink-primary',
+          'placeholder:text-ink-placeholder',
           'shadow-[inset_0_0_0_1.5px_var(--color-surface-divider)]',
           'focus:shadow-[inset_0_0_0_1.5px_var(--color-primary)]',
           'focus:outline-none',
-          'transition-shadow duration-fast ease-default',
+          'transition-shadow duration-fast ease-out-soft',
           disabled ? 'opacity-50 cursor-not-allowed' : '',
         ].join(' ')}
       />
@@ -80,7 +80,7 @@ export default function SearchInput({
           type="button"
           onClick={() => onChange('')}
           aria-label="Clear search"
-          className="absolute right-md text-text-tertiary hover:text-text-secondary transition-colors duration-fast ease-default bg-transparent border-none cursor-pointer p-0 leading-none text-body"
+          className="absolute right-md text-ink-tertiary hover:text-ink-secondary transition-colors duration-fast ease-out-soft bg-transparent border-none cursor-pointer p-0 leading-none text-body"
         >
           ×
         </button>

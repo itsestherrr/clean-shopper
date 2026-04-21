@@ -38,7 +38,7 @@ function StatesStrip({ variant }: { variant: 'default' | 'selectable' }) {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-lg">
       {STATE_LABELS.map((state) => (
         <div key={state}>
-          <p className="text-label text-text-tertiary uppercase mb-sm">{state}</p>
+          <p className="text-label text-ink-tertiary uppercase mb-sm">{state}</p>
           <StateFrame state={state}>
             <ProductCard
               {...DEMO_PRODUCT}
@@ -70,14 +70,14 @@ function DoDontPair({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-md mb-sm">
         <div className="border-l-4 border-clean bg-clean-tint rounded-card p-md">
           <p className="text-label text-clean uppercase mb-xs"><span aria-hidden="true">✓</span> Do</p>
-          <p className="text-body text-text-primary">{doLabel}</p>
+          <p className="text-body text-ink-primary">{doLabel}</p>
         </div>
         <div className="border-l-4 border-avoid bg-avoid-tint rounded-card p-md">
           <p className="text-label text-avoid uppercase mb-xs"><span aria-hidden="true">✗</span> Don't</p>
-          <p className="text-body text-text-primary">{dontLabel}</p>
+          <p className="text-body text-ink-primary">{dontLabel}</p>
         </div>
       </div>
-      <p className="text-small text-text-tertiary italic">Why: {why}</p>
+      <p className="text-small text-ink-tertiary italic">Why: {why}</p>
     </div>
   )
 }
@@ -85,12 +85,12 @@ function DoDontPair({
 function AccessSubSection({ title, rows }: { title: string; rows: [string, string][] }) {
   return (
     <div>
-      <h3 className="text-h4 text-text-primary mb-sm">{title}</h3>
+      <h3 className="text-h4 text-ink-primary mb-sm">{title}</h3>
       <dl className="space-y-xs">
         {rows.map(([k, v]) => (
           <div key={k} className="grid grid-cols-[160px_1fr] gap-md">
-            <dt className="text-small text-text-tertiary">{k}</dt>
-            <dd className="text-body text-text-secondary">{v}</dd>
+            <dt className="text-small text-ink-tertiary">{k}</dt>
+            <dd className="text-body text-ink-secondary">{v}</dd>
           </div>
         ))}
       </dl>
@@ -111,9 +111,9 @@ export default function ProductCardSpecPage() {
   return (
     <>
       <header className="mb-2xl">
-        <p className="text-label text-primary uppercase mb-xs">Component spec</p>
-        <h1 className="text-h1 text-text-primary mb-sm">ProductCard</h1>
-        <p className="text-body text-text-secondary max-w-[640px]">
+        <p className="text-label text-amethyst uppercase mb-xs">Component spec</p>
+        <h1 className="text-h1 text-ink-primary mb-sm">ProductCard</h1>
+        <p className="text-body text-ink-secondary max-w-[640px]">
           Displays a product summary with name, brand, rating, category, and description. Used
           in search results, the product library, comparison pickers, and shopping list views.
         </p>
@@ -122,7 +122,7 @@ export default function ProductCardSpecPage() {
             <a
               key={s.id}
               href={`#${s.id}`}
-              className="text-small text-text-secondary hover:text-primary transition-colors"
+              className="text-small text-ink-secondary hover:text-amethyst transition-colors"
             >
               {s.label}
             </a>
@@ -132,7 +132,7 @@ export default function ProductCardSpecPage() {
 
         {/* Overview */}
         <section id="overview" className="mb-3xl">
-          <h2 className="text-h2 text-text-primary mb-md">Overview</h2>
+          <h2 className="text-h2 text-ink-primary mb-md">Overview</h2>
           <div className="bg-surface-card border border-surface-divider rounded-card p-xl mb-lg">
             <div className="max-w-[360px]">
               <ProductCard
@@ -147,7 +147,7 @@ export default function ProductCardSpecPage() {
               />
             </div>
           </div>
-          <p className="text-label text-text-tertiary uppercase mb-sm">Loading</p>
+          <p className="text-label text-ink-tertiary uppercase mb-sm">Loading</p>
           <div className="max-w-[360px] mb-lg">
             <ProductCard
               loading
@@ -174,14 +174,14 @@ export default function ProductCardSpecPage() {
 
         {/* Variants */}
         <section id="variants" className="mb-3xl">
-          <h2 className="text-h2 text-text-primary mb-md">Variants</h2>
-          <p className="text-body text-text-secondary mb-lg max-w-[640px]">
+          <h2 className="text-h2 text-ink-primary mb-md">Variants</h2>
+          <p className="text-body text-ink-secondary mb-lg max-w-[640px]">
             Two variants. <code>default</code> opens a detail view on click. <code>selectable</code>{' '}
             turns the card into a selection control for comparison pickers.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-lg">
             <div>
-              <p className="text-label text-text-tertiary uppercase mb-sm">default</p>
+              <p className="text-label text-ink-tertiary uppercase mb-sm">default</p>
               <ProductCard
                 name="Dr. Bronner's Pure Castile Soap"
                 brand="Dr. Bronner's"
@@ -194,7 +194,7 @@ export default function ProductCardSpecPage() {
               />
             </div>
             <div>
-              <p className="text-label text-text-tertiary uppercase mb-sm">selectable</p>
+              <p className="text-label text-ink-tertiary uppercase mb-sm">selectable</p>
               <ProductCard
                 variant="selectable"
                 selected={true}
@@ -211,14 +211,14 @@ export default function ProductCardSpecPage() {
 
         {/* Sizes */}
         <section id="sizes" className="mb-3xl">
-          <h2 className="text-h2 text-text-primary mb-md">Sizes</h2>
-          <p className="text-body text-text-secondary mb-lg max-w-[640px]">
+          <h2 className="text-h2 text-ink-primary mb-md">Sizes</h2>
+          <p className="text-body text-ink-secondary mb-lg max-w-[640px]">
             Two sizes. <code>default</code> is used in search result grids and the product library.{' '}
             <code>compact</code> drops description and footer for shopping list rows and library scan views.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-lg">
             <div>
-              <p className="text-label text-text-tertiary uppercase mb-sm">default</p>
+              <p className="text-label text-ink-tertiary uppercase mb-sm">default</p>
               <ProductCard
                 name="Dr. Bronner's Pure Castile Soap"
                 brand="Dr. Bronner's"
@@ -229,7 +229,7 @@ export default function ProductCardSpecPage() {
               />
             </div>
             <div>
-              <p className="text-label text-text-tertiary uppercase mb-sm">compact</p>
+              <p className="text-label text-ink-tertiary uppercase mb-sm">compact</p>
               <div className="flex flex-col gap-sm">
                 <ProductCard
                   size="compact"
@@ -265,8 +265,8 @@ export default function ProductCardSpecPage() {
 
         {/* States */}
         <section id="states" className="mb-3xl">
-          <h2 className="text-h2 text-text-primary mb-md">States</h2>
-          <p className="text-body text-text-secondary mb-lg max-w-[640px]">
+          <h2 className="text-h2 text-ink-primary mb-md">States</h2>
+          <p className="text-body text-ink-secondary mb-lg max-w-[640px]">
             Interactive states for each variant. The default card in each strip is live — hover
             or tab to it. The rest are visually locked for side-by-side comparison. Selectable
             is shown unselected so hover, pressed, and focus effects are visible; see Variants
@@ -274,19 +274,19 @@ export default function ProductCardSpecPage() {
           </p>
 
           <div className="mb-xl">
-            <p className="text-label text-primary uppercase mb-md">Default variant</p>
+            <p className="text-label text-amethyst uppercase mb-md">Default variant</p>
             <StatesStrip variant="default" />
           </div>
 
           <div>
-            <p className="text-label text-primary uppercase mb-md">Selectable variant</p>
+            <p className="text-label text-amethyst uppercase mb-md">Selectable variant</p>
             <StatesStrip variant="selectable" />
           </div>
         </section>
 
         {/* Do/Don't */}
         <section id="do-dont" className="mb-3xl">
-          <h2 className="text-h2 text-text-primary mb-md">Do / Don't</h2>
+          <h2 className="text-h2 text-ink-primary mb-md">Do / Don't</h2>
           <div className="space-y-xl">
             <DoDontPair
               doLabel="Use default size in search result grids and product library"
@@ -313,7 +313,7 @@ export default function ProductCardSpecPage() {
 
         {/* Accessibility */}
         <section id="accessibility" className="mb-3xl">
-          <h2 className="text-h2 text-text-primary mb-md">Accessibility</h2>
+          <h2 className="text-h2 text-ink-primary mb-md">Accessibility</h2>
           <div className="space-y-lg max-w-[720px]">
             <AccessSubSection
               title="Keyboard"

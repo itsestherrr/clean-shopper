@@ -25,18 +25,18 @@ export default function NavBar({ activeTab, onNavigate, user, onSignOut }: NavBa
         px-md py-sm gap-md
       ">
         <div className="flex flex-col min-w-0 flex-1">
-          <span className="text-label uppercase text-text-tertiary">Signed in as</span>
-          <span className="text-small text-text-primary truncate">{user.email}</span>
+          <span className="text-label uppercase text-ink-tertiary">Signed in as</span>
+          <span className="text-small text-ink-primary truncate">{user.email}</span>
         </div>
         <button
           type="button"
           onClick={onSignOut}
           className="
             flex-shrink-0
-            text-small text-primary hover:text-primary-dark
+            text-small text-amethyst hover:text-amethyst-110
             cursor-pointer bg-transparent border-none
-            transition-colors duration-fast ease-default
-            focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2
+            transition-colors duration-fast ease-out-soft
+            focus-visible:outline-2 focus-visible:outline-amethyst focus-visible:outline-offset-2
             px-sm py-xs rounded-full
           "
         >
@@ -61,9 +61,9 @@ export default function NavBar({ activeTab, onNavigate, user, onSignOut }: NavBa
               className={`
                 flex flex-col items-center gap-xs py-xs px-sm
                 cursor-pointer border-none bg-transparent
-                transition-colors duration-fast ease-default
-                focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2
-                ${isActive ? 'text-primary' : 'text-text-tertiary'}
+                transition-colors duration-fast ease-out-soft
+                focus-visible:outline-2 focus-visible:outline-amethyst focus-visible:outline-offset-2
+                ${isActive ? 'text-amethyst' : 'text-ink-tertiary'}
               `}
             >
               <span className="text-[20px] leading-none">{tab.icon}</span>
@@ -79,7 +79,7 @@ export default function NavBar({ activeTab, onNavigate, user, onSignOut }: NavBa
         bg-surface-card border-b border-surface-divider
         items-center px-xl gap-xl
       ">
-        <div className="text-h3 text-text-primary">Clean Shopper</div>
+        <div className="text-h3 text-ink-primary">Clean Shopper</div>
 
         <div className="flex items-center gap-xs flex-1">
           {tabs.map((tab) => {
@@ -92,11 +92,11 @@ export default function NavBar({ activeTab, onNavigate, user, onSignOut }: NavBa
                 className={`
                   flex items-center gap-sm px-md py-sm
                   rounded-card cursor-pointer border-none
-                  transition-colors duration-fast ease-default
-                  focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2
+                  transition-colors duration-fast ease-out-soft
+                  focus-visible:outline-2 focus-visible:outline-amethyst focus-visible:outline-offset-2
                   ${isActive
-                    ? 'bg-primary-light text-primary font-medium'
-                    : 'bg-transparent text-text-secondary hover:bg-surface-muted'
+                    ? 'bg-amethyst-5 text-amethyst font-medium'
+                    : 'bg-transparent text-ink-secondary hover:bg-surface-muted'
                   }
                 `}
               >
@@ -110,8 +110,8 @@ export default function NavBar({ activeTab, onNavigate, user, onSignOut }: NavBa
         <a
           href="/spec"
           className="
-            text-small text-text-tertiary hover:text-primary
-            transition-colors duration-fast ease-default
+            text-small text-ink-tertiary hover:text-amethyst
+            transition-colors duration-fast ease-out-soft
           "
         >
           Component Spec
@@ -119,17 +119,17 @@ export default function NavBar({ activeTab, onNavigate, user, onSignOut }: NavBa
 
         <div className="flex items-center gap-md pl-md border-l border-surface-divider">
           <div className="flex flex-col items-end">
-            <span className="text-label uppercase text-text-tertiary leading-none">Signed in</span>
-            <span className="text-small text-text-primary truncate max-w-[180px]">{user.email}</span>
+            <span className="text-label uppercase text-ink-tertiary leading-none">Signed in</span>
+            <span className="text-small text-ink-primary truncate max-w-[180px]">{user.email}</span>
           </div>
           <button
             type="button"
             onClick={onSignOut}
             className="
-              text-small text-text-secondary hover:text-primary
+              text-small text-ink-secondary hover:text-amethyst
               cursor-pointer bg-transparent border-none
-              transition-colors duration-fast ease-default
-              focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2
+              transition-colors duration-fast ease-out-soft
+              focus-visible:outline-2 focus-visible:outline-amethyst focus-visible:outline-offset-2
             "
           >
             Sign out

@@ -42,7 +42,7 @@ export default function IngredientList({
 
   return (
     <div>
-      <h4 className="text-h4 text-text-primary mb-sm">Ingredients</h4>
+      <h4 className="text-h4 text-ink-primary mb-sm">Ingredients</h4>
       <div className="flex flex-col gap-xs">
         {visible.map((ingredient) => (
           <div
@@ -52,7 +52,7 @@ export default function IngredientList({
             <span className={`${ratingDotColors[ingredient.rating]} w-2.5 h-2.5 rounded-full inline-block mt-1 flex-shrink-0`} />
             <div className="flex-1">
               <div className="flex items-center gap-sm">
-                <span className="text-h4 text-text-primary">{ingredient.name}</span>
+                <span className="text-h4 text-ink-primary">{ingredient.name}</span>
                 {highlightAvoided && ingredient.isUserAvoided && (
                   // TODO(v4): migrate to PreferenceTag when IngredientList cluster is refactored.
                   // This is a personal-preference flag, not a safety rating (StatusBadge) or
@@ -64,7 +64,7 @@ export default function IngredientList({
                   </span>
                 )}
               </div>
-              <p className="text-small text-text-secondary mt-xs">{ingredient.reason}</p>
+              <p className="text-small text-ink-secondary mt-xs">{ingredient.reason}</p>
             </div>
           </div>
         ))}

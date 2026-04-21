@@ -60,8 +60,8 @@ export default function SearchPage() {
 
   return (
     <div>
-      <h1 className="text-h1 text-text-primary mb-sm">Search Products</h1>
-      <p className="text-body text-text-secondary mb-xl">
+      <h1 className="text-h1 text-ink-primary mb-sm">Search Products</h1>
+      <p className="text-body text-ink-secondary mb-xl">
         Search facial cleansers, moisturizers, body wash, and deodorant by name or brand.
       </p>
 
@@ -84,12 +84,12 @@ export default function SearchPage() {
         {!loading && !error && (
           <aside className="md:w-[220px] md:flex-shrink-0">
             <div className="flex items-center justify-between mb-md">
-              <h2 className="text-label uppercase text-text-tertiary">Filters</h2>
+              <h2 className="text-label uppercase text-ink-tertiary">Filters</h2>
               {filtersActive && (
                 <button
                   type="button"
                   onClick={() => { setCategoryFilter(new Set()); setRatingFilter(new Set()) }}
-                  className="text-small text-primary hover:text-primary-dark cursor-pointer bg-transparent border-none"
+                  className="text-small text-amethyst hover:text-amethyst-110 cursor-pointer bg-transparent border-none"
                 >
                   Clear
                 </button>
@@ -97,7 +97,7 @@ export default function SearchPage() {
             </div>
 
             <div className="mb-lg">
-              <h3 className="text-small text-text-secondary font-medium mb-sm">Category</h3>
+              <h3 className="text-small text-ink-secondary font-medium mb-sm">Category</h3>
               <div className="flex flex-col gap-xs">
                 {categories.map((c) => (
                   <label key={c} className="flex items-center gap-sm cursor-pointer py-xs">
@@ -105,16 +105,16 @@ export default function SearchPage() {
                       type="checkbox"
                       checked={categoryFilter.has(c)}
                       onChange={() => setCategoryFilter((prev) => toggleSetValue(prev, c))}
-                      className="accent-primary"
+                      className="accent-amethyst"
                     />
-                    <span className="text-body text-text-primary">{c}</span>
+                    <span className="text-body text-ink-primary">{c}</span>
                   </label>
                 ))}
               </div>
             </div>
 
             <div>
-              <h3 className="text-small text-text-secondary font-medium mb-sm">Rating</h3>
+              <h3 className="text-small text-ink-secondary font-medium mb-sm">Rating</h3>
               <div className="flex flex-col gap-xs">
                 {RATINGS.map((r) => (
                   <label key={r} className="flex items-center gap-sm cursor-pointer py-xs">
@@ -122,9 +122,9 @@ export default function SearchPage() {
                       type="checkbox"
                       checked={ratingFilter.has(r)}
                       onChange={() => setRatingFilter((prev) => toggleSetValue(prev, r))}
-                      className="accent-primary"
+                      className="accent-amethyst"
                     />
-                    <span className="text-body text-text-primary capitalize">{r}</span>
+                    <span className="text-body text-ink-primary capitalize">{r}</span>
                   </label>
                 ))}
               </div>
@@ -145,7 +145,7 @@ export default function SearchPage() {
 
           {/* Result count — only when filtering is active */}
           {!loading && !error && (term || filtersActive) && (
-            <p className="text-small text-text-tertiary mb-lg">
+            <p className="text-small text-ink-tertiary mb-lg">
               {displayed.length} {displayed.length === 1 ? 'result' : 'results'}
               {term && <> for &ldquo;{query.trim()}&rdquo;</>}
             </p>

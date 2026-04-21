@@ -15,7 +15,7 @@ export default function IngredientBar({ counts }: IngredientBarProps) {
 
   return (
     <div>
-      <h3 className="text-h3 text-text-primary mb-md">
+      <h3 className="text-h3 text-ink-primary mb-md">
         Ingredient Breakdown ({total})
       </h3>
 
@@ -27,7 +27,7 @@ export default function IngredientBar({ counts }: IngredientBarProps) {
           return (
             <div
               key={rating}
-              className={`${bg} transition-all duration-base ease-default`}
+              className={`${bg} transition-all duration-base ease-out-soft`}
               style={{ width: `${pct}%` }}
             />
           )
@@ -39,7 +39,7 @@ export default function IngredientBar({ counts }: IngredientBarProps) {
         {segments.map(({ rating, label, dot }) => (
           <div key={rating} className="flex items-center gap-xs">
             <span className={`${dot} w-2.5 h-2.5 rounded-full inline-block`} />
-            <span className="text-small text-text-secondary">
+            <span className="text-small text-ink-secondary">
               {counts[rating]} {label}
             </span>
           </div>
