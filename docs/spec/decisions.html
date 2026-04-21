@@ -557,6 +557,129 @@
   .opt-card-label { font-size:12px; font-weight:700; color:#3F1F68; }
   .opt-card-desc { font-size:11px; color:#6B4F8F; line-height:1.45; text-align:center; }
 
+  /* ================= ICON BUTTON ================= */
+  .ib {
+    width:36px; height:36px; border-radius:999px; border:none;
+    display:inline-flex; align-items:center; justify-content:center;
+    cursor:pointer; transition: transform 120ms cubic-bezier(.4,0,.2,1),
+                                 box-shadow 120ms cubic-bezier(.4,0,.2,1),
+                                 background-color 120ms cubic-bezier(.4,0,.2,1),
+                                 color 120ms cubic-bezier(.4,0,.2,1);
+    background:#F5F2F8; color:#6B4F8F;
+  }
+  .ib svg { width:18px; height:18px; stroke-width:1.8; }
+  .ib.sm { width:28px; height:28px; }
+  .ib.sm svg { width:15px; height:15px; }
+
+  /* Ghost variant (transparent) */
+  .ib.ghost { background:transparent; color:#ADA1BE; }
+
+  /* Default resting already set. Shared hover: grey → darker grey */
+  .ib:hover { background:#E9E6ED; color:#3F1F68; }
+  .ib.ghost:hover { background:#F5F2F8; color:#6B4F8F; }
+
+  /* ───── Option A: flat-amethyst micro-shadow on hover, press-into-shadow ───── */
+  .ib.opt-a:hover {
+    background:#F5F2F8; color:#3F1F68;
+    box-shadow: 2px 2px 0 0 #3F1F68;
+  }
+  .ib.opt-a:active {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 0 #3F1F68;
+  }
+  .ib.opt-a.active-state {
+    background:#F5F2F8; color:#3F1F68;
+    box-shadow: 2px 2px 0 0 #3F1F68;
+  }
+
+  /* ───── Option B: lime fill on active, no shadow ───── */
+  .ib.opt-b:hover { background:#E9E6ED; color:#3F1F68; }
+  .ib.opt-b.active-state { background:#C9EC2D; color:#3F1F68; }
+  .ib.opt-b:active { transform: scale(0.94); }
+
+  /* ───── Option C: lime flat-shadow on active (matches ProductCard) ───── */
+  .ib.opt-c:hover {
+    background:#F5F2F8; color:#3F1F68;
+    box-shadow: 1.5px 1.5px 0 0 #C9EC2D;
+  }
+  .ib.opt-c.active-state {
+    background:#FFFFFF; color:#3F1F68;
+    box-shadow: 2px 2px 0 0 #C9EC2D;
+  }
+  .ib.opt-c:active {
+    transform: translate(1px, 1px);
+    box-shadow: 0.5px 0.5px 0 0 #C9EC2D;
+  }
+
+  /* ───── Option D: color-only (current) ───── */
+  .ib.opt-d:hover { background:#E9E6ED; color:#6B4F8F; }
+  .ib.opt-d.active-state { background:#F5F2F8; color:#3F1F68; }
+  .ib.opt-d:active { background:#DAD2E2; }
+
+  /* State labels under each row */
+  .ib-state-row { display:flex; gap:14px; align-items:center; justify-content:center; }
+  .ib-state-col { display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .ib-state-label { font-size:10px; color:#ADA1BE; font-family:'JetBrains Mono',monospace; letter-spacing:0.06em; text-transform:uppercase; }
+
+  /* ───── In-context mini previews ───── */
+  .ctx-row {
+    display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:16px;
+    margin-bottom:24px;
+  }
+  .ctx-card {
+    border:1.5px solid #E9E6ED; background:#FFFFFF; border-radius:12px;
+    padding:16px; display:flex; flex-direction:column; gap:10px;
+  }
+  .ctx-card-label {
+    font-size:10px; color:#ADA1BE; font-family:'JetBrains Mono',monospace;
+    letter-spacing:0.08em; text-transform:uppercase;
+  }
+  .ctx-stage {
+    background:#FCFBFA; border-radius:10px; padding:16px;
+    display:flex; align-items:center; justify-content:center; min-height:150px;
+  }
+
+  /* Mini ProductCard for "save heart in ProductCard" context */
+  .ctx-pcard {
+    width:160px; border:1.5px solid #E9E6ED; background:#FFFFFF;
+    border-radius:18px 18px 8px 8px; overflow:hidden; position:relative;
+  }
+  .ctx-pcard-img {
+    width:100%; aspect-ratio:1/1;
+    background:linear-gradient(135deg,#E4E2E7 0%, #DAD2E2 100%);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'JetBrains Mono',monospace; font-size:10px; color:#ADA1BE;
+  }
+  .ctx-pcard-heart {
+    position:absolute; top:8px; right:8px;
+    background:rgba(255,255,255,0.85); backdrop-filter:blur(6px);
+  }
+  .ctx-pcard-body { padding:10px 12px 12px; }
+  .ctx-pcard-name { font-size:12px; font-weight:700; color:#3F1F68; }
+  .ctx-pcard-brand { font-size:10px; color:#ADA1BE; }
+
+  /* Mini modal for "close button in Modal header" context */
+  .ctx-modal {
+    width:220px; background:#FFFFFF; border-radius:18px;
+    box-shadow: 0 12px 40px rgba(63,31,104,0.12);
+    padding:14px;
+  }
+  .ctx-modal-head {
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:10px;
+  }
+  .ctx-modal-title { font-size:13px; font-weight:800; color:#3F1F68; }
+  .ctx-modal-body {
+    height:60px; background:#F5F2F8; border-radius:8px;
+  }
+
+  /* Mini navbar for "nav tab icons" context */
+  .ctx-navbar {
+    width:100%; max-width:220px; background:#FFFFFF;
+    border-radius:16px; padding:8px; display:flex; justify-content:space-around;
+    box-shadow: 0 4px 16px rgba(63,31,104,0.06);
+  }
+
   /* subtle reveal panel for click-target mock */
   .pdp-mock {
     width:100%; min-height:120px; background:#FCFBFA; border:1.5px dashed #DAD2E2; border-radius:12px;
@@ -604,6 +727,7 @@
         <button class="tab" data-tab="button">Button <span class="tab-count">13</span></button>
         <button class="tab" data-tab="badge">Badge <span class="tab-count">5</span></button>
         <button class="tab" data-tab="product-card">Product Card <span class="tab-count">11</span></button>
+        <button class="tab" data-tab="icon-button">Icon Button <span class="tab-count">1</span></button>
       </div>
 
       <!-- ================= BUTTON ================= -->
@@ -2269,6 +2393,158 @@
 
       </div><!-- /panel:product-card -->
 
+      <!-- ================= ICON BUTTON ================= -->
+      <div class="tab-panel" data-panel="icon-button">
+      <div class="section-head">
+        <div class="section-title">Icon Button</div>
+        <div class="section-count">1 decided · 0 open</div>
+      </div>
+
+      <p class="text-sm text-ink-secondary max-w-[720px] leading-relaxed mb-6">
+        IconButton is a workhorse — it's the save heart on every ProductCard, the close on every Modal, and the tab icons in the bottom NavBar. Whatever signature we pick gets repeated 20+ times on a search result page. The question is how much visual weight it should carry: does it quietly support, or does it get a piece of the amethyst/lime signature?
+      </p>
+
+      <!-- Where you see it -->
+      <div class="mb-6">
+        <div class="mono text-[11px] text-ink-tertiary tracking-[0.16em] uppercase mb-3">Where you see it</div>
+        <div class="ctx-row">
+          <!-- ProductCard save heart -->
+          <div class="ctx-card">
+            <div class="ctx-card-label">ProductCard · save heart</div>
+            <div class="ctx-stage">
+              <div class="ctx-pcard">
+                <div class="ctx-pcard-img">
+                  product image
+                  <button class="ib sm ctx-pcard-heart" aria-label="Save">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                  </button>
+                </div>
+                <div class="ctx-pcard-body">
+                  <div class="ctx-pcard-name">Aesop Body Wash</div>
+                  <div class="ctx-pcard-brand">Aesop</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Modal close -->
+          <div class="ctx-card">
+            <div class="ctx-card-label">Modal · close</div>
+            <div class="ctx-stage">
+              <div class="ctx-modal">
+                <div class="ctx-modal-head">
+                  <div class="ctx-modal-title">Confirm</div>
+                  <button class="ib ghost sm" aria-label="Close">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                  </button>
+                </div>
+                <div class="ctx-modal-body"></div>
+              </div>
+            </div>
+          </div>
+          <!-- NavBar -->
+          <div class="ctx-card">
+            <div class="ctx-card-label">NavBar · tab icons</div>
+            <div class="ctx-stage">
+              <div class="ctx-navbar">
+                <button class="ib sm active-state" aria-label="Home">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                </button>
+                <button class="ib ghost sm" aria-label="Library">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                </button>
+                <button class="ib ghost sm" aria-label="List">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- IB-01 -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">IB-01</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Visual signature — how much weight should IconButton carry?</div>
+        <div class="d-q">IconButton appears in three very different contexts above. Whatever we pick shows up 20+ times on a search page, twice on every Modal, and always-on in the NavBar. Each option below is shown at rest, hover (hover to try), and "active" (filled radio-style). Pressed adds small motion on A and C.</div>
+
+        <div class="opt-grid-4">
+          <!-- A · Flat-amethyst micro-shadow -->
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">A · Flat-amethyst micro-shadow</div>
+            <div class="ib-state-row">
+              <div class="ib-state-col">
+                <button class="ib opt-a"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+                <span class="ib-state-label">rest</span>
+              </div>
+              <div class="ib-state-col">
+                <button class="ib opt-a active-state"><svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+                <span class="ib-state-label">active</span>
+              </div>
+            </div>
+            <div class="opt-card-desc">Circle + 2px flat amethyst shadow on hover/active. Press lands into the shadow. Matches Button's family language.</div>
+          </div>
+
+          <!-- B · Lime fill on active -->
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">B · Lime fill on active</div>
+            <div class="ib-state-row">
+              <div class="ib-state-col">
+                <button class="ib opt-b"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+                <span class="ib-state-label">rest</span>
+              </div>
+              <div class="ib-state-col">
+                <button class="ib opt-b active-state"><svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+                <span class="ib-state-label">active</span>
+              </div>
+            </div>
+            <div class="opt-card-desc">Active state becomes solid lime + amethyst icon. High-contrast, editorial. Press = tiny scale-down.</div>
+          </div>
+
+          <!-- C · Lime flat-shadow on active -->
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">C · Lime flat-shadow (ProductCard family)</div>
+            <div class="ib-state-row">
+              <div class="ib-state-col">
+                <button class="ib opt-c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+                <span class="ib-state-label">rest</span>
+              </div>
+              <div class="ib-state-col">
+                <button class="ib opt-c active-state"><svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+                <span class="ib-state-label">active</span>
+              </div>
+            </div>
+            <div class="opt-card-desc">Matches ProductCard hover shadow. Active = white bg + 2px lime flat shadow. Press lands into the shadow.</div>
+          </div>
+
+          <!-- D · Color-only (current) -->
+          <div class="opt-card picked">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">D · Color-only (current)</div>
+            <div class="ib-state-row">
+              <div class="ib-state-col">
+                <button class="ib opt-d"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+                <span class="ib-state-label">rest</span>
+              </div>
+              <div class="ib-state-col">
+                <button class="ib opt-d active-state"><svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+                <span class="ib-state-label">active</span>
+              </div>
+            </div>
+            <div class="opt-card-desc">No shadow. Just bg + icon color shifts. Safe, quiet, doesn't fight other signature surfaces.</div>
+          </div>
+        </div>
+
+        <div class="d-note">
+          <strong>D — color-only.</strong> IconButton stays the workhorse: bg + icon color shifts, no shadow, no motion. ProductCard and Button already carry the amethyst/lime signature — repeating it on the 20+ save hearts per search grid would compete with the card's own hover shadow, and nesting a lime-shadow IconButton inside a lime-shadow card would double-tap the same note. Hover: <code class="mono text-[12px]">bg-amethyst-5 → bg-surface-divider</code> for default, <code class="mono text-[12px]">transparent → bg-surface-muted</code> for ghost. Active: <code class="mono text-[12px]">bg-amethyst-5 text-amethyst</code>.
+          <span class="why-not"><strong>Why not A:</strong> flat-amethyst shadow × 20 cards competes with the ProductCard's own hover shadow on a search grid. <strong>Why not B:</strong> lime fill is punchy but reads as an editorial accent — wrong weight for a save-state that persists across every page. <strong>Why not C:</strong> lime-shadow IconButton inside a lime-shadow ProductCard doubles the same signature move.</span>
+        </div>
+      </div>
+
+      </div><!-- /panel:icon-button -->
+
       <footer class="pt-6 mt-12 border-t border-surf-divider flex items-center justify-between text-[11px] text-ink-tertiary mono">
         <span>clean-shopper · decisions log</span>
         <span>v4 · amethyst apothecary</span>
@@ -2294,7 +2570,7 @@
     window.addEventListener('hashchange', () => {
       activate(location.hash.slice(1) || 'button');
     });
-    const valid = ['button', 'badge', 'product-card'];
+    const valid = ['button', 'badge', 'product-card', 'icon-button'];
     const initial = location.hash.slice(1);
     activate(valid.includes(initial) ? initial : 'button');
   })();

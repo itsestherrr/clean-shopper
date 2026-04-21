@@ -28,7 +28,7 @@ Legend: **v4** = specced under v4 · **pre-v4** = built under v3, needs refactor
 | --- | --- | --- | --- | --- |
 | **Button** | v4 ✓ | [`component-spec/button.md`](component-spec/button.md) | [`/spec/button`](spec/button.html) | `decisions.html#button` (B-01 → B-13) |
 | **Badge** — StatusBadge · CategoryTag · AccentBadge | v4 ✓ | [`component-spec/badge.md`](component-spec/badge.md) | [`/spec/badge`](spec/badge.html) | `decisions.html#badge` (BD-01 → BD-05) |
-| **IconButton** | pre-v4 | — | — | — |
+| **IconButton** | v4 ✓ | [`component-spec/icon-button.md`](component-spec/icon-button.md) | [`/spec/icon-button`](spec/icon-button.html) | `decisions.html#icon-button` (IB-01) |
 | **IngredientDot** | planned | — | — | — |
 
 ### Composites
