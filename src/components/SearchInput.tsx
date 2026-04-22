@@ -1,3 +1,5 @@
+import IconButton from './IconButton'
+
 interface SearchInputProps {
   value: string
   onChange: (value: string) => void
@@ -26,7 +28,8 @@ export default function SearchInput({
   return (
     <div className="relative flex items-center">
 
-      {/* Left icon: spinner when loading, search icon otherwise */}
+      {/* Left icon: spinner when loading, search icon otherwise. SI-03 is deferred;
+          loudness lives on the results surface, not here. */}
       <div className="absolute left-md text-ink-tertiary pointer-events-none">
         {loading ? (
           <svg
@@ -67,23 +70,27 @@ export default function SearchInput({
           'text-body text-ink-primary',
           'placeholder:text-ink-placeholder',
           'shadow-[inset_0_0_0_1.5px_var(--color-surface-divider)]',
-          'focus:shadow-[inset_0_0_0_1.5px_var(--color-primary)]',
+          // SI-01: system focus-visible ring (2px amethyst outline + 2px offset)
+          // matches Button, IconButton, ProductCard.
           'focus:outline-none',
+          'focus-visible:outline-2 focus-visible:outline-amethyst focus-visible:outline-offset-2',
           'transition-shadow duration-fast ease-out-soft',
           disabled ? 'opacity-50 cursor-not-allowed' : '',
         ].join(' ')}
       />
 
-      {/* Clear button — only visible when there's a value */}
+      {/* SI-02: Clear button is an IconButton (ghost, sm) — same primitive as Modal close,
+          Toast dismiss, and other close/dismiss actions across the system. */}
       {value && !disabled && (
-        <button
-          type="button"
-          onClick={() => onChange('')}
-          aria-label="Clear search"
-          className="absolute right-md text-ink-tertiary hover:text-ink-secondary transition-colors duration-fast ease-out-soft bg-transparent border-none cursor-pointer p-0 leading-none text-body"
-        >
-          ×
-        </button>
+        <div className="absolute right-xs">
+          <IconButton
+            icon="×"
+            onClick={() => onChange('')}
+            variant="ghost"
+            size="sm"
+            ariaLabel="Clear search"
+          />
+        </div>
       )}
     </div>
   )

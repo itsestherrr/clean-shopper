@@ -36,7 +36,7 @@ Legend: **v4** = specced under v4 · **pre-v4** = built under v3, needs refactor
 | Component | Status | Deep spec | Live page | Decisions |
 | --- | --- | --- | --- | --- |
 | **ProductCard** | v4 ✓ | [`component-spec/product-card.md`](component-spec/product-card.md) | [`/spec/product-card`](spec/product-card.html) | — |
-| **SearchInput** | pre-v4 | — | — | — |
+| **SearchInput** | v4 ✓ | [`component-spec/search-input.md`](component-spec/search-input.md) | [`/spec/search-input`](spec/search-input.html) | `decisions.html#search-input` (SI-01, SI-02; SI-03 deferred) |
 | **EmptyState** | pre-v4 | — | — | — |
 | **Modal** | pre-v4 | — | — | — |
 | **Toast** | v4 ✓ | [`component-spec/toast.md`](component-spec/toast.md) | [`/spec/toast`](spec/toast.html) | `decisions.html#toast` (TS-01, TS-02) |

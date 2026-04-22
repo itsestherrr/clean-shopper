@@ -16,6 +16,7 @@ import IngredientListSpecPage from './features/spec/IngredientListSpecPage'
 import ModalSpecPage from './features/spec/ModalSpecPage'
 import ProductCardSpecPage from './features/spec/ProductCardSpecPage'
 import ToastSpecPage from './features/spec/ToastSpecPage'
+import SearchInputSpecPage from './features/spec/SearchInputSpecPage'
 
 const AUTH_ROUTES = ['/signin', '/signup']
 
@@ -107,6 +108,7 @@ function App() {
             <Route path="modal" element={<ModalSpecPage />} />
             <Route path="product-card" element={<ProductCardSpecPage />} />
             <Route path="toast" element={<ToastSpecPage />} />
+            <Route path="search-input" element={<SearchInputSpecPage />} />
           </Route>
         </Routes>
         </div>

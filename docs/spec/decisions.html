@@ -727,6 +727,79 @@
   /* Toast showcase stack (used inside options + in-context) */
   .toast-stack { display:flex; flex-direction:column; gap:10px; align-items:stretch; width:100%; }
 
+  /* ================= SEARCH INPUT ================= */
+  .si-wrap { display:flex; flex-direction:column; gap:10px; }
+  .si {
+    position:relative; display:flex; align-items:center;
+    background:#FFFFFF; border-radius:999px;
+    height:44px; padding:0 16px 0 44px;
+    font-family:'Plus Jakarta Sans',system-ui,sans-serif;
+    font-size:14px; color:#2A1247;
+    box-shadow: inset 0 0 0 1.5px #DAD2E2;
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
+  }
+  .si-ic { position:absolute; left:16px; width:16px; height:16px; color:#ADA1BE; }
+  .si-ic svg { display:block; width:100%; height:100%; }
+  .si-val { color:#2A1247; flex:1; }
+  .si-placeholder { color:#ADA1BE; flex:1; }
+  .si-clear {
+    width:20px; height:20px; border-radius:999px;
+    display:inline-flex; align-items:center; justify-content:center;
+    color:#ADA1BE; font-size:14px; line-height:1;
+    background:transparent; border:none; cursor:pointer;
+  }
+  .si-clear:hover { color:#6B4F8F; }
+  /* state labels under each preview */
+  .si-row-label {
+    font-family:'JetBrains Mono',monospace; font-size:10px;
+    color:#ADA1BE; letter-spacing:0.16em; text-transform:uppercase;
+    margin-bottom:4px;
+  }
+
+  /* ───── SI-01 A: inset color swap (current) ───── */
+  .si.si-a.rest { box-shadow: inset 0 0 0 1.5px #DAD2E2; }
+  .si.si-a.focused { box-shadow: inset 0 0 0 1.5px #3F1F68; }
+
+  /* ───── SI-01 B: system focus-visible ring ───── */
+  .si.si-b.rest { box-shadow: inset 0 0 0 1.5px #DAD2E2; }
+  .si.si-b.focused { box-shadow: inset 0 0 0 1.5px #DAD2E2, 0 0 0 2px #FCFBFA, 0 0 0 4px #3F1F68; }
+
+  /* ───── SI-01 C: flat amethyst shadow + translate ───── */
+  .si.si-c.rest { box-shadow: inset 0 0 0 1.5px #DAD2E2; }
+  .si.si-c.focused { box-shadow: inset 0 0 0 1.5px #3F1F68, 3px 3px 0 0 #3F1F68; transform: translate(-1px,-1px); }
+
+  /* SI-02: Clear button treatments */
+  .si-clear-a { color:#ADA1BE; font-size:14px; width:auto; height:auto; padding:0; }
+  .si-clear-b {
+    width:22px; height:22px; border-radius:999px;
+    background:transparent; color:#ADA1BE;
+  }
+  .si-clear-b:hover { background:#F5F2F8; color:#6B4F8F; }
+  .si-clear-c { opacity:0; transition: opacity 0.12s ease; }
+  .si:hover .si-clear-c, .si.focused .si-clear-c { opacity:1; }
+
+  /* SI-03: Loading treatments */
+  .si.si-load-a .si-ic::after { /* spinner swap handled with markup */ }
+  .si-load-bar {
+    position:absolute; left:16px; right:16px; bottom:6px; height:2px;
+    border-radius:2px; overflow:hidden; background:rgba(63,31,104,0.08);
+  }
+  .si-load-bar::after {
+    content:''; position:absolute; left:0; top:0; height:100%; width:40%;
+    background:#3F1F68; border-radius:2px;
+    animation: siLoad 1.2s cubic-bezier(.4,0,.2,1) infinite;
+  }
+  @keyframes siLoad {
+    0% { left:-40%; } 100% { left:100%; }
+  }
+  .si-spin {
+    width:16px; height:16px; border-radius:999px;
+    border:2px solid #DAD2E2; border-top-color:#3F1F68;
+    animation: siSpin 0.8s linear infinite;
+  }
+  @keyframes siSpin { to { transform: rotate(360deg); } }
+  .si-placeholder-searching { font-style:italic; color:#6B4F8F; }
+
   /* In-context stage for Toast — shows bottom of a page */
   .ctx-toast-stage {
     background:#FCFBFA; border-radius:10px; padding:20px;
@@ -790,6 +863,7 @@
         <button class="tab" data-tab="product-card">Product Card <span class="tab-count">11</span></button>
         <button class="tab" data-tab="icon-button">Icon Button <span class="tab-count">1</span></button>
         <button class="tab" data-tab="toast">Toast <span class="tab-count">2</span></button>
+        <button class="tab" data-tab="search-input">Search Input <span class="tab-count">3</span></button>
       </div>
 
       <!-- ================= BUTTON ================= -->
@@ -2740,6 +2814,248 @@
 
       </div><!-- /panel:toast -->
 
+      <!-- ================= SEARCH INPUT ================= -->
+      <div class="tab-panel" data-panel="search-input">
+      <div class="section-head">
+        <div class="section-title">Search Input</div>
+        <div class="section-count">2 decided · 1 open</div>
+      </div>
+
+      <p class="text-sm text-ink-secondary max-w-[720px] leading-relaxed mb-6">
+        SearchInput is the primary control on the Search screen — a single full-width pill where the user types a product name and submits. Shape is already pill (correct, aligns with the control family — Button, IconButton, NavBar tabs). Three open questions: how does focus behave, what does the clear affordance look like, and how do we signal "Claude is searching."
+      </p>
+
+      <!-- SI-01 -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">SI-01</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Focus treatment</div>
+        <div class="d-q">Rest state is quiet: white pill, 1.5px divider border, muted placeholder. The question is what focus does — stay local (color swap), match the system focus-visible convention (outline ring), or pick up a Button-style signature gesture (flat shadow + translate).</div>
+
+        <div class="opt-grid-3">
+          <!-- A: inset color swap (current) -->
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">A · Inset color swap (current)</div>
+            <div class="si-wrap">
+              <div>
+                <div class="si-row-label">Rest</div>
+                <div class="si si-a rest">
+                  <span class="si-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></span>
+                  <span class="si-placeholder">Search shampoo, sunscreen…</span>
+                </div>
+              </div>
+              <div>
+                <div class="si-row-label">Focused</div>
+                <div class="si si-a focused">
+                  <span class="si-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></span>
+                  <span class="si-val">acure shampoo</span>
+                  <button class="si-clear" aria-label="Clear">×</button>
+                </div>
+              </div>
+            </div>
+            <div class="opt-card-desc">Divider border swaps to amethyst on focus. Self-contained, no outline ring. Doesn't match the system's focus-visible convention used on Button/IconButton.</div>
+          </div>
+
+          <!-- B: system focus-visible ring -->
+          <div class="opt-card picked">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">B · System focus-visible ring</div>
+            <div class="si-wrap">
+              <div>
+                <div class="si-row-label">Rest</div>
+                <div class="si si-b rest">
+                  <span class="si-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></span>
+                  <span class="si-placeholder">Search shampoo, sunscreen…</span>
+                </div>
+              </div>
+              <div>
+                <div class="si-row-label">Focused</div>
+                <div class="si si-b focused">
+                  <span class="si-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></span>
+                  <span class="si-val">acure shampoo</span>
+                  <button class="si-clear" aria-label="Clear">×</button>
+                </div>
+              </div>
+            </div>
+            <div class="opt-card-desc">2px amethyst outline ring with 2px offset. Keeps border divider color. Matches Button/IconButton focus language exactly — one focus convention across the system.</div>
+          </div>
+
+          <!-- C: flat shadow + translate -->
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">C · Flat shadow + translate</div>
+            <div class="si-wrap">
+              <div>
+                <div class="si-row-label">Rest</div>
+                <div class="si si-c rest">
+                  <span class="si-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></span>
+                  <span class="si-placeholder">Search shampoo, sunscreen…</span>
+                </div>
+              </div>
+              <div>
+                <div class="si-row-label">Focused</div>
+                <div class="si si-c focused">
+                  <span class="si-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></span>
+                  <span class="si-val">acure shampoo</span>
+                  <button class="si-clear" aria-label="Clear">×</button>
+                </div>
+              </div>
+            </div>
+            <div class="opt-card-desc">Flat amethyst shadow + 2px translate on focus. Borrows Button's signature press. Strongest feedback — but loud for a text input the user lives in for a while.</div>
+          </div>
+        </div>
+
+        <div class="d-note">
+          <strong>Why B:</strong> Every other interactive surface in v4 — Button, IconButton, ProductCard — uses the same amethyst focus-visible ring (2px outline, 2px offset). Breaking that pattern on one control splinters the focus language across the system. B restores a single convention everywhere the user can focus something.
+          <span class="why-not"><strong>Why not the others:</strong> A is the current treatment and is self-contained, but it's the only place the system uses an inset color swap as its focus cue — inconsistent. C borrows Button's press signature (translate + flat shadow), which is an action gesture. A text input the user lives in for several seconds shouldn't "press down" every time it's focused — fine for a one-click Button, fatiguing on an input.</span>
+        </div>
+      </div>
+
+      <!-- SI-02 -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">SI-02</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Clear button affordance</div>
+        <div class="d-q">When the input has a value, we show a clear control. Today it's a plain text `×` at muted-divider color. Three ways to treat it in v4.</div>
+
+        <div class="opt-grid-3">
+          <!-- A: plain × (current) -->
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">A · Plain × text (current)</div>
+            <div class="si-wrap">
+              <div>
+                <div class="si-row-label">Filled</div>
+                <div class="si si-a rest">
+                  <span class="si-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></span>
+                  <span class="si-val">acure shampoo</span>
+                  <button class="si-clear si-clear-a" aria-label="Clear">×</button>
+                </div>
+              </div>
+            </div>
+            <div class="opt-card-desc">Plain character, no background, muted color. Always visible when filled. Lightweight but doesn't look like a button.</div>
+          </div>
+
+          <!-- B: IconButton ghost sm -->
+          <div class="opt-card picked">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">B · IconButton ghost sm</div>
+            <div class="si-wrap">
+              <div>
+                <div class="si-row-label">Filled</div>
+                <div class="si si-a rest">
+                  <span class="si-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></span>
+                  <span class="si-val">acure shampoo</span>
+                  <button class="si-clear si-clear-b" aria-label="Clear">×</button>
+                </div>
+              </div>
+            </div>
+            <div class="opt-card-desc">Reuses IconButton variant=ghost size=sm. Circular hit target, system-consistent hover (muted bg + darker ink). One primitive instead of two.</div>
+          </div>
+
+          <!-- C: hover/focus reveal -->
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">C · Hover/focus reveal</div>
+            <div class="si-wrap">
+              <div>
+                <div class="si-row-label">Filled (idle)</div>
+                <div class="si si-a rest">
+                  <span class="si-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></span>
+                  <span class="si-val">acure shampoo</span>
+                  <button class="si-clear si-clear-b si-clear-c" aria-label="Clear">×</button>
+                </div>
+              </div>
+              <div>
+                <div class="si-row-label">Filled (hover / focused)</div>
+                <div class="si si-a focused">
+                  <span class="si-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></span>
+                  <span class="si-val">acure shampoo</span>
+                  <button class="si-clear si-clear-b" aria-label="Clear">×</button>
+                </div>
+              </div>
+            </div>
+            <div class="opt-card-desc">IconButton ghost sm that only appears on hover or focus. Cleanest idle look — but adds a hidden-until-hover affordance users may not discover.</div>
+          </div>
+        </div>
+
+        <div class="d-note">
+          <strong>Why B:</strong> "Clear" is the same semantic action as Modal close, Toast dismiss, and ProductCard's other icon-only controls — dismiss/remove. Using IconButton (ghost, sm) means one primitive carries that pattern everywhere, with consistent hover (muted bg + darker ink), consistent focus ring, consistent 28px hit target. Fewer bespoke controls, one tested pattern.
+          <span class="why-not"><strong>Why not the others:</strong> A is lightweight but doesn't read as a control — a plain character at muted color doesn't invite tapping, and it has no hover/focus treatment of its own. C hides a functional control behind hover, which fails on touch and is a known discoverability anti-pattern (WCAG 2.1 SC 1.3.3).</span>
+        </div>
+      </div>
+
+      <!-- SI-03 -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">SI-03</span><span class="d-status open">Deferred</span></div>
+        <div class="d-title">Loading signal — "Claude is searching"</div>
+        <div class="d-q"><strong>Deferred pending page-level decision.</strong> The common pattern for search loading puts the loud signal on the results surface (skeleton cards, streaming status), not on the input — the input already did its job when the user hit Enter. That makes SI-03 a narrower question than originally framed: "how quiet should the input be, given the page carries the main signal?" Parked until the SearchPage results-area loading pattern is decided; then SI-03 becomes a simple "stay consistent with the page signal" call.</div>
+
+        <div class="opt-grid-3">
+          <!-- A: icon-slot spinner (current) -->
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">A · Icon-slot spinner (current)</div>
+            <div class="si-wrap">
+              <div>
+                <div class="si-row-label">Loading</div>
+                <div class="si si-a rest">
+                  <span class="si-ic"><span class="si-spin"></span></span>
+                  <span class="si-val">acure shampoo</span>
+                </div>
+              </div>
+            </div>
+            <div class="opt-card-desc">Search icon becomes a spinner. Quiet, local. The user may not notice for the first second.</div>
+          </div>
+
+          <!-- B: progress bar underneath -->
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">B · Underline progress bar</div>
+            <div class="si-wrap">
+              <div>
+                <div class="si-row-label">Loading</div>
+                <div class="si si-a rest" style="padding-bottom:10px">
+                  <span class="si-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></span>
+                  <span class="si-val">acure shampoo</span>
+                  <span class="si-load-bar"></span>
+                </div>
+              </div>
+            </div>
+            <div class="opt-card-desc">Amethyst bar animates along the bottom of the input, NProgress-style. Bigger signal without swapping the search icon. Reads as "something is happening" across the whole input.</div>
+          </div>
+
+          <!-- C: spinner + placeholder text swap -->
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">C · Spinner + status text</div>
+            <div class="si-wrap">
+              <div>
+                <div class="si-row-label">Loading (input empty)</div>
+                <div class="si si-a rest">
+                  <span class="si-ic"><span class="si-spin"></span></span>
+                  <span class="si-placeholder si-placeholder-searching">Asking Claude…</span>
+                </div>
+              </div>
+              <div>
+                <div class="si-row-label">Loading (with query)</div>
+                <div class="si si-a rest">
+                  <span class="si-ic"><span class="si-spin"></span></span>
+                  <span class="si-val" style="opacity:0.5">acure shampoo</span>
+                </div>
+              </div>
+            </div>
+            <div class="opt-card-desc">Spinner plus a verbal cue — either a placeholder swap when empty, or the user's query dimmed when present. Most explicit. Personalizes the AI moment ("Asking Claude") but risks feeling chatty.</div>
+          </div>
+        </div>
+
+        <div class="d-note open">
+          <strong>Trade-off:</strong> A is the most restrained; B is a stronger ambient signal without language; C names what's happening. The right choice depends on whether we want Claude's role visible in the UI or quiet.
+          <span class="why-not"><strong>Watch outs:</strong> A is too subtle for a 2–6 second wait — users second-guess whether submit worked. B uses animation + color which competes with any in-progress result card fade-in below. C makes Claude visible in the product voice — on-brand for an AI-assisted research tool, but "Asking Claude…" as placeholder text only fires when the input is empty; when it has a value we need a different signal (dimmed query, as shown).</span>
+        </div>
+      </div>
+
+      </div><!-- /panel:search-input -->
+
       <footer class="pt-6 mt-12 border-t border-surf-divider flex items-center justify-between text-[11px] text-ink-tertiary mono">
         <span>clean-shopper · decisions log</span>
         <span>v4 · amethyst apothecary</span>
@@ -2765,7 +3081,7 @@
     window.addEventListener('hashchange', () => {
       activate(location.hash.slice(1) || 'button');
     });
-    const valid = ['button', 'badge', 'product-card', 'icon-button', 'toast'];
+    const valid = ['button', 'badge', 'product-card', 'icon-button', 'toast', 'search-input'];
     const initial = location.hash.slice(1);
     activate(valid.includes(initial) ? initial : 'button');
   })();
