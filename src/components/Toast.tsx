@@ -15,7 +15,7 @@ const config: Record<ToastType, {
   icon: string
 }> = {
   success: { bg: 'bg-clean-bg',     text: 'text-clean',        iconBg: 'bg-clean',        iconText: 'text-clean-bg',    icon: '✓' },
-  info:    { bg: 'bg-amethyst-5', text: 'text-amethyst-110', iconBg: 'bg-amethyst-110', iconText: 'text-amethyst-5', icon: 'i' },
+  info:    { bg: 'bg-slate-tint',   text: 'text-slate-deep',   iconBg: 'bg-slate',        iconText: 'text-slate-tint',  icon: 'i' },
   warning: { bg: 'bg-caution-bg',   text: 'text-caution',      iconBg: 'bg-caution',      iconText: 'text-caution-bg',  icon: '!' },
   error:   { bg: 'bg-avoid-bg',     text: 'text-avoid',        iconBg: 'bg-avoid',        iconText: 'text-avoid-bg',    icon: '×' },
 }

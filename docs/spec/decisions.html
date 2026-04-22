@@ -680,6 +680,67 @@
     box-shadow: 0 4px 16px rgba(63,31,104,0.06);
   }
 
+  /* ================= TOAST ================= */
+  .toast {
+    display:flex; align-items:center; gap:10px;
+    padding:10px 14px; width:100%; max-width:340px;
+    font-family:'Plus Jakarta Sans',system-ui,sans-serif;
+  }
+  .toast-icon {
+    width:20px; height:20px; border-radius:999px;
+    display:inline-flex; align-items:center; justify-content:center;
+    font-size:11px; font-weight:800; line-height:1; flex-shrink:0;
+  }
+  .toast-msg { flex:1; font-size:13px; }
+  .toast-close {
+    font-size:16px; line-height:1; opacity:0.4;
+    background:transparent; border:none; cursor:pointer; padding:4px;
+  }
+  .toast-close:hover { opacity:0.7; }
+
+  /* Type tokens (shared across options) */
+  .toast.success { background:#D7E8E0; color:#2B5F4E; }
+  .toast.success .toast-icon { background:#2B5F4E; color:#D7E8E0; }
+  .toast.info    { background:#E4EEF4; color:#2B5667; }
+  .toast.info    .toast-icon { background:#3B7080; color:#E4EEF4; }
+  .toast.warning { background:#F5E9B8; color:#7A6115; }
+  .toast.warning .toast-icon { background:#C9A227; color:#F5E9B8; }
+  .toast.error   { background:#FFD9D2; color:#B3240E; }
+  .toast.error   .toast-icon { background:#B3240E; color:#FFD9D2; }
+
+  /* ───── A: Symmetric 16px + soft glow (current) ───── */
+  .toast.opt-a { border-radius:16px; box-shadow:0 4px 16px rgba(63,31,104,0.08); }
+
+  /* ───── B: Asymmetric SM + status-colored flat shadow ───── */
+  .toast.opt-b { border-radius:16px 16px 8px 8px; }
+  .toast.opt-b.success { box-shadow: 3px 3px 0 0 #7DBFA8; }
+  .toast.opt-b.info    { box-shadow: 3px 3px 0 0 #3F1F68; }
+  .toast.opt-b.warning { box-shadow: 3px 3px 0 0 #C9A227; }
+  .toast.opt-b.error   { box-shadow: 3px 3px 0 0 #FF3A20; }
+
+  /* ───── C: Pill shape + soft glow ───── */
+  .toast.opt-c { border-radius:999px; box-shadow:0 4px 16px rgba(63,31,104,0.08); }
+
+  /* ───── D: Asymmetric SM + neutral slate flat shadow ───── */
+  .toast.opt-d { border-radius:16px 16px 8px 8px; box-shadow: 3px 3px 0 0 #3B7080; }
+
+  /* Toast showcase stack (used inside options + in-context) */
+  .toast-stack { display:flex; flex-direction:column; gap:10px; align-items:stretch; width:100%; }
+
+  /* In-context stage for Toast — shows bottom of a page */
+  .ctx-toast-stage {
+    background:#FCFBFA; border-radius:10px; padding:20px;
+    display:flex; flex-direction:column; justify-content:flex-end; min-height:180px;
+    position:relative; overflow:hidden;
+  }
+  .ctx-toast-stage::before {
+    content:''; position:absolute; inset:0; background:
+      linear-gradient(180deg, transparent 0%, transparent 40%, rgba(63,31,104,0.03) 100%),
+      repeating-linear-gradient(0deg, #F5F2F8 0 12px, transparent 12px 24px);
+    opacity:0.6;
+  }
+  .ctx-toast-stage .toast { position:relative; z-index:1; }
+
   /* subtle reveal panel for click-target mock */
   .pdp-mock {
     width:100%; min-height:120px; background:#FCFBFA; border:1.5px dashed #DAD2E2; border-radius:12px;
@@ -728,6 +789,7 @@
         <button class="tab" data-tab="badge">Badge <span class="tab-count">5</span></button>
         <button class="tab" data-tab="product-card">Product Card <span class="tab-count">11</span></button>
         <button class="tab" data-tab="icon-button">Icon Button <span class="tab-count">1</span></button>
+        <button class="tab" data-tab="toast">Toast <span class="tab-count">2</span></button>
       </div>
 
       <!-- ================= BUTTON ================= -->
@@ -2545,6 +2607,139 @@
 
       </div><!-- /panel:icon-button -->
 
+      <!-- ================= TOAST ================= -->
+      <div class="tab-panel" data-panel="toast">
+      <div class="section-head">
+        <div class="section-title">Toast</div>
+        <div class="section-count">2 decided · 0 open</div>
+      </div>
+
+      <p class="text-sm text-ink-secondary max-w-[720px] leading-relaxed mb-6">
+        Toast is the app's transient voice — "product saved," "failed to load," "ingredient data updated." It appears bottom-center, lives ~4 seconds, then fades. Four types map to the semantic color system: success · info · warning · error. The v4 question: does Toast carry a piece of the signature shape language (asym corners, flat-offset shadow), or stay a quiet informational pill?
+      </p>
+
+      <!-- TS-01 -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">TS-01</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Shape + shadow signature</div>
+        <div class="d-q">Toast doesn't compete with other surfaces — it floats above everything for a few seconds and leaves. That gives us room to make a stronger visual call than IconButton. Four directions below. Each is shown as a full stack of types so you can feel the family.</div>
+
+        <div class="opt-grid-4">
+          <!-- A · Symmetric 16px + soft glow (current) -->
+          <div class="opt-card picked">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">A · Symmetric + soft (current)</div>
+            <div class="toast-stack">
+              <div class="toast opt-a success"><span class="toast-icon">✓</span><span class="toast-msg">Saved to library.</span></div>
+              <div class="toast opt-a info"><span class="toast-icon">i</span><span class="toast-msg">Ingredient data updated.</span></div>
+              <div class="toast opt-a warning"><span class="toast-icon">!</span><span class="toast-msg">Some ingredients unverified.</span></div>
+              <div class="toast opt-a error"><span class="toast-icon">×</span><span class="toast-msg">Failed to load details.</span></div>
+            </div>
+            <div class="opt-card-desc">16px symmetric. Soft amethyst-tinted drop shadow. Quiet, generic.</div>
+          </div>
+
+          <!-- B · Asymmetric SM + status-colored flat shadow -->
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">B · Asym + status-colored flat shadow</div>
+            <div class="toast-stack">
+              <div class="toast opt-b success"><span class="toast-icon">✓</span><span class="toast-msg">Saved to library.</span></div>
+              <div class="toast opt-b info"><span class="toast-icon">i</span><span class="toast-msg">Ingredient data updated.</span></div>
+              <div class="toast opt-b warning"><span class="toast-icon">!</span><span class="toast-msg">Some ingredients unverified.</span></div>
+              <div class="toast opt-b error"><span class="toast-icon">×</span><span class="toast-msg">Failed to load details.</span></div>
+            </div>
+            <div class="opt-card-desc">16/16/8/8 asym. Flat shadow keyed to the type — green for success, amethyst for info, amber for warning, coral for error.</div>
+          </div>
+
+          <!-- C · Pill shape + soft glow -->
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">C · Pill + soft glow</div>
+            <div class="toast-stack">
+              <div class="toast opt-c success"><span class="toast-icon">✓</span><span class="toast-msg">Saved to library.</span></div>
+              <div class="toast opt-c info"><span class="toast-icon">i</span><span class="toast-msg">Ingredient data updated.</span></div>
+              <div class="toast opt-c warning"><span class="toast-icon">!</span><span class="toast-msg">Some ingredients unverified.</span></div>
+              <div class="toast opt-c error"><span class="toast-icon">×</span><span class="toast-msg">Failed to load details.</span></div>
+            </div>
+            <div class="opt-card-desc">Full pill. Echoes Button shape. Reads as "floating notification" — playful, transient.</div>
+          </div>
+
+          <!-- D · Asym + neutral slate flat shadow -->
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">D · Asym + neutral slate shadow</div>
+            <div class="toast-stack">
+              <div class="toast opt-d success"><span class="toast-icon">✓</span><span class="toast-msg">Saved to library.</span></div>
+              <div class="toast opt-d info"><span class="toast-icon">i</span><span class="toast-msg">Ingredient data updated.</span></div>
+              <div class="toast opt-d warning"><span class="toast-icon">!</span><span class="toast-msg">Some ingredients unverified.</span></div>
+              <div class="toast opt-d error"><span class="toast-icon">×</span><span class="toast-msg">Failed to load details.</span></div>
+            </div>
+            <div class="opt-card-desc">16/16/8/8 asym. Single slate flat shadow for all types. Status shows only in bg + icon.</div>
+          </div>
+        </div>
+
+        <div class="d-note">
+          <strong>Why A:</strong> Toast is a floating surface, not a control. Radius families in v4 split along use: pills belong to controls (Button, IconButton, SearchInput, NavBar tabs, StatusBadge); asymmetric and symmetric radii belong to surfaces (ProductCard asym, Modal 24px, card 16px). A puts Toast in the surface family as a small sibling of Modal — the structurally correct place. C would be the only non-control pill in the system.
+          <span class="why-not"><strong>Why not the others:</strong> B's color-keyed shadows carry the most signature but risk reading noisy across types. C reads playful but orphans Toast from every other surface. D keeps v4's flat-shadow DNA but doubles up on ProductCard's treatment for a transient message — overbuilt for the job. A stays quiet and lets TS-02 carry the status read through color.</span>
+        </div>
+      </div>
+
+      <!-- TS-02 -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">TS-02</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Info color — where does it come from?</div>
+        <div class="d-q">The product-level semantic palette (clean/caution/avoid) covers three of four toast types. Info has no dedicated token, so the first pass reused amethyst — which collides with brand and silences the info signal. Source from somewhere that's visually distinct from amethyst and already in the system.</div>
+
+        <div class="opt-grid-4">
+          <!-- 1 · Slate (picked) -->
+          <div class="opt-card picked">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">1 · Slate (existing token)</div>
+            <div class="toast-stack">
+              <div class="toast opt-a info"><span class="toast-icon">i</span><span class="toast-msg">Ingredient data updated.</span></div>
+            </div>
+            <div class="opt-card-desc">bg <code>slate-tint</code>, text <code>slate-deep</code>, icon <code>slate</code>. Cool, neutral, distinct from amethyst. Zero new tokens.</div>
+          </div>
+
+          <!-- 2 · Amethyst (current, rejected) -->
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">2 · Amethyst (brand)</div>
+            <div class="toast-stack">
+              <div class="toast opt-a" style="background:#F5F2F8;color:#2A1247"><span class="toast-icon" style="background:#2A1247;color:#F5F2F8">i</span><span class="toast-msg">Ingredient data updated.</span></div>
+            </div>
+            <div class="opt-card-desc">Brand-cohesive but reads as generic app chrome. Info signal goes silent.</div>
+          </div>
+
+          <!-- 3 · New info blue -->
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">3 · New info blue</div>
+            <div class="toast-stack">
+              <div class="toast opt-a" style="background:#E6EFFE;color:#1E3A8A"><span class="toast-icon" style="background:#1E3A8A;color:#E6EFFE">i</span><span class="toast-msg">Ingredient data updated.</span></div>
+            </div>
+            <div class="opt-card-desc">Most conventional (Material, Ant, Polaris). But introduces a new hue to a palette that's deliberately amethyst+lime+neutrals.</div>
+          </div>
+
+          <!-- 4 · Neutral ink -->
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">4 · Neutral ink</div>
+            <div class="toast-stack">
+              <div class="toast opt-a" style="background:#ECE9F1;color:#2A1247"><span class="toast-icon" style="background:#2A1247;color:#ECE9F1">i</span><span class="toast-msg">Ingredient data updated.</span></div>
+            </div>
+            <div class="opt-card-desc">Quiet, but still reads as brand ink. Same problem as option 2 in a different shade.</div>
+          </div>
+        </div>
+
+        <div class="d-note">
+          <strong>Why slate:</strong> Toasts pull from a shared semantic palette (same system used by banners, inline validation, badges) — they don't get a color set of their own. Our product-level semantics cover three buckets: clean=success (green), caution=warning (amber), avoid=error (coral). Info needed a cool, non-alarming color that's clearly not brand. Slate is already in the system (`--color-slate`, `-deep`, `-tint`) and it's the only cool neutral in the palette, which makes it the structurally cheapest answer.
+          <span class="why-not"><strong>Why not the others:</strong> Amethyst makes info look like brand chrome. A new info-blue adds a hue the v4 palette was curated to avoid. Neutral ink is a quieter version of the amethyst problem — still reads as brand.</span>
+        </div>
+      </div>
+
+      </div><!-- /panel:toast -->
+
       <footer class="pt-6 mt-12 border-t border-surf-divider flex items-center justify-between text-[11px] text-ink-tertiary mono">
         <span>clean-shopper · decisions log</span>
         <span>v4 · amethyst apothecary</span>
@@ -2570,7 +2765,7 @@
     window.addEventListener('hashchange', () => {
       activate(location.hash.slice(1) || 'button');
     });
-    const valid = ['button', 'badge', 'product-card', 'icon-button'];
+    const valid = ['button', 'badge', 'product-card', 'icon-button', 'toast'];
     const initial = location.hash.slice(1);
     activate(valid.includes(initial) ? initial : 'button');
   })();

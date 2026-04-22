@@ -39,7 +39,7 @@ Legend: **v4** = specced under v4 · **pre-v4** = built under v3, needs refactor
 | **SearchInput** | pre-v4 | — | — | — |
 | **EmptyState** | pre-v4 | — | — | — |
 | **Modal** | pre-v4 | — | — | — |
-| **Toast** | pre-v4 | — | — | — |
+| **Toast** | v4 ✓ | [`component-spec/toast.md`](component-spec/toast.md) | [`/spec/toast`](spec/toast.html) | `decisions.html#toast` (TS-01, TS-02) |
 
 ### Features
 
