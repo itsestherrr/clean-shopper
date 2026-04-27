@@ -173,7 +173,13 @@ export default function SearchPage() {
           {/* No results */}
           {!loading && !error && (term || filtersActive) && displayed.length === 0 && (
             <EmptyState
-              icon="🔍"
+              icon={
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+                  <circle cx="11" cy="11" r="7" />
+                  <path strokeLinecap="round" d="M20 20l-3.5-3.5" />
+                  <path strokeLinecap="round" d="M8.5 11h5" />
+                </svg>
+              }
               title="No products found"
               description={term ? `No results for "${query.trim()}". Try a different keyword or adjust filters.` : 'No products match the selected filters.'}
             />

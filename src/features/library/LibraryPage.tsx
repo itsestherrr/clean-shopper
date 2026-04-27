@@ -65,7 +65,11 @@ export default function LibraryPage() {
 
       {!loading && !savedLoading && !error && displayed.length === 0 && (
         <EmptyState
-          icon="♡"
+          icon={
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 21s-7-4.5-9.5-9A5 5 0 0112 6a5 5 0 019.5 6c-2.5 4.5-9.5 9-9.5 9z" />
+            </svg>
+          }
           title="No saved products yet"
           description="Tap the heart on any product to save it here."
         />

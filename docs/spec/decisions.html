@@ -800,6 +800,66 @@
   @keyframes siSpin { to { transform: rotate(360deg); } }
   .si-placeholder-searching { font-style:italic; color:#6B4F8F; }
 
+  /* ================= EMPTY STATE ================= */
+  .es-stage {
+    background:#FCFBFA; border-radius:10px; padding:16px;
+    min-height:240px; display:flex; align-items:center; justify-content:center;
+    position:relative; overflow:hidden;
+    font-family:'Plus Jakarta Sans',system-ui,sans-serif;
+  }
+  .es-stage-label {
+    position:absolute; top:8px; left:10px;
+    font-family:'JetBrains Mono',monospace; font-size:9px;
+    color:#ADA1BE; letter-spacing:0.16em; text-transform:uppercase;
+  }
+  /* faint page chrome behind the empty state */
+  .es-stage::before {
+    content:''; position:absolute; left:16px; right:16px; top:30px; height:34px;
+    background:linear-gradient(90deg, #F5F2F8 0 70px, transparent 70px);
+    border-radius:999px;
+    opacity:0.5;
+  }
+
+  .es {
+    display:flex; flex-direction:column; align-items:center; text-align:center;
+    padding:24px 16px; max-width:320px;
+    color:#2A1247;
+  }
+  .es-icon {
+    width:56px; height:56px;
+    display:inline-flex; align-items:center; justify-content:center;
+    color:#ADA1BE; margin-bottom:14px;
+  }
+  .es-icon svg { width:32px; height:32px; display:block; }
+  .es-title { font-size:16px; font-weight:700; line-height:1.3; margin-bottom:6px; color:#2A1247; }
+  .es-desc { font-size:13px; line-height:1.5; color:#6B4F8F; }
+
+  /* ───── A: Bare centered (current, no emoji) ───── */
+  .es.opt-a .es-icon { background:transparent; }
+
+  /* ───── B: Framed surface ───── */
+  .es.opt-b {
+    background:#FFFFFF; border:1.5px solid #E9E6ED; border-radius:16px;
+    padding:32px 20px;
+  }
+
+  /* ───── C: Framed + signed (amethyst disc + lime dot) ───── */
+  .es.opt-c {
+    background:#FFFFFF; border:1.5px solid #E9E6ED; border-radius:16px 16px 8px 8px;
+    padding:32px 20px;
+    box-shadow: 3px 3px 0 0 #DAD2E2;
+    position:relative;
+  }
+  .es.opt-c .es-icon {
+    background:#F5F2F8; border-radius:999px; color:#3F1F68;
+    position:relative;
+  }
+  .es.opt-c .es-icon::after {
+    content:''; position:absolute; right:-2px; bottom:-2px;
+    width:14px; height:14px; border-radius:999px;
+    background:#C9F056; border:2px solid #FFFFFF;
+  }
+
   /* In-context stage for Toast — shows bottom of a page */
   .ctx-toast-stage {
     background:#FCFBFA; border-radius:10px; padding:20px;
@@ -864,6 +924,7 @@
         <button class="tab" data-tab="icon-button">Icon Button <span class="tab-count">1</span></button>
         <button class="tab" data-tab="toast">Toast <span class="tab-count">2</span></button>
         <button class="tab" data-tab="search-input">Search Input <span class="tab-count">3</span></button>
+        <button class="tab" data-tab="empty-state">Empty State <span class="tab-count">1</span></button>
       </div>
 
       <!-- ================= BUTTON ================= -->
@@ -3056,6 +3117,123 @@
 
       </div><!-- /panel:search-input -->
 
+      <!-- ================= EMPTY STATE ================= -->
+      <div class="tab-panel" data-panel="empty-state">
+      <div class="section-head">
+        <div class="section-title">Empty State</div>
+        <div class="section-count">1 decided · 0 open</div>
+      </div>
+
+      <p class="text-sm text-ink-secondary max-w-[720px] leading-relaxed mb-6">
+        EmptyState handles "no content" moments — empty Library, empty Search results, and any future "you have nothing here yet" surface. Two real consumers today, both icon + title + description, neither using the optional action button. The v4 question: how visible should empty be? It can recede into the page, sit framed in a card, or carry a small piece of brand signature so the void becomes a moment instead of a hole. (No emoji — using stroke-style SVG glyphs to match the rest of the system.)
+      </p>
+
+      <!-- ES-01 -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">ES-01</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Visibility — quiet, framed, or signed</div>
+        <div class="d-q">Each option below shown in two real contexts: Library empty (heart glyph) and Search no-results (magnifier glyph). Look at how the empty state sits inside the page, not just how it looks alone.</div>
+
+        <div class="opt-grid-3">
+          <!-- A: Bare centered (current, no emoji) -->
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">A · Bare centered (current, no emoji)</div>
+
+            <div class="es-stage" style="margin-bottom:8px">
+              <span class="es-stage-label">Library · empty</span>
+              <div class="es opt-a">
+                <span class="es-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21s-7-4.5-9.5-9A5 5 0 0112 6a5 5 0 019.5 6c-2.5 4.5-9.5 9-9.5 9z"/></svg>
+                </span>
+                <div class="es-title">No saved products yet</div>
+                <div class="es-desc">Tap the heart on any product to save it here.</div>
+              </div>
+            </div>
+
+            <div class="es-stage">
+              <span class="es-stage-label">Search · no results</span>
+              <div class="es opt-a">
+                <span class="es-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7" stroke-linecap="round"/><path stroke-linecap="round" d="M20 20l-3.5-3.5"/><path stroke-linecap="round" d="M8.5 11h5"/></svg>
+                </span>
+                <div class="es-title">No products found</div>
+                <div class="es-desc">No results for "acure shampoo." Try a different keyword or adjust filters.</div>
+              </div>
+            </div>
+
+            <div class="opt-card-desc">No surface, no border, no shadow. Lives directly on the page. Glyph at ink-tertiary. Quiet — empty recedes.</div>
+          </div>
+
+          <!-- B: Framed surface -->
+          <div class="opt-card picked">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">B · Framed surface card</div>
+
+            <div class="es-stage" style="margin-bottom:8px">
+              <span class="es-stage-label">Library · empty</span>
+              <div class="es opt-b">
+                <span class="es-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21s-7-4.5-9.5-9A5 5 0 0112 6a5 5 0 019.5 6c-2.5 4.5-9.5 9-9.5 9z"/></svg>
+                </span>
+                <div class="es-title">No saved products yet</div>
+                <div class="es-desc">Tap the heart on any product to save it here.</div>
+              </div>
+            </div>
+
+            <div class="es-stage">
+              <span class="es-stage-label">Search · no results</span>
+              <div class="es opt-b">
+                <span class="es-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7" stroke-linecap="round"/><path stroke-linecap="round" d="M20 20l-3.5-3.5"/><path stroke-linecap="round" d="M8.5 11h5"/></svg>
+                </span>
+                <div class="es-title">No products found</div>
+                <div class="es-desc">No results for "acure shampoo." Try a different keyword or adjust filters.</div>
+              </div>
+            </div>
+
+            <div class="opt-card-desc">Wrapped in a soft white card with divider border, 16px radius. Same family as ProductCard's surface but symmetric. Lifts the empty state from the page without adding signature.</div>
+          </div>
+
+          <!-- C: Framed + signed -->
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">C · Framed + signed</div>
+
+            <div class="es-stage" style="margin-bottom:8px">
+              <span class="es-stage-label">Library · empty</span>
+              <div class="es opt-c">
+                <span class="es-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21s-7-4.5-9.5-9A5 5 0 0112 6a5 5 0 019.5 6c-2.5 4.5-9.5 9-9.5 9z"/></svg>
+                </span>
+                <div class="es-title">No saved products yet</div>
+                <div class="es-desc">Tap the heart on any product to save it here.</div>
+              </div>
+            </div>
+
+            <div class="es-stage">
+              <span class="es-stage-label">Search · no results</span>
+              <div class="es opt-c">
+                <span class="es-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7" stroke-linecap="round"/><path stroke-linecap="round" d="M20 20l-3.5-3.5"/><path stroke-linecap="round" d="M8.5 11h5"/></svg>
+                </span>
+                <div class="es-title">No products found</div>
+                <div class="es-desc">No results for "acure shampoo." Try a different keyword or adjust filters.</div>
+              </div>
+            </div>
+
+            <div class="opt-card-desc">Asym-sm radius (16/16/8/8) with the system's flat amethyst-tint shadow. Icon sits in an amethyst-tinted disc with a small lime accent dot at the corner. Empty becomes a small brand moment — borrows ProductCard's surface DNA + the lime accent from AccentBadge.</div>
+          </div>
+        </div>
+
+        <div class="d-note">
+          <strong>Why B:</strong> Empty states show up on pages with chrome around them (filter rows, headers, sidebars) — without a frame the message floats and reads as unfinished. A surface card with divider + 16px radius gives the message an anchor and uses the same surface family as the rest of the system (Modal 24px, ProductCard surface). Honest about what empty is — it doesn't pretend to be a moment — but treats it as a real piece of UI instead of a void.
+          <span class="why-not"><strong>Why not the others:</strong> A leaves the message floating without anchor; on Library above the category filter row, that reads as "did the page break?" not "you have nothing yet." C borrows ProductCard's full signature (asym + flat shadow + lime accent) for a moment that's by definition not the focus — it's where there's nothing to do. Spending the brand's loudest treatment on a "no content" surface inverts the visual hierarchy. Save the signature for places where it carries weight (ProductCard, Button, AccentBadge).</span>
+        </div>
+      </div>
+
+      </div><!-- /panel:empty-state -->
+
       <footer class="pt-6 mt-12 border-t border-surf-divider flex items-center justify-between text-[11px] text-ink-tertiary mono">
         <span>clean-shopper · decisions log</span>
         <span>v4 · amethyst apothecary</span>
@@ -3081,7 +3259,7 @@
     window.addEventListener('hashchange', () => {
       activate(location.hash.slice(1) || 'button');
     });
-    const valid = ['button', 'badge', 'product-card', 'icon-button', 'toast', 'search-input'];
+    const valid = ['button', 'badge', 'product-card', 'icon-button', 'toast', 'search-input', 'empty-state'];
     const initial = location.hash.slice(1);
     activate(valid.includes(initial) ? initial : 'button');
   })();

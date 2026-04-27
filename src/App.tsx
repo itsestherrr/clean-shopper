@@ -17,6 +17,7 @@ import ModalSpecPage from './features/spec/ModalSpecPage'
 import ProductCardSpecPage from './features/spec/ProductCardSpecPage'
 import ToastSpecPage from './features/spec/ToastSpecPage'
 import SearchInputSpecPage from './features/spec/SearchInputSpecPage'
+import EmptyStateSpecPage from './features/spec/EmptyStateSpecPage'
 
 const AUTH_ROUTES = ['/signin', '/signup']
 
@@ -109,6 +110,7 @@ function App() {
             <Route path="product-card" element={<ProductCardSpecPage />} />
             <Route path="toast" element={<ToastSpecPage />} />
             <Route path="search-input" element={<SearchInputSpecPage />} />
+            <Route path="empty-state" element={<EmptyStateSpecPage />} />
           </Route>
         </Routes>
         </div>
