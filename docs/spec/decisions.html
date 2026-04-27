@@ -874,6 +874,190 @@
   }
   .ctx-toast-stage .toast { position:relative; z-index:1; }
 
+  /* ================= NAVBAR ================= */
+  /* Faux navbar mock — desktop top bar */
+  .nb {
+    background:#FFFFFF; border-bottom:1.5px solid #E9E6ED;
+    padding:0 16px; height:56px;
+    display:flex; align-items:center; gap:18px;
+    font-family:'Plus Jakarta Sans',system-ui,sans-serif;
+    border-radius:10px 10px 0 0;
+  }
+  .nb-brand {
+    font-size:15px; font-weight:700; color:#2A1247; letter-spacing:-0.01em;
+    display:inline-flex; align-items:center; gap:8px;
+    position:relative;
+  }
+  .nb-tabs { display:flex; align-items:center; gap:2px; flex:1; }
+  .nb-tab {
+    display:inline-flex; align-items:center; gap:8px;
+    padding:8px 14px; border-radius:999px;
+    font-size:13px; color:#6B4F8F;
+    cursor:pointer; border:none; background:transparent;
+    position:relative;
+  }
+  .nb-tab svg { width:16px; height:16px; }
+  .nb-tab.active { color:#3F1F68; font-weight:600; }
+  .nb-account {
+    width:32px; height:32px; border-radius:999px;
+    background:linear-gradient(135deg,#3F1F68,#5B2F8C);
+    color:#FFFFFF; font-size:12px; font-weight:700;
+    display:inline-flex; align-items:center; justify-content:center;
+    cursor:pointer;
+  }
+
+  /* Stage label */
+  .nb-stage {
+    background:#FCFBFA; border-radius:10px; padding:14px;
+    position:relative; overflow:hidden;
+    font-family:'Plus Jakarta Sans',system-ui,sans-serif;
+  }
+  .nb-stage-label {
+    font-family:'JetBrains Mono',monospace; font-size:9px;
+    color:#ADA1BE; letter-spacing:0.16em; text-transform:uppercase;
+    margin-bottom:8px; display:block;
+  }
+  /* faint page chrome below the navbar */
+  .nb-stage-page {
+    background:#FCFBFA; padding:18px 16px;
+    border-left:1.5px solid #E9E6ED;
+    border-right:1.5px solid #E9E6ED;
+    border-bottom:1.5px solid #E9E6ED;
+    border-radius:0 0 10px 10px;
+    min-height:60px;
+  }
+  .nb-stage-page::before {
+    content:''; display:block; height:8px; width:160px;
+    background:#E9E6ED; border-radius:999px; margin-bottom:8px;
+  }
+  .nb-stage-page::after {
+    content:''; display:block; height:6px; width:240px;
+    background:#F1ECF5; border-radius:999px;
+  }
+
+  /* ───── N-02 active indicator variants ───── */
+  /* A · Soft amethyst pill chip */
+  .nb.opt-a .nb-tab.active { background:#F1ECF5; color:#3F1F68; }
+  /* B · Underline bar */
+  .nb.opt-b { height:56px; align-items:stretch; padding-top:0; padding-bottom:0; }
+  .nb.opt-b .nb-brand,
+  .nb.opt-b .nb-account { align-self:center; }
+  .nb.opt-b .nb-tabs { align-items:stretch; }
+  .nb.opt-b .nb-tab {
+    border-radius:0; padding:0 14px; align-self:stretch;
+    border-bottom:2px solid transparent; margin-bottom:-1.5px;
+  }
+  .nb.opt-b .nb-tab.active {
+    background:transparent; border-bottom-color:#3F1F68;
+  }
+  /* C · Lime accent dot */
+  .nb.opt-c .nb-tab.active::after {
+    content:''; width:6px; height:6px; border-radius:999px;
+    background:#C9F056; display:inline-block;
+    box-shadow:0 0 0 1.5px #FFFFFF;
+  }
+
+  /* ───── N-03 mobile patterns ───── */
+  .nbm {
+    background:#FFFFFF; border-bottom:1.5px solid #E9E6ED;
+    padding:0 12px; height:48px; max-width:360px;
+    display:flex; align-items:center; gap:8px;
+    border-radius:10px 10px 0 0;
+    font-family:'Plus Jakarta Sans',system-ui,sans-serif;
+  }
+  .nbm-brand { font-size:14px; font-weight:700; color:#2A1247; flex-shrink:0; }
+  .nbm-spacer { flex:1; }
+
+  /* A · Icon-only row */
+  .nbm.opt-a .nbm-icons { display:flex; gap:2px; }
+  .nbm.opt-a .nbm-ic {
+    width:32px; height:32px; border-radius:999px;
+    display:inline-flex; align-items:center; justify-content:center;
+    color:#6B4F8F; cursor:pointer;
+  }
+  .nbm.opt-a .nbm-ic.active { background:#F1ECF5; color:#3F1F68; }
+  .nbm.opt-a .nbm-ic svg { width:16px; height:16px; }
+
+  /* B · Hamburger menu */
+  .nbm.opt-b .nbm-burger {
+    width:32px; height:32px; border-radius:999px;
+    display:inline-flex; align-items:center; justify-content:center;
+    color:#3F1F68; cursor:pointer;
+  }
+  .nbm.opt-b .nbm-burger svg { width:18px; height:18px; }
+
+  /* C · Horizontal scroll with labels */
+  .nbm.opt-c .nbm-scroll {
+    display:flex; gap:4px; overflow:hidden; flex:1;
+    -webkit-mask-image:linear-gradient(90deg,#000 80%,transparent);
+            mask-image:linear-gradient(90deg,#000 80%,transparent);
+  }
+  .nbm.opt-c .nbm-tab {
+    display:inline-flex; align-items:center; gap:6px;
+    padding:6px 10px; border-radius:999px;
+    font-size:12px; color:#6B4F8F; flex-shrink:0;
+  }
+  .nbm.opt-c .nbm-tab.active { background:#F1ECF5; color:#3F1F68; font-weight:600; }
+  .nbm.opt-c .nbm-tab svg { width:14px; height:14px; }
+
+  /* ───── N-05 brand mark variants ───── */
+  /* A · plain wordmark — default styling above */
+  /* B · wordmark + amethyst disc */
+  .nb-brand.opt-b::before {
+    content:''; width:18px; height:18px; border-radius:999px;
+    background:#3F1F68; display:inline-block;
+    box-shadow:2px 2px 0 0 #DAD2E2;
+  }
+  /* C · lime underline on "Clean" */
+  .nb-brand.opt-c .nb-brand-clean {
+    background-image:linear-gradient(180deg,transparent 78%,#C9F056 78%, #C9F056 96%, transparent 96%);
+    padding:0 2px;
+  }
+
+  /* ---- Final NavBar shape mock (post N-06) ---- */
+  .nb-final {
+    background:#FFFFFF; border-bottom:1.5px solid #E9E6ED;
+    padding:0 16px; height:56px;
+    display:grid;
+    grid-template-columns:auto auto 1fr auto;
+    align-items:center; gap:24px;
+    border-radius:10px 10px 0 0;
+    font-family:'Plus Jakarta Sans',system-ui,sans-serif;
+  }
+  .nb-textnav { display:flex; align-items:center; gap:18px; }
+  .nb-textlink {
+    font-size:13px; color:#3A2E50; cursor:pointer;
+    display:inline-flex; align-items:center; gap:6px;
+  }
+  .nb-textlink svg { width:14px; height:14px; }
+  .nb-textlink.active-amethyst { color:#3F1F68; font-weight:600; }
+  .nb-search-mock {
+    display:flex; align-items:center; gap:8px;
+    background:#F5F2F8; border-radius:999px;
+    padding:8px 16px; min-width:0;
+    color:#ADA1BE; font-size:12px;
+  }
+  .nb-search-mock svg { width:14px; height:14px; flex-shrink:0; }
+  .nb-utilities { display:flex; align-items:center; gap:10px; }
+  .nb-util {
+    width:32px; height:32px; border-radius:999px;
+    display:inline-flex; align-items:center; justify-content:center;
+    color:#3A2E50; cursor:pointer;
+  }
+  .nb-util svg { width:18px; height:18px; }
+
+  .nbm-final {
+    background:#FFFFFF; border-bottom:1.5px solid #E9E6ED;
+    max-width:360px; border-radius:10px 10px 0 0;
+    font-family:'Plus Jakarta Sans',system-ui,sans-serif;
+  }
+  .nbm-final-row {
+    display:flex; align-items:center; gap:8px;
+    padding:10px 12px;
+  }
+  .nbm-final-brand { font-size:14px; font-weight:700; color:#2A1247; }
+  .nbm-final-spacer { flex:1; }
+
   /* subtle reveal panel for click-target mock */
   .pdp-mock {
     width:100%; min-height:120px; background:#FCFBFA; border:1.5px dashed #DAD2E2; border-radius:12px;
@@ -925,6 +1109,7 @@
         <button class="tab" data-tab="toast">Toast <span class="tab-count">2</span></button>
         <button class="tab" data-tab="search-input">Search Input <span class="tab-count">3</span></button>
         <button class="tab" data-tab="empty-state">Empty State <span class="tab-count">1</span></button>
+        <button class="tab" data-tab="navbar">NavBar <span class="tab-count">6</span></button>
       </div>
 
       <!-- ================= BUTTON ================= -->
@@ -3234,6 +3419,302 @@
 
       </div><!-- /panel:empty-state -->
 
+      <!-- ================= NAVBAR ================= -->
+      <div class="tab-panel" data-panel="navbar">
+      <div class="section-head">
+        <div class="section-title">NavBar</div>
+        <div class="section-count">6 decided · 0 open</div>
+      </div>
+
+      <p class="text-sm text-ink-secondary max-w-[760px] leading-relaxed mb-6">
+        Global chrome — sits at the top of every authenticated page. Final shape: <strong>Logo · Home · Browse</strong> on the left, a <strong>global search bar</strong> centered as the primary action, and <strong>Favorites + Account</strong> as right-side icon utilities. No active indicator. Mobile collapses to a single header row (logo + favorites + account) with the search bar on its own row below. All six structural calls are decided — recorded here as the source of truth.
+      </p>
+
+      <!-- N-01 -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">N-01</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Icon system — where icons appear, and where they don't</div>
+        <div class="d-q">Icons are reserved for the right-side utilities (Favorites = heart, Account = avatar). Page nav (Home, Browse) is plain text — primary destinations don't need glyphs to be readable, and adding them dilutes the focus on the centered search bar.</div>
+
+        <div class="opt-grid-2">
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">A · Icons on every nav item</div>
+            <div class="nb-stage" style="margin-bottom:0">
+              <div class="nb-final">
+                <div class="nb-brand">Clean Shopper</div>
+                <div class="nb-textnav">
+                  <span class="nb-textlink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M3 11l9-7 9 7M5 10v10h14V10"/></svg>Home</span>
+                  <span class="nb-textlink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>Browse</span>
+                </div>
+                <div class="nb-search-mock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M20 20l-3.5-3.5"/></svg><span>Search products or brands…</span></div>
+                <div class="nb-utilities">
+                  <span class="nb-util"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21s-7-4.5-9.5-9A5 5 0 0112 6a5 5 0 019.5 6c-2.5 4.5-9.5 9-9.5 9z"/></svg></span>
+                  <div class="nb-account">EO</div>
+                </div>
+              </div>
+            </div>
+            <div class="opt-card-desc">Icons on every label crowds the bar. Page links compete with the search bar for attention.</div>
+          </div>
+
+          <div class="opt-card picked">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">B · Icons only on right-side utilities</div>
+            <div class="nb-stage" style="margin-bottom:0">
+              <div class="nb-final">
+                <div class="nb-brand">Clean Shopper</div>
+                <div class="nb-textnav">
+                  <span class="nb-textlink">Home</span>
+                  <span class="nb-textlink">Browse</span>
+                </div>
+                <div class="nb-search-mock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M20 20l-3.5-3.5"/></svg><span>Search products or brands…</span></div>
+                <div class="nb-utilities">
+                  <span class="nb-util"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21s-7-4.5-9.5-9A5 5 0 0112 6a5 5 0 019.5 6c-2.5 4.5-9.5 9-9.5 9z"/></svg></span>
+                  <div class="nb-account">EO</div>
+                </div>
+              </div>
+            </div>
+            <div class="opt-card-desc">Page links read as labels; icons on the right read as utility shortcuts. Search visually leads.</div>
+          </div>
+        </div>
+
+        <div class="d-note">
+          <strong>Why B:</strong> Two distinct semantic groups — page navigation (Home, Browse) and persistent utilities (Favorites, Account). Mixing icons everywhere makes them feel equivalent; reserving icons for utilities communicates "shortcut" vs "destination." Lets the centered search bar lead visually.
+          <span class="why-not"><strong>Why not A:</strong> Icons on every label compete for visual weight, the bar starts to feel busy, and Home + Browse don't gain anything from a glyph — the words are unambiguous.</span>
+        </div>
+      </div>
+
+      <!-- N-02 -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">N-02</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Active indicator — how "you are here" is communicated</div>
+        <div class="d-q">No active indicator on Home / Browse. The page itself (heading, content, URL) tells the user where they are; the navbar doesn't need to repeat it.</div>
+
+        <div class="opt-grid-2">
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">A · Indicator on active link</div>
+            <div class="nb-stage" style="margin-bottom:0">
+              <div class="nb-final">
+                <div class="nb-brand">Clean Shopper</div>
+                <div class="nb-textnav">
+                  <span class="nb-textlink">Home</span>
+                  <span class="nb-textlink active-amethyst">Browse</span>
+                </div>
+                <div class="nb-search-mock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M20 20l-3.5-3.5"/></svg><span>Search products or brands…</span></div>
+                <div class="nb-utilities">
+                  <span class="nb-util"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21s-7-4.5-9.5-9A5 5 0 0112 6a5 5 0 019.5 6c-2.5 4.5-9.5 9-9.5 9z"/></svg></span>
+                  <div class="nb-account">EO</div>
+                </div>
+              </div>
+            </div>
+            <div class="opt-card-desc">Active page tinted amethyst + bolded. Adds chrome that the page itself already communicates.</div>
+          </div>
+
+          <div class="opt-card picked">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">B · No indicator</div>
+            <div class="nb-stage" style="margin-bottom:0">
+              <div class="nb-final">
+                <div class="nb-brand">Clean Shopper</div>
+                <div class="nb-textnav">
+                  <span class="nb-textlink">Home</span>
+                  <span class="nb-textlink">Browse</span>
+                </div>
+                <div class="nb-search-mock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M20 20l-3.5-3.5"/></svg><span>Search products or brands…</span></div>
+                <div class="nb-utilities">
+                  <span class="nb-util"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21s-7-4.5-9.5-9A5 5 0 0112 6a5 5 0 019.5 6c-2.5 4.5-9.5 9-9.5 9z"/></svg></span>
+                  <div class="nb-account">EO</div>
+                </div>
+              </div>
+            </div>
+            <div class="opt-card-desc">All page links read identically. The page heading and URL carry "you are here."</div>
+          </div>
+        </div>
+
+        <div class="d-note">
+          <strong>Why B:</strong> The shape of the app — search-led, two secondary pages — doesn't have many "where am I?" moments. Page heading does the job. Quieter chrome.
+          <span class="why-not"><strong>Why not A:</strong> Active indicators are most useful when the navbar is the primary signal of section identity (5+ tabs, deep nesting). For two text links beside a centered search bar, an indicator is mostly visual noise.</span>
+        </div>
+      </div>
+
+      <!-- N-03 -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">N-03</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Mobile layout — what survives the condense</div>
+        <div class="d-q">No bottom tab bar. Mobile collapses to a single header row: logo (left), favorites + account (right), search bar on its own row below. Home and Browse are dropped from mobile chrome — Home is a tap away from the logo (logo links home), Browse is reachable by submitting an empty search or via a future "Browse all" CTA on Home.</div>
+
+        <div class="opt-grid-1">
+          <div class="opt-card picked">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">B · Logo + utilities + dedicated search row</div>
+            <div class="nb-stage" style="margin-bottom:0">
+              <div class="nbm-final">
+                <div class="nbm-final-row">
+                  <span class="nbm-final-brand">Clean Shopper</span>
+                  <div class="nbm-final-spacer"></div>
+                  <span class="nb-util"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21s-7-4.5-9.5-9A5 5 0 0112 6a5 5 0 019.5 6c-2.5 4.5-9.5 9-9.5 9z"/></svg></span>
+                  <div class="nb-account" style="width:28px;height:28px;font-size:10px">EO</div>
+                </div>
+                <div class="nb-search-mock" style="margin:0 12px 12px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M20 20l-3.5-3.5"/></svg><span>Search products or brands…</span></div>
+              </div>
+            </div>
+            <div class="opt-card-desc">Two-row stacked header: <code>[Logo · ♡ · 👤]</code> then <code>[ search bar ]</code>. Search stays primary on mobile too. Pattern matches Custom Ink reference.</div>
+          </div>
+        </div>
+
+        <div class="d-note">
+          <strong>Why this shape:</strong> Search is the primary action across breakpoints — putting it on its own row keeps it tappable and visually leading even when horizontal space is tight. Favorites and Account stay reachable in the top corner where users expect utilities. Home/Browse aren't critical mobile-first destinations.
+          <span class="why-not"><strong>Why not a hamburger:</strong> Adds a tap to every navigation. With only two secondary pages (Home, Browse), the menu would be near-empty.</span>
+          <span class="why-not"><strong>Why not icon-only nav row:</strong> Search isn't a 32px icon — making it a button-to-modal pattern would hide the most-used input behind a tap.</span>
+        </div>
+      </div>
+
+      <!-- N-04 -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">N-04</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Account treatment — how Sign out is reachable</div>
+        <div class="d-q">Avatar circle (initials, amethyst gradient) opens a dropdown with email + Sign out. Compact in the bar, scales to Preferences and Theme later.</div>
+
+        <div class="opt-grid-2">
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">A · Inline text + Sign out link (current)</div>
+            <div class="nb-stage" style="margin-bottom:0">
+              <div class="nb opt-a">
+                <div class="nb-brand">Clean Shopper</div>
+                <div class="nb-tabs"></div>
+                <div style="display:flex;align-items:center;gap:10px;font-size:11px;border-left:1px solid #E9E6ED;padding-left:10px">
+                  <div style="display:flex;flex-direction:column;align-items:flex-end"><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#ADA1BE;letter-spacing:0.16em">SIGNED IN</span><span style="color:#2A1247">esther.oh@…</span></div>
+                  <span style="color:#6B4F8F">Sign out</span>
+                </div>
+              </div>
+            </div>
+            <div class="opt-card-desc">Email always visible. Eats horizontal space; doesn't scale.</div>
+          </div>
+
+          <div class="opt-card picked">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">B · Avatar circle + dropdown</div>
+            <div class="nb-stage" style="margin-bottom:0">
+              <div class="nb opt-a">
+                <div class="nb-brand">Clean Shopper</div>
+                <div class="nb-tabs"></div>
+                <div style="position:relative">
+                  <div class="nb-account">EO</div>
+                  <div style="position:absolute;top:38px;right:0;background:#FFFFFF;border:1.5px solid #E9E6ED;border-radius:12px;padding:10px 0;min-width:180px;box-shadow:3px 3px 0 0 #DAD2E2;font-size:12px;z-index:5">
+                    <div style="padding:6px 14px"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#ADA1BE;letter-spacing:0.16em">SIGNED IN</div><div style="color:#2A1247">esther.oh@customink.com</div></div>
+                    <div style="height:1px;background:#E9E6ED;margin:6px 0"></div>
+                    <div style="padding:6px 14px;color:#6B4F8F">Preferences</div>
+                    <div style="padding:6px 14px;color:#6B4F8F">Sign out</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="opt-card-desc">Initials avatar (amethyst gradient). Click opens menu with email + Sign out + future Preferences.</div>
+          </div>
+        </div>
+
+        <div class="d-note">
+          <strong>Why B:</strong> Compact in the bar, scales to more actions later, matches the pattern users expect from modern apps.
+          <span class="why-not"><strong>Why not A:</strong> Doesn't scale — every new account action means more chrome in the bar.</span>
+        </div>
+      </div>
+
+      <!-- N-05 -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">N-05</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Brand mark — wordmark only</div>
+        <div class="d-q">Plain "Clean Shopper" wordmark, no disc, no lime accent. The brand sings through ProductCard's signature (asym + flat shadow + amethyst disc + lime accent dot) — the navbar shouldn't compete with the page below.</div>
+
+        <div class="opt-grid-1">
+          <div class="opt-card picked">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">A · Plain wordmark</div>
+            <div class="nb-stage" style="margin-bottom:0">
+              <div class="nb-final">
+                <div class="nb-brand">Clean Shopper</div>
+                <div class="nb-textnav">
+                  <span class="nb-textlink">Home</span>
+                  <span class="nb-textlink">Browse</span>
+                </div>
+                <div class="nb-search-mock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M20 20l-3.5-3.5"/></svg><span>Search products or brands…</span></div>
+                <div class="nb-utilities">
+                  <span class="nb-util"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21s-7-4.5-9.5-9A5 5 0 0112 6a5 5 0 019.5 6c-2.5 4.5-9.5 9-9.5 9z"/></svg></span>
+                  <div class="nb-account">EO</div>
+                </div>
+              </div>
+            </div>
+            <div class="opt-card-desc">Just the wordmark. The logo links to Home (so logo doubles as Home button on mobile).</div>
+          </div>
+        </div>
+
+        <div class="d-note">
+          <strong>Why plain:</strong> The navbar is a frame, not a stage. Brand signature lives where it has work to do — ProductCard, Buttons, AccentBadge. A loud brand mark in the chrome would compete with the centered search bar (the actual primary action) for attention.
+        </div>
+      </div>
+
+      <!-- N-06 -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">N-06</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Search placement — global, not page-local</div>
+        <div class="d-q">SearchInput moves into NavBar globally (centered desktop, dedicated row mobile). SearchPage drops its own input and renders just results + filters. Submitting from anywhere routes to <code>/search?q=…</code>.</div>
+
+        <div class="opt-grid-2">
+          <div class="opt-card">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">A · Page-local (current)</div>
+            <div class="nb-stage" style="margin-bottom:0">
+              <div class="nb-final" style="grid-template-columns:auto 1fr auto">
+                <div class="nb-brand">Clean Shopper</div>
+                <div class="nb-textnav" style="justify-content:flex-end"><span class="nb-textlink">Home</span><span class="nb-textlink">Browse</span></div>
+                <div class="nb-utilities">
+                  <span class="nb-util"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21s-7-4.5-9.5-9A5 5 0 0112 6a5 5 0 019.5 6c-2.5 4.5-9.5 9-9.5 9z"/></svg></span>
+                  <div class="nb-account">EO</div>
+                </div>
+              </div>
+              <div class="nb-stage-page" style="padding:16px">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#ADA1BE;letter-spacing:0.16em;margin-bottom:8px">SEARCH PAGE</div>
+                <div class="nb-search-mock" style="background:#F5F2F8"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M20 20l-3.5-3.5"/></svg><span>Search products or brands…</span></div>
+              </div>
+            </div>
+            <div class="opt-card-desc">Search lives only on /search. Reaching it always costs a navigation.</div>
+          </div>
+
+          <div class="opt-card picked">
+            <div class="opt-card-radio"></div>
+            <div class="opt-card-label">B · Global in NavBar</div>
+            <div class="nb-stage" style="margin-bottom:0">
+              <div class="nb-final">
+                <div class="nb-brand">Clean Shopper</div>
+                <div class="nb-textnav">
+                  <span class="nb-textlink">Home</span>
+                  <span class="nb-textlink">Browse</span>
+                </div>
+                <div class="nb-search-mock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M20 20l-3.5-3.5"/></svg><span>Search products or brands…</span></div>
+                <div class="nb-utilities">
+                  <span class="nb-util"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21s-7-4.5-9.5-9A5 5 0 0112 6a5 5 0 019.5 6c-2.5 4.5-9.5 9-9.5 9z"/></svg></span>
+                  <div class="nb-account">EO</div>
+                </div>
+              </div>
+              <div class="nb-stage-page" style="padding:14px">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#ADA1BE;letter-spacing:0.16em;margin-bottom:6px">ANY PAGE</div>
+                <div style="height:6px;width:160px;background:#E9E6ED;border-radius:999px;margin-bottom:6px"></div>
+                <div style="height:6px;width:240px;background:#F1ECF5;border-radius:999px"></div>
+              </div>
+            </div>
+            <div class="opt-card-desc">Always-visible search. Submitting anywhere routes to /search?q=… SearchPage drops its own input and just renders results + filters.</div>
+          </div>
+        </div>
+
+        <div class="d-note">
+          <strong>Why B:</strong> Search is the primary action across the app. Putting it in the global frame means the primary action is always one keystroke away (with a future <code>/</code> hotkey). Matches Reference #2 (Custom Ink) and most product-search apps.
+          <span class="why-not"><strong>Implementation note:</strong> Query state is owned by the URL (<code>?q=…</code>). NavBar reads it to keep the input synced with the active route. Submitting from the navbar pushes <code>/search?q=…</code>; SearchPage subscribes to the param and filters.</span>
+        </div>
+      </div>
+
+      </div><!-- /panel:navbar -->
+
       <footer class="pt-6 mt-12 border-t border-surf-divider flex items-center justify-between text-[11px] text-ink-tertiary mono">
         <span>clean-shopper · decisions log</span>
         <span>v4 · amethyst apothecary</span>
@@ -3259,7 +3740,7 @@
     window.addEventListener('hashchange', () => {
       activate(location.hash.slice(1) || 'button');
     });
-    const valid = ['button', 'badge', 'product-card', 'icon-button', 'toast', 'search-input', 'empty-state'];
+    const valid = ['button', 'badge', 'product-card', 'icon-button', 'toast', 'search-input', 'empty-state', 'navbar'];
     const initial = location.hash.slice(1);
     activate(valid.includes(initial) ? initial : 'button');
   })();

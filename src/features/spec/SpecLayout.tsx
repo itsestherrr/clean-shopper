@@ -6,6 +6,7 @@ const SPEC_PAGES = [
   { name: 'IngredientBar', path: '/spec/ingredient-bar' },
   { name: 'IngredientList', path: '/spec/ingredient-list' },
   { name: 'Modal', path: '/spec/modal' },
+  { name: 'NavBar', path: '/spec/navbar' },
   { name: 'ProductCard', path: '/spec/product-card' },
   { name: 'SearchInput', path: '/spec/search-input' },
   { name: 'Toast', path: '/spec/toast' },

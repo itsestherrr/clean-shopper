@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { type Product, type ProductRow, type Rating, rowToProduct } from '../../lib/types'
 
 const RATINGS: Rating[] = ['clean', 'caution', 'avoid']
 import { supabase } from '../../lib/supabase'
 import { useSavedProducts } from '../../lib/use-saved-products'
 import ProductCard from '../../components/ProductCard'
-import SearchInput from '../../components/SearchInput'
 import EmptyState from '../../components/EmptyState'
 
 export default function SearchPage() {
   const [allProducts, setAllProducts] = useState<Product[]>([])
-  const [query, setQuery] = useState('')
+  const [searchParams] = useSearchParams()
+  const query = searchParams.get('q') ?? ''
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const { savedIds, toggle: toggleSave } = useSavedProducts()
@@ -60,19 +61,12 @@ export default function SearchPage() {
 
   return (
     <div>
-      <h1 className="text-h1 text-ink-primary mb-sm">Search Products</h1>
-      <p className="text-body text-ink-secondary mb-xl">
-        Search facial cleansers, moisturizers, body wash, and deodorant by name or brand.
+      <h1 className="text-h1 text-ink-primary mb-sm">Search</h1>
+      <p className="text-body text-ink-secondary mb-2xl">
+        {term
+          ? <>Showing results for &ldquo;{query.trim()}&rdquo;.</>
+          : <>Use the search bar above, or filter the full catalog.</>}
       </p>
-
-      {/* Search bar */}
-      <div className="max-w-[600px] mb-2xl">
-        <SearchInput
-          value={query}
-          onChange={setQuery}
-          placeholder="Search products or brands…"
-        />
-      </div>
 
       {/* Error */}
       {error && (

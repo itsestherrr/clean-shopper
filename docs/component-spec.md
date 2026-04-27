@@ -52,7 +52,7 @@ Legend: **v4** = specced under v4 · **pre-v4** = built under v3, needs refactor
 
 | Component | Status | Deep spec | Live page | Decisions |
 | --- | --- | --- | --- | --- |
-| **NavBar** | pre-v4 | — | — | — |
+| **NavBar** | v4 ✓ | [`component-spec/navbar.md`](component-spec/navbar.md) | [`/spec/navbar`](spec/navbar.html) | `decisions.html#navbar` (N-01 → N-06) |
 
 ### Planned (not yet built)
 
