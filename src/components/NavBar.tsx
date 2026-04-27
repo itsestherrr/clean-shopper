@@ -184,7 +184,7 @@ export default function NavBar({ user, onSignOut }: NavBarProps) {
   )
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-sticky bg-surface-card border-b border-surface-divider">
+    <header className="fixed top-0 left-0 right-0 z-[200] bg-surface-card border-b border-surface-divider">
       {/* Desktop */}
       <div className="hidden md:grid grid-cols-[auto_auto_1fr_auto] items-center gap-xl h-[64px] px-xl">
         {Brand}

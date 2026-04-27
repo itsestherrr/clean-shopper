@@ -74,53 +74,55 @@ export default function SearchPage() {
       )}
 
       <div className="flex flex-col md:flex-row gap-xl">
-        {/* Filter sidebar */}
+        {/* Filter sidebar — surface card. Sister sidebar lives on BrowsePage; keep in sync. */}
         {!loading && !error && (
-          <aside className="md:w-[220px] md:flex-shrink-0">
-            <div className="flex items-center justify-between mb-md">
-              <h2 className="text-label uppercase text-ink-tertiary">Filters</h2>
-              {filtersActive && (
-                <button
-                  type="button"
-                  onClick={() => { setCategoryFilter(new Set()); setRatingFilter(new Set()) }}
-                  className="text-small text-amethyst hover:text-amethyst-110 cursor-pointer bg-transparent border-none"
-                >
-                  Clear
-                </button>
-              )}
-            </div>
-
-            <div className="mb-lg">
-              <h3 className="text-small text-ink-secondary font-medium mb-sm">Category</h3>
-              <div className="flex flex-col gap-xs">
-                {categories.map((c) => (
-                  <label key={c} className="flex items-center gap-sm cursor-pointer py-xs">
-                    <input
-                      type="checkbox"
-                      checked={categoryFilter.has(c)}
-                      onChange={() => setCategoryFilter((prev) => toggleSetValue(prev, c))}
-                      className="accent-amethyst"
-                    />
-                    <span className="text-body text-ink-primary">{c}</span>
-                  </label>
-                ))}
+          <aside className="md:w-[240px] md:flex-shrink-0">
+            <div className="bg-surface-card border-[1.5px] border-surface-divider rounded-card p-lg">
+              <div className="flex items-center justify-between mb-md">
+                <h2 className="text-label uppercase text-ink-tertiary">Filters</h2>
+                {filtersActive && (
+                  <button
+                    type="button"
+                    onClick={() => { setCategoryFilter(new Set()); setRatingFilter(new Set()) }}
+                    className="text-small text-amethyst hover:text-amethyst-110 cursor-pointer bg-transparent border-none"
+                  >
+                    Clear
+                  </button>
+                )}
               </div>
-            </div>
 
-            <div>
-              <h3 className="text-small text-ink-secondary font-medium mb-sm">Rating</h3>
-              <div className="flex flex-col gap-xs">
-                {RATINGS.map((r) => (
-                  <label key={r} className="flex items-center gap-sm cursor-pointer py-xs">
-                    <input
-                      type="checkbox"
-                      checked={ratingFilter.has(r)}
-                      onChange={() => setRatingFilter((prev) => toggleSetValue(prev, r))}
-                      className="accent-amethyst"
-                    />
-                    <span className="text-body text-ink-primary capitalize">{r}</span>
-                  </label>
-                ))}
+              <div className="mb-lg">
+                <h3 className="text-small text-ink-secondary font-medium mb-sm">Category</h3>
+                <div className="flex flex-col gap-xs">
+                  {categories.map((c) => (
+                    <label key={c} className="flex items-center gap-sm cursor-pointer py-xs">
+                      <input
+                        type="checkbox"
+                        checked={categoryFilter.has(c)}
+                        onChange={() => setCategoryFilter((prev) => toggleSetValue(prev, c))}
+                        className="accent-amethyst"
+                      />
+                      <span className="text-body text-ink-primary">{c}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-small text-ink-secondary font-medium mb-sm">Rating</h3>
+                <div className="flex flex-col gap-xs">
+                  {RATINGS.map((r) => (
+                    <label key={r} className="flex items-center gap-sm cursor-pointer py-xs">
+                      <input
+                        type="checkbox"
+                        checked={ratingFilter.has(r)}
+                        onChange={() => setRatingFilter((prev) => toggleSetValue(prev, r))}
+                        className="accent-amethyst"
+                      />
+                      <span className="text-body text-ink-primary capitalize">{r}</span>
+                    </label>
+                  ))}
+                </div>
               </div>
             </div>
           </aside>
