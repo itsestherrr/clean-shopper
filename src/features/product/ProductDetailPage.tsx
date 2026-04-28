@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import Button from '../../components/Button'
 import StatusBadge from '../../components/StatusBadge'
 import CategoryTag from '../../components/CategoryTag'
 import IngredientList from '../../components/IngredientList'
-import IngredientBar from '../../components/IngredientBar'
 import { supabase } from '../../lib/supabase'
 import { useSavedProducts } from '../../lib/use-saved-products'
 import { type Product, type ProductRow, rowToProduct } from '../../lib/types'
@@ -27,7 +27,7 @@ export default function ProductDetailPage() {
 
     supabase
       .from('products')
-      .select('id, name, brand, category, description, rating, ingredients, image_url')
+      .select('id, name, brand, category, description, subtitle, claims, rating, ingredients, image_url')
       .eq('id', id)
       .maybeSingle()
       .then(({ data, error }) => {
@@ -47,16 +47,20 @@ export default function ProductDetailPage() {
     }
   }, [id])
 
+  const BackLink = (
+    <button
+      type="button"
+      onClick={() => navigate(-1)}
+      className="text-small text-ink-secondary hover:text-amethyst mb-lg cursor-pointer bg-transparent border-none p-0"
+    >
+      ← Back
+    </button>
+  )
+
   if (loading) {
     return (
       <div>
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          className="text-small text-ink-secondary hover:text-amethyst mb-lg cursor-pointer bg-transparent border-none p-0"
-        >
-          ← Back
-        </button>
+        {BackLink}
         <div className="animate-pulse">
           <div className="bg-surface-muted rounded-asym aspect-square max-w-[480px] mb-lg" />
           <div className="h-8 bg-surface-muted rounded w-2/3 mb-md" />
@@ -69,13 +73,7 @@ export default function ProductDetailPage() {
   if (error) {
     return (
       <div>
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          className="text-small text-ink-secondary hover:text-amethyst mb-lg cursor-pointer bg-transparent border-none p-0"
-        >
-          ← Back
-        </button>
+        {BackLink}
         <p className="text-body text-avoid">Failed to load product: {error}</p>
       </div>
     )
@@ -84,13 +82,7 @@ export default function ProductDetailPage() {
   if (notFound || !product) {
     return (
       <div>
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          className="text-small text-ink-secondary hover:text-amethyst mb-lg cursor-pointer bg-transparent border-none p-0"
-        >
-          ← Back
-        </button>
+        {BackLink}
         <h1 className="text-h1 text-ink-primary mb-sm">Product not found</h1>
         <p className="text-body text-ink-secondary">
           This product doesn&rsquo;t exist or has been removed.
@@ -101,24 +93,25 @@ export default function ProductDetailPage() {
 
   const isSaved = savedIds.has(product.id)
   const hasStructuredIngredients = product.ingredients.length > 0
-  const rawIngredientNames = product.description
-    ? product.description
-        .split(',')
-        .map((s) => s.trim())
-        .filter(Boolean)
+  // Description is always prose lede now. Legacy comma-list fallback only kicks
+  // in when description looks like a comma-separated ingredient dump (no spaces
+  // after commas + no sentence punctuation) and there are no structured ingredients.
+  const looksLikeIngredientList =
+    !hasStructuredIngredients &&
+    !!product.description &&
+    product.description.includes(',') &&
+    !/[.!?]/.test(product.description)
+  const ledeText = looksLikeIngredientList ? '' : product.description
+  const rawIngredientNames = looksLikeIngredientList
+    ? product.description.split(',').map((s) => s.trim()).filter(Boolean)
     : []
 
   return (
     <div>
-      <button
-        type="button"
-        onClick={() => navigate(-1)}
-        className="text-small text-ink-secondary hover:text-amethyst mb-lg cursor-pointer bg-transparent border-none p-0"
-      >
-        ← Back
-      </button>
+      {BackLink}
 
-      <div className="grid grid-cols-1 md:grid-cols-[minmax(0,480px)_1fr] gap-2xl items-start">
+      {/* TOP — retail PDP feel: image left, fuller info column right */}
+      <section className="grid grid-cols-1 md:grid-cols-[minmax(0,480px)_1fr] gap-2xl items-start mb-3xl">
         {/* Image */}
         <figure className="relative m-0">
           <div className="aspect-square rounded-asym overflow-hidden bg-surface-muted border-[1.5px] border-surface-divider">
@@ -132,68 +125,116 @@ export default function ProductDetailPage() {
           </div>
         </figure>
 
-        {/* Detail */}
+        {/* Info */}
         <div>
-          <div className="flex items-start justify-between gap-md mb-md">
-            <div className="min-w-0">
-              <h1 className="text-h1 text-ink-primary mb-xs">{product.name}</h1>
-              <p className="text-body text-ink-secondary">{product.brand}</p>
-            </div>
-            <button
-              type="button"
-              onClick={() => toggleSave(product.id)}
-              aria-label={isSaved ? 'Remove from library' : 'Save to library'}
-              aria-pressed={isSaved}
-              className="shrink-0 w-10 h-10 rounded-full bg-surface-card border-[1.5px] border-surface-divider hover:border-amethyst flex items-center justify-center cursor-pointer transition-colors"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill={isSaved ? '#3F1F68' : 'none'} stroke="#3F1F68" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-              </svg>
-            </button>
-          </div>
+          <p className="text-label uppercase tracking-[0.14em] text-amethyst-80 font-extrabold mb-xs">
+            {product.brand}
+          </p>
+          <h1 className="text-h1 text-ink-primary mb-xs leading-tight">
+            {product.name}
+          </h1>
+          {product.subtitle && (
+            <p className="text-body text-ink-secondary mb-md">{product.subtitle}</p>
+          )}
 
           <div className="flex items-center gap-sm mb-lg">
             <StatusBadge tier={product.rating} />
             <CategoryTag>{product.category}</CategoryTag>
           </div>
 
-          {hasStructuredIngredients ? (
-            <>
-              <IngredientBar
-                counts={{
-                  clean: product.ingredients.filter((i) => i.rating === 'clean').length,
-                  caution: product.ingredients.filter((i) => i.rating === 'caution').length,
-                  avoid: product.ingredients.filter((i) => i.rating === 'avoid').length,
-                }}
-              />
-              <div className="mt-lg">
-                <IngredientList ingredients={product.ingredients} />
-              </div>
-            </>
-          ) : rawIngredientNames.length > 0 ? (
-            <div>
-              <p className="text-label uppercase text-ink-tertiary mb-md">Ingredients</p>
-              <div className="flex flex-col">
-                {rawIngredientNames.map((name, i) => (
-                  <div
-                    key={i}
-                    className="py-sm border-b border-surface-divider last:border-none"
-                  >
-                    <span className="text-h4 text-ink-primary">{name}</span>
-                  </div>
-                ))}
-              </div>
-              <p className="text-small text-ink-tertiary mt-lg">
-                Safety ratings coming once AI analysis is run.
-              </p>
-            </div>
-          ) : (
-            <p className="text-small text-ink-tertiary">
-              No ingredient information available for this product.
+          {ledeText && (
+            <p className="text-body text-ink-secondary leading-relaxed mb-lg max-w-[560px]">
+              {ledeText}
             </p>
           )}
+
+          {product.claims && product.claims.length > 0 && (
+            <ul className="flex flex-col gap-sm mb-xl list-none p-0 max-w-[560px]">
+              {product.claims.map((claim, i) => (
+                <li key={i} className="flex items-start gap-sm text-body text-ink-secondary">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                    className="text-caution-dot flex-shrink-0 mt-[2px]"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  <span>{claim}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          <div className="flex items-center gap-sm flex-wrap">
+            <Button
+              variant="primary"
+              size="lg"
+              onClick={() => toggleSave(product.id)}
+              aria-label={isSaved ? 'Remove from library' : 'Save to library'}
+              icon={
+                <svg
+                  viewBox="0 0 24 24"
+                  fill={isSaved ? 'currentColor' : 'none'}
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  width="20"
+                  height="20"
+                >
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                </svg>
+              }
+            >
+              {isSaved ? 'Saved to library' : 'Save to library'}
+            </Button>
+            <Button variant="secondary" size="lg" disabled>
+              Compare
+            </Button>
+          </div>
         </div>
-      </div>
+      </section>
+
+      {/* INGREDIENTS — no surface wrapper, header + rows */}
+      {hasStructuredIngredients ? (
+        <section>
+          <div className="flex items-baseline justify-between mb-md flex-wrap gap-sm">
+            <h2 className="text-h2 text-ink-primary">Ingredients</h2>
+            <span className="text-small text-ink-tertiary">
+              {product.ingredients.length} total · click any row to learn more
+            </span>
+          </div>
+          <IngredientList ingredients={product.ingredients} />
+        </section>
+      ) : rawIngredientNames.length > 0 ? (
+        <section>
+          <h2 className="text-h2 text-ink-primary mb-md">Ingredients</h2>
+          <div className="flex flex-col">
+            {rawIngredientNames.map((name, i) => (
+              <div
+                key={i}
+                className="py-sm border-b border-surface-divider last:border-none"
+              >
+                <span className="text-body text-ink-primary">{name}</span>
+              </div>
+            ))}
+          </div>
+          <p className="text-small text-ink-tertiary mt-lg">
+            Safety ratings coming once AI analysis is run.
+          </p>
+        </section>
+      ) : (
+        <p className="text-small text-ink-tertiary">
+          No ingredient information available for this product.
+        </p>
+      )}
     </div>
   )
 }

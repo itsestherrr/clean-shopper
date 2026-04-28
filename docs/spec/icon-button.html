@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IconButton · Clean Shopper Spec</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_shell.css">
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
+<script>
+tailwind.config = {
+  theme: { extend: {
+    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] },
+    colors: {
+      amethyst: '#3F1F68', 'amethyst-110': '#2A1247', 'amethyst-80': '#6B4F8F', 'amethyst-40': '#ADA1BE', 'amethyst-20': '#DAD2E2', 'amethyst-5': '#F5F2F8',
+      slate: '#3B7080', 'slate-tint': '#E4EEF4',
+      lime: '#C9EC2D', 'lime-tint': '#F0F9C9',
+      cream: '#FCFBFA', paper: '#FFFFFF', 'surf-divider': '#E9E6ED',
+      'ink-primary': '#3F1F68', 'ink-secondary': '#6B4F8F', 'ink-tertiary': '#ADA1BE',
+    },
+  }}
+}
+</script>
+<style>
+  .mono { font-family:'JetBrains Mono',monospace; }
+  .code { font-family:'JetBrains Mono',monospace; font-size:11px; background:#F5F2F8; padding:2px 6px; border-radius:4px; color:#3F1F68; display:inline-block; }
+  .token-card { background:#FFFFFF; border:1.5px solid #E9E6ED; border-radius:16px; padding:20px; }
+
+  /* ══ IconButton primitives (live) ═════════════════════════════════ */
+  .ib {
+    display:inline-flex; align-items:center; justify-content:center;
+    border:none; cursor:pointer; border-radius:9999px;
+    transition: background-color 160ms cubic-bezier(0.4,0,0.2,1), color 160ms cubic-bezier(0.4,0,0.2,1);
+  }
+  .ib:focus-visible { outline:2px solid #3F1F68; outline-offset:2px; }
+  .ib-sm { width:28px; height:28px; font-size:15px; }
+  .ib-md { width:36px; height:36px; font-size:18px; }
+
+  /* default */
+  .ib-default          { background:#F5F2F8; color:#6B4F8F; }
+  .ib-default:hover    { background:#E9E6ED; }
+  .ib-default.is-active { background:#F5F2F8; color:#3F1F68; }
+
+  /* ghost */
+  .ib-ghost            { background:transparent; color:#ADA1BE; }
+  .ib-ghost:hover      { background:#F5F2F8; color:#6B4F8F; }
+  .ib-ghost.is-active  { background:transparent; color:#3F1F68; }
+
+  .ib:disabled { opacity:0.5; cursor:not-allowed; }
+  .ib:disabled:hover { background:inherit; color:inherit; }
+
+  .force-hover .ib-default { background:#E9E6ED !important; }
+  .force-hover .ib-ghost   { background:#F5F2F8 !important; color:#6B4F8F !important; }
+  .force-focus .ib         { outline:2px solid #3F1F68 !important; outline-offset:2px !important; }
+
+  .frame { background:#FCFBFA; border:1px dashed #E9E6ED; border-radius:12px; padding:28px; }
+  .row { display:flex; align-items:center; gap:20px; padding:10px 0; }
+  .row-label { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; color:#ADA1BE; letter-spacing:0.12em; text-transform:uppercase; width:110px; flex-shrink:0; }
+  .swatch { display:inline-block; width:12px; height:12px; border-radius:3px; vertical-align:middle; margin-right:4px; border:1px solid rgba(0,0,0,0.05); }
+
+  /* PC tile to demo where it lives */
+  .pc-tile { width:200px; height:240px; border-radius:18px 18px 6px 18px; background:linear-gradient(180deg,#F5F2F8,#FFFFFF); border:1.5px solid #E9E6ED; position:relative; overflow:hidden; }
+  .pc-frosted { position:absolute; top:10px; right:10px; background:rgba(255,255,255,0.85); backdrop-filter:blur(6px); border-radius:9999px; }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="mark">C</div>
+      <div><span class="name">Clean Shopper</span><span class="tag">spec</span></div>
+    </div>
+    <div class="nav-group">
+      <a href="design-system.html" class="nav-link"><span class="nav-dot"></span>Design System</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-label">Components</div>
+      <a href="product-card.html" class="nav-link"><span class="nav-dot"></span>Product Card</a>
+      <a href="badge.html" class="nav-link"><span class="nav-dot"></span>Badge</a>
+      <a href="button.html" class="nav-link"><span class="nav-dot"></span>Button</a>
+      <a href="icon-button.html" class="nav-link active"><span class="nav-dot"></span>IconButton</a>
+      <a href="search-input.html" class="nav-link"><span class="nav-dot"></span>SearchInput</a>
+      <a href="empty-state.html" class="nav-link"><span class="nav-dot"></span>EmptyState</a>
+      <a href="toast.html" class="nav-link"><span class="nav-dot"></span>Toast</a>
+      <a href="navbar.html" class="nav-link"><span class="nav-dot"></span>NavBar</a>
+      <a href="ingredient-list.html" class="nav-link"><span class="nav-dot"></span>IngredientList</a>
+      <a href="modal.html" class="nav-link"><span class="nav-dot"></span>Modal</a>
+      <div style="height:1px; background:#E9E6ED; margin:10px 4px;"></div>
+      <a href="http://localhost:5173/spec/icon-button" class="nav-link" target="_blank" rel="noopener" style="color:#6B4F8F;"><span class="nav-dot" style="background:#3B7080;"></span>Open live in app →</a>
+    </div>
+    <div class="nav-group">
+      <a href="decisions.html" class="nav-link"><span class="nav-dot"></span>Decisions log</a>
+    </div>
+    <div class="sidebar-footer">v4 · amethyst apothecary</div>
+  </aside>
+
+  <main class="main">
+    <div class="main-inner">
+
+      <!-- ═══ HEADER ═══════════════════════════════════════════════ -->
+      <header class="mb-12">
+        <div class="mono text-[11px] text-ink-tertiary tracking-[0.16em] uppercase mb-3">Component · IconButton</div>
+        <h1 class="text-5xl font-extrabold tracking-tighter leading-[0.95] mb-4 text-amethyst">IconButton.</h1>
+        <p class="text-base text-ink-secondary max-w-[640px] leading-relaxed">
+          The workhorse control. Circular, icon-only, no signature shadow or motion of its own — saves the brand's loudest treatment for ProductCard and Button. Always requires <span class="code">aria-label</span> because there is no visible text. Two variants, two sizes, an active state, and color-only transitions.
+        </p>
+        <div class="mt-6 flex items-center gap-3 text-xs">
+          <span class="mono text-ink-tertiary">Deep spec:</span>
+          <a href="../component-spec/icon-button.md" class="code hover:underline">docs/component-spec/icon-button.md</a>
+          <span class="mono text-ink-tertiary ml-4">Decisions:</span>
+          <a href="decisions.html" class="code hover:underline">IB-01</a>
+        </div>
+      </header>
+
+      <!-- ═══ LIVE ═══════════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Live — hover, click, tab</h2>
+        <div class="frame">
+          <div class="row">
+            <span class="row-label">Default</span>
+            <button class="ib ib-default ib-md" aria-label="Save"><i class="ph ph-heart"></i></button>
+            <button class="ib ib-default ib-md is-active" aria-label="Saved"><i class="ph-fill ph-heart"></i></button>
+            <button class="ib ib-default ib-md" aria-label="More"><i class="ph ph-dots-three"></i></button>
+            <button class="ib ib-default ib-md" aria-label="Disabled" disabled><i class="ph ph-trash"></i></button>
+          </div>
+          <div class="row">
+            <span class="row-label">Ghost</span>
+            <button class="ib ib-ghost ib-md" aria-label="Close"><i class="ph ph-x"></i></button>
+            <button class="ib ib-ghost ib-md" aria-label="Search"><i class="ph ph-magnifying-glass"></i></button>
+            <button class="ib ib-ghost ib-md is-active" aria-label="Active tab"><i class="ph-fill ph-house"></i></button>
+            <button class="ib ib-ghost ib-md" aria-label="Disabled" disabled><i class="ph ph-x"></i></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ VARIANTS ═══════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Variants</h2>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="token-card">
+            <div class="flex gap-2 mb-4">
+              <button class="ib ib-default ib-md" aria-label="Save"><i class="ph ph-heart"></i></button>
+              <button class="ib ib-default ib-md is-active" aria-label="Saved"><i class="ph-fill ph-heart"></i></button>
+            </div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-1">Default</div>
+            <p class="text-xs text-ink-secondary leading-relaxed mb-3">Standalone actions on busy backgrounds — the save heart on a ProductCard image.</p>
+            <div class="text-[10px] mono text-ink-tertiary">
+              bg <span class="swatch" style="background:#F5F2F8;"></span>surface-muted<br>
+              icon <span class="swatch" style="background:#6B4F8F;"></span>ink-secondary<br>
+              active <span class="swatch" style="background:#3F1F68;"></span>amethyst
+            </div>
+          </div>
+          <div class="token-card">
+            <div class="flex gap-2 mb-4">
+              <button class="ib ib-ghost ib-md" aria-label="Close"><i class="ph ph-x"></i></button>
+              <button class="ib ib-ghost ib-md is-active" aria-label="Active"><i class="ph-fill ph-house"></i></button>
+            </div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-1">Ghost</div>
+            <p class="text-xs text-ink-secondary leading-relaxed mb-3">Inside other components' chrome — Modal close, NavBar utilities, Toast dismiss, SearchInput clear.</p>
+            <div class="text-[10px] mono text-ink-tertiary">
+              bg transparent<br>
+              icon <span class="swatch" style="background:#ADA1BE;"></span>ink-tertiary<br>
+              hover bg <span class="swatch" style="background:#F5F2F8;"></span>surface-muted
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ SIZES ══════════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Sizes</h2>
+        <div class="frame">
+          <div class="row">
+            <span class="row-label">sm · 28px</span>
+            <button class="ib ib-default ib-sm" aria-label="Save"><i class="ph ph-heart"></i></button>
+            <button class="ib ib-ghost ib-sm" aria-label="Close"><i class="ph ph-x"></i></button>
+            <span class="mono text-[11px] text-ink-tertiary ml-4">Card footers, Toast dismiss, SearchInput clear, NavBar tabs</span>
+          </div>
+          <div class="row">
+            <span class="row-label">md · 36px <strong>default</strong></span>
+            <button class="ib ib-default ib-md" aria-label="Save"><i class="ph ph-heart"></i></button>
+            <button class="ib ib-ghost ib-md" aria-label="Close"><i class="ph ph-x"></i></button>
+            <span class="mono text-[11px] text-ink-tertiary ml-4">Standalone actions, Modal close</span>
+          </div>
+        </div>
+        <p class="text-xs text-ink-tertiary mt-3">Note: <span class="code">md</span> falls below the 44px iOS touch guideline. Acceptable inside dense desktop chrome but pair with parent hit-area padding when touch is the dominant input.</p>
+      </section>
+
+      <!-- ═══ STATES ═════════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">States</h2>
+        <div class="frame">
+          <div class="row">
+            <span class="row-label">Rest</span>
+            <button class="ib ib-default ib-md" aria-label="Save"><i class="ph ph-heart"></i></button>
+            <button class="ib ib-ghost ib-md" aria-label="Close"><i class="ph ph-x"></i></button>
+          </div>
+          <div class="row force-hover">
+            <span class="row-label">Hover</span>
+            <button class="ib ib-default ib-md" aria-label="Save"><i class="ph ph-heart"></i></button>
+            <button class="ib ib-ghost ib-md" aria-label="Close"><i class="ph ph-x"></i></button>
+            <span class="mono text-[11px] text-ink-tertiary ml-4">Default → <span class="code">surface-divider</span> · Ghost → <span class="code">surface-muted</span> + ink-secondary</span>
+          </div>
+          <div class="row force-focus">
+            <span class="row-label">Focus</span>
+            <button class="ib ib-default ib-md" aria-label="Save"><i class="ph ph-heart"></i></button>
+            <button class="ib ib-ghost ib-md" aria-label="Close"><i class="ph ph-x"></i></button>
+            <span class="mono text-[11px] text-ink-tertiary ml-4">2px amethyst outline · +2px offset · system convention</span>
+          </div>
+          <div class="row">
+            <span class="row-label">Active</span>
+            <button class="ib ib-default ib-md is-active" aria-label="Saved"><i class="ph-fill ph-heart"></i></button>
+            <button class="ib ib-ghost ib-md is-active" aria-label="Active"><i class="ph-fill ph-house"></i></button>
+            <span class="mono text-[11px] text-ink-tertiary ml-4">Filled — "this action is currently applied"</span>
+          </div>
+          <div class="row">
+            <span class="row-label">Disabled</span>
+            <button class="ib ib-default ib-md" aria-label="Disabled" disabled><i class="ph ph-heart"></i></button>
+            <button class="ib ib-ghost ib-md" aria-label="Disabled" disabled><i class="ph ph-x"></i></button>
+            <span class="mono text-[11px] text-ink-tertiary ml-4">opacity 0.5 · removed from tab order</span>
+          </div>
+        </div>
+        <div class="token-card mt-4">
+          <div class="flex items-start gap-3">
+            <i class="ph ph-info text-xl text-slate flex-shrink-0 mt-0.5"></i>
+            <div>
+              <div class="font-bold text-sm mb-1">Why no shadow or press motion? (IB-01)</div>
+              <p class="text-xs text-ink-secondary leading-relaxed">A ProductCard search grid renders 20+ save hearts at once. Adding a flat-offset shadow to IconButton would either compete with the card's hover signature, or stack lime-shadow-on-lime-shadow when a heart sits on a card. IconButton stays color-only so the system has a single workhorse that disappears into context.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ WHERE IT LIVES ═════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Where it lives</h2>
+        <div class="grid grid-cols-3 gap-4">
+          <div class="token-card">
+            <div class="pc-tile mb-3">
+              <button class="ib ib-default ib-sm pc-frosted" aria-label="Save"><i class="ph ph-heart"></i></button>
+            </div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-1">ProductCard heart</div>
+            <p class="text-xs text-ink-secondary leading-relaxed">Default + custom frosted bg. <span class="code">size="sm"</span>. <span class="code">active=true</span> when saved.</p>
+          </div>
+          <div class="token-card">
+            <div class="frame mb-3" style="padding:14px; display:flex; justify-content:space-between; align-items:center;">
+              <span class="text-sm font-bold text-amethyst">Add to Library</span>
+              <button class="ib ib-ghost ib-md" aria-label="Close modal"><i class="ph ph-x"></i></button>
+            </div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-1">Modal close</div>
+            <p class="text-xs text-ink-secondary leading-relaxed">Ghost <span class="code">md</span>. <span class="code">aria-label="Close modal"</span>.</p>
+          </div>
+          <div class="token-card">
+            <div class="frame mb-3" style="padding:10px 14px; display:flex; gap:10px; align-items:center; background:#E7F1ED;">
+              <span style="background:#2B5F4E; color:#E7F1ED; width:20px; height:20px; border-radius:9999px; display:inline-flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;">✓</span>
+              <span class="text-xs flex-1" style="color:#2B5F4E;">Added to library</span>
+              <button class="ib ib-ghost ib-sm" aria-label="Dismiss" style="color:#2B5F4E;"><i class="ph ph-x"></i></button>
+            </div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-1">Toast dismiss</div>
+            <p class="text-xs text-ink-secondary leading-relaxed">Ghost <span class="code">sm</span>. <span class="code">aria-label="Dismiss"</span>.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ TOKENS ═════════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Tokens</h2>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="token-card">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-ink-secondary mb-2">Color</div>
+            <div class="text-[11px] mono text-ink-primary leading-relaxed">
+              <span class="swatch" style="background:#F5F2F8;"></span>surface-muted — default rest, ghost hover<br>
+              <span class="swatch" style="background:#E9E6ED;"></span>surface-divider — default hover<br>
+              <span class="swatch" style="background:#6B4F8F;"></span>ink-secondary — default icon, ghost hover icon<br>
+              <span class="swatch" style="background:#ADA1BE;"></span>ink-tertiary — ghost icon<br>
+              <span class="swatch" style="background:#3F1F68;"></span>amethyst — active icon, focus ring
+            </div>
+          </div>
+          <div class="token-card">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-ink-secondary mb-2">Shape · motion</div>
+            <div class="text-[11px] mono text-ink-primary leading-relaxed">
+              radius <span class="code">rounded-full</span><br>
+              sm <span class="code">28 × 28</span> · icon 15px<br>
+              md <span class="code">36 × 36</span> · icon 18px<br>
+              transition <span class="code">colors only</span><br>
+              duration <span class="code">duration-fast</span><br>
+              ease <span class="code">ease-out-soft</span><br>
+              shadow <span class="code">none</span> · scale <span class="code">none</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ A11Y ═══════════════════════════════════════════════════ -->
+      <section class="mb-16 token-card">
+        <div class="flex items-start gap-3">
+          <i class="ph ph-accessible text-xl text-slate flex-shrink-0 mt-0.5"></i>
+          <div class="flex-1">
+            <div class="font-bold text-sm mb-2">Accessibility</div>
+            <ul class="text-xs text-ink-secondary leading-relaxed space-y-1 list-disc pl-4">
+              <li><span class="code">ariaLabel</span> is <strong>required</strong> — there is no visible text fallback</li>
+              <li>When toggling state, swap the label too (<span class="code">"Save to library"</span> ↔ <span class="code">"Remove from library"</span>) — color-only is not enough</li>
+              <li>Native <span class="code">&lt;button&gt;</span> — Enter and Space activate, Tab focuses</li>
+              <li>Focus ring matches the system — 2px amethyst outline at 2px offset, <span class="code">:focus-visible</span> only</li>
+              <li>Disabled buttons drop out of tab order via the HTML <span class="code">disabled</span> attribute</li>
+              <li>Don't nest two IconButtons without at least <span class="code">gap-xs</span> (4px) between them — neighboring 28px circles need breathing room</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <footer class="pt-6 border-t border-surf-divider flex items-center justify-between text-[11px] text-ink-tertiary mono">
+        <span>clean-shopper · icon-button spec</span>
+        <span>v4 · amethyst apothecary</span>
+      </footer>
+
+    </div>
+  </main>
+</div>
+</body>
+</html>

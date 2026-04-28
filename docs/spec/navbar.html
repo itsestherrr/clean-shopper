@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NavBar · Clean Shopper Spec</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_shell.css">
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
+<script>
+tailwind.config = {
+  theme: { extend: {
+    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] },
+    colors: {
+      amethyst: '#3F1F68', 'amethyst-110': '#2A1247', 'amethyst-80': '#6B4F8F', 'amethyst-40': '#ADA1BE', 'amethyst-20': '#DAD2E2', 'amethyst-5': '#F5F2F8',
+      slate: '#3B7080', 'slate-tint': '#E4EEF4',
+      lime: '#C9EC2D', 'lime-tint': '#F0F9C9',
+      cream: '#FCFBFA', paper: '#FFFFFF', 'surf-divider': '#E9E6ED',
+      'ink-primary': '#3F1F68', 'ink-secondary': '#6B4F8F', 'ink-tertiary': '#ADA1BE',
+    },
+  }}
+}
+</script>
+<style>
+  .mono { font-family:'JetBrains Mono',monospace; }
+  .code { font-family:'JetBrains Mono',monospace; font-size:11px; background:#F5F2F8; padding:2px 6px; border-radius:4px; color:#3F1F68; display:inline-block; }
+  .token-card { background:#FFFFFF; border:1.5px solid #E9E6ED; border-radius:16px; padding:20px; }
+
+  /* ══ NavBar primitives ════════════════════════════════════════ */
+  .nav {
+    background:#FFFFFF; border-bottom:1px solid #E9E6ED;
+    height:64px; padding:0 32px;
+    display:grid; grid-template-columns:auto auto 1fr auto; align-items:center; gap:24px;
+  }
+  .nav-brand { font-size:18px; font-weight:800; color:#3F1F68; letter-spacing:-0.01em; }
+  .nav-links { display:flex; gap:24px; }
+  .nav-links a { font-size:14px; color:#3F1F68; font-weight:500; text-decoration:none; }
+  .nav-links a:hover { color:#6B4F8F; }
+  .nav-search { display:flex; justify-content:center; }
+  .nav-search-pill {
+    display:flex; align-items:center; gap:8px;
+    width:100%; max-width:560px; height:40px;
+    padding:0 16px;
+    background:#FFFFFF;
+    border-radius:9999px;
+    box-shadow: inset 0 0 0 1.5px #E9E6ED;
+    color:#ADA1BE; font-size:14px;
+  }
+  .nav-utils { display:flex; gap:8px; }
+  .nav-util {
+    width:36px; height:36px; border-radius:9999px;
+    display:inline-flex; align-items:center; justify-content:center;
+    background:transparent; color:#3F1F68; border:none; cursor:pointer;
+  }
+  .nav-util:hover { background:#F5F2F8; color:#3F1F68; }
+  .nav-avatar {
+    width:36px; height:36px; border-radius:9999px;
+    background:linear-gradient(135deg,#3F1F68,#2A1247); color:#FCFBFA;
+    display:inline-flex; align-items:center; justify-content:center;
+    font-size:12px; font-weight:700; letter-spacing:0.02em;
+  }
+
+  /* mobile (stacked) */
+  .nav-mobile { display:flex; flex-direction:column; background:#FFFFFF; border:1px solid #E9E6ED; border-radius:12px; overflow:hidden; }
+  .nav-mobile-row1 { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-bottom:1px solid #E9E6ED; }
+  .nav-mobile-row2 { padding:12px 16px; }
+
+  /* dropdown */
+  .nav-dd {
+    background:#FFFFFF; border:1.5px solid #E9E6ED; border-radius:16px;
+    width:240px;
+    box-shadow: 4px 4px 0 0 rgba(63,31,104,0.12);
+    overflow:hidden;
+  }
+  .nav-dd-row { padding:14px 16px; }
+  .nav-dd-row .label { font-size:10px; color:#ADA1BE; text-transform:uppercase; letter-spacing:0.16em; font-family:'JetBrains Mono',monospace; }
+  .nav-dd-row .email { font-size:13px; color:#3F1F68; margin-top:2px; }
+  .nav-dd-divide { height:1px; background:#E9E6ED; }
+  .nav-dd-btn { display:block; width:100%; text-align:left; padding:12px 16px; background:transparent; border:none; cursor:pointer; font-size:14px; color:#3F1F68; }
+  .nav-dd-btn:hover { background:#F5F2F8; }
+
+  .frame { background:#FCFBFA; border:1px dashed #E9E6ED; border-radius:12px; padding:28px; }
+  .swatch { display:inline-block; width:12px; height:12px; border-radius:3px; vertical-align:middle; margin-right:4px; border:1px solid rgba(0,0,0,0.05); }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="mark">C</div>
+      <div><span class="name">Clean Shopper</span><span class="tag">spec</span></div>
+    </div>
+    <div class="nav-group">
+      <a href="design-system.html" class="nav-link"><span class="nav-dot"></span>Design System</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-label">Components</div>
+      <a href="product-card.html" class="nav-link"><span class="nav-dot"></span>Product Card</a>
+      <a href="badge.html" class="nav-link"><span class="nav-dot"></span>Badge</a>
+      <a href="button.html" class="nav-link"><span class="nav-dot"></span>Button</a>
+      <a href="icon-button.html" class="nav-link"><span class="nav-dot"></span>IconButton</a>
+      <a href="search-input.html" class="nav-link"><span class="nav-dot"></span>SearchInput</a>
+      <a href="empty-state.html" class="nav-link"><span class="nav-dot"></span>EmptyState</a>
+      <a href="toast.html" class="nav-link"><span class="nav-dot"></span>Toast</a>
+      <a href="navbar.html" class="nav-link active"><span class="nav-dot"></span>NavBar</a>
+      <a href="ingredient-list.html" class="nav-link"><span class="nav-dot"></span>IngredientList</a>
+      <a href="modal.html" class="nav-link"><span class="nav-dot"></span>Modal</a>
+      <div style="height:1px; background:#E9E6ED; margin:10px 4px;"></div>
+      <a href="http://localhost:5173/spec/navbar" class="nav-link" target="_blank" rel="noopener" style="color:#6B4F8F;"><span class="nav-dot" style="background:#3B7080;"></span>Open live in app →</a>
+    </div>
+    <div class="nav-group">
+      <a href="decisions.html" class="nav-link"><span class="nav-dot"></span>Decisions log</a>
+    </div>
+    <div class="sidebar-footer">v4 · amethyst apothecary</div>
+  </aside>
+
+  <main class="main">
+    <div class="main-inner">
+
+      <!-- ═══ HEADER ═══════════════════════════════════════════════ -->
+      <header class="mb-12">
+        <div class="mono text-[11px] text-ink-tertiary tracking-[0.16em] uppercase mb-3">Component · NavBar</div>
+        <h1 class="text-5xl font-extrabold tracking-tighter leading-[0.95] mb-4 text-amethyst">NavBar.</h1>
+        <p class="text-base text-ink-secondary max-w-[640px] leading-relaxed">
+          Global chrome. Brand · page links · centered <strong>global SearchInput</strong> · utility shortcuts. Restrained on purpose: no active indicator, no icon for page links, no brand-signature treatment in the wordmark — so the centered search reads as the primary action of the entire app.
+        </p>
+        <div class="mt-6 flex items-center gap-3 text-xs">
+          <span class="mono text-ink-tertiary">Deep spec:</span>
+          <a href="../component-spec/navbar.md" class="code hover:underline">docs/component-spec/navbar.md</a>
+          <span class="mono text-ink-tertiary ml-4">Decisions:</span>
+          <a href="decisions.html" class="code hover:underline">N-01 → N-06</a>
+        </div>
+      </header>
+
+      <!-- ═══ DESKTOP ═══════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Desktop ≥ 768px</h2>
+        <div class="frame">
+          <div class="nav">
+            <div class="nav-brand">Clean Shopper</div>
+            <div class="nav-links">
+              <a href="#">Home</a>
+              <a href="#">Browse</a>
+            </div>
+            <div class="nav-search">
+              <div class="nav-search-pill">
+                <i class="ph ph-magnifying-glass" style="font-size:16px;"></i>
+                <span>Search products or brands…</span>
+              </div>
+            </div>
+            <div class="nav-utils">
+              <button class="nav-util" aria-label="Favorites"><i class="ph ph-heart" style="font-size:18px;"></i></button>
+              <span class="nav-avatar">EO</span>
+            </div>
+          </div>
+        </div>
+        <p class="text-xs text-ink-tertiary mt-3"><span class="code">64px</span> tall. CSS grid <span class="code">auto auto 1fr auto</span>. SearchInput is centered in its <span class="code">1fr</span> column with a <span class="code">560px</span> max width to keep the pill from sprawling on ultrawide displays.</p>
+      </section>
+
+      <!-- ═══ MOBILE ═══════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Mobile &lt; 768px</h2>
+        <div class="frame" style="max-width:420px;">
+          <div class="nav-mobile">
+            <div class="nav-mobile-row1">
+              <div class="nav-brand" style="font-size:16px;">Clean Shopper</div>
+              <div class="nav-utils">
+                <button class="nav-util" aria-label="Favorites"><i class="ph ph-heart" style="font-size:18px;"></i></button>
+                <span class="nav-avatar">EO</span>
+              </div>
+            </div>
+            <div class="nav-mobile-row2">
+              <div class="nav-search-pill">
+                <i class="ph ph-magnifying-glass" style="font-size:16px;"></i>
+                <span>Search products or brands…</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="text-xs text-ink-tertiary mt-3">Two stacked rows · ≈ <span class="code">112px</span> total. Home and Browse drop from the chrome — logo links to <span class="code">/home</span>, Browse is reachable via Home or direct URL. (N-03)</p>
+      </section>
+
+      <!-- ═══ ANATOMY ═══════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Anatomy</h2>
+        <div class="grid grid-cols-3 gap-4">
+          <div class="token-card">
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-1">Brand · Home · Browse</div>
+            <p class="text-xs text-ink-secondary leading-relaxed">Plain wordmark (N-05). Page links are text only — no icons (N-01). No active indicator (N-02).</p>
+          </div>
+          <div class="token-card">
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-1">Global Search</div>
+            <p class="text-xs text-ink-secondary leading-relaxed">Renders the shared SearchInput. URL-owned <span class="code">?q=</span> state (N-06). Pages read the param; they don't render their own input.</p>
+          </div>
+          <div class="token-card">
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-1">Favorites · Account</div>
+            <p class="text-xs text-ink-secondary leading-relaxed">Icon-only Favorites + 36px amethyst-gradient avatar with initials. Click avatar → dropdown (N-04).</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ SEARCH BEHAVIOR ═══════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Search behavior — N-06</h2>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="token-card">
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-2">Off /search</div>
+            <p class="text-xs text-ink-secondary leading-relaxed">Typing does not change the URL. Pressing Enter routes to <span class="code">/search?q=value</span>.</p>
+          </div>
+          <div class="token-card">
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-2">On /search</div>
+            <p class="text-xs text-ink-secondary leading-relaxed">Typing replaces <span class="code">?q=</span> live (<span class="code">replace: true</span>) so results filter on every keystroke. Clearing the input zeroes <span class="code">?q=</span> without changing the route.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ ACCOUNT DROPDOWN ═══════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Account dropdown — N-04</h2>
+        <div class="frame flex justify-end">
+          <div class="nav-dd">
+            <div class="nav-dd-row">
+              <div class="label">Signed in</div>
+              <div class="email">esther.oh@customink.com</div>
+            </div>
+            <div class="nav-dd-divide"></div>
+            <button class="nav-dd-btn">Sign out</button>
+          </div>
+        </div>
+        <p class="text-xs text-ink-tertiary mt-3">Anchored top-right of the avatar. Dismissed by click-outside, Escape, or route change. <span class="code">aria-haspopup="menu"</span>, <span class="code">aria-expanded</span> on trigger; menu items get <span class="code">role="menuitem"</span>.</p>
+      </section>
+
+      <!-- ═══ TOKENS ═════════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Tokens</h2>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="token-card">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-ink-secondary mb-2">Color</div>
+            <div class="text-[11px] mono text-ink-primary leading-relaxed">
+              <span class="swatch" style="background:#FFFFFF; border-color:#DAD2E2;"></span>surface-card — bar bg<br>
+              <span class="swatch" style="background:#E9E6ED;"></span>surface-divider — bottom border<br>
+              <span class="swatch" style="background:#3F1F68;"></span>amethyst — wordmark, ink-primary, focus<br>
+              <span class="swatch" style="background:#F5F2F8;"></span>surface-muted — utility hover bg
+            </div>
+          </div>
+          <div class="token-card">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-ink-secondary mb-2">Layout · spacing</div>
+            <div class="text-[11px] mono text-ink-primary leading-relaxed">
+              desktop <span class="code">h-[64px] px-xl</span><br>
+              grid <span class="code">auto auto 1fr auto</span><br>
+              search cap <span class="code">max-w-[560px]</span><br>
+              utility <span class="code">w-9 h-9 rounded-full</span><br>
+              mobile rows <span class="code">px-md py-sm</span> ×2<br>
+              z <span class="code">z-sticky</span> · pos <span class="code">fixed top-0</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ A11Y ═══════════════════════════════════════════════════ -->
+      <section class="mb-16 token-card">
+        <div class="flex items-start gap-3">
+          <i class="ph ph-accessible text-xl text-slate flex-shrink-0 mt-0.5"></i>
+          <div class="flex-1">
+            <div class="font-bold text-sm mb-2">Accessibility</div>
+            <ul class="text-xs text-ink-secondary leading-relaxed space-y-1 list-disc pl-4">
+              <li>Brand and page links use <span class="code">NavLink</span> — Tab-focusable, native click + Enter</li>
+              <li>Favorites is icon-only with <span class="code">aria-label="Favorites"</span></li>
+              <li>Account button: <span class="code">aria-label="Account menu"</span> · <span class="code">aria-haspopup="menu"</span> · <span class="code">aria-expanded</span></li>
+              <li>Menu items use <span class="code">role="menuitem"</span>; Escape and click-outside dismiss</li>
+              <li>Focus rings system-wide: 2px amethyst outline, +2px offset, <span class="code">:focus-visible</span> only</li>
+              <li>SearchInput's keyboard behavior is owned by SearchInput — Enter submits, × clears</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <footer class="pt-6 border-t border-surf-divider flex items-center justify-between text-[11px] text-ink-tertiary mono">
+        <span>clean-shopper · navbar spec</span>
+        <span>v4 · amethyst apothecary</span>
+      </footer>
+
+    </div>
+  </main>
+</div>
+</body>
+</html>

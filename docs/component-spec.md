@@ -45,8 +45,7 @@ Legend: **v4** = specced under v4 · **pre-v4** = built under v3, needs refactor
 
 | Component | Status | Deep spec | Live page | Decisions |
 | --- | --- | --- | --- | --- |
-| **IngredientList** | pre-v4 | — | — | — |
-| **IngredientBar** | pre-v4 | — | — | — |
+| **IngredientList** | v4 ✓ | — | [`/spec/ingredient-list`](spec/ingredient-list.html) | `decisions.html#IL-01`, `DS-01` |
 
 ### Shell
 

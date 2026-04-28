@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PDP · D2 refined · Clean Shopper</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_pdp-shared.css">
+<style>
+  /* D2 refined: no section-card wrapper, status pinned left, light hover, no summary chips */
+  .top {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 56px;
+    align-items: start;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 800px) { .top { grid-template-columns: 1fr; gap: 32px; } }
+
+  /* Section header without enclosing surface */
+  .ing-section { margin-top: 56px; }
+  .ing-section .sec-head { margin-bottom: 12px; }
+
+  /* Single-column ingredient rows */
+  .ing-rows { display: flex; flex-direction: column; gap: 8px; }
+  .ing-row {
+    background: #FFFFFF;
+    border: 1.5px solid #E9E6ED;
+    border-radius: 16px;
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: border-color 200ms ease, background-color 200ms ease;
+  }
+  /* Light-touch hover — no transform, no shadow */
+  .ing-row:hover { border-color: #ADA1BE; background: #FCFBFA; }
+
+  .ing-row .head {
+    display: flex; align-items: center; gap: 14px;
+  }
+
+  /* Status column (dot + label) — FIXED width so names align */
+  .status {
+    display: inline-flex; align-items: center; gap: 8px;
+    width: 100px;
+    flex-shrink: 0;
+  }
+  .status .dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .status .label {
+    font-size: 11px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .ing-row.tier-clean   .status .dot   { background: #7DBFA8; }
+  .ing-row.tier-clean   .status .label { color: #2B5F4E; }
+  .ing-row.tier-caution .status .dot   { background: #C9A227; }
+  .ing-row.tier-caution .status .label { color: #7A6115; }
+  .ing-row.tier-avoid   .status .dot   { background: #FF3A20; }
+  .ing-row.tier-avoid   .status .label { color: #B3240E; }
+
+  .ing-row .name {
+    font-size: 16px; font-weight: 700; color: #3F1F68;
+    flex: 1; min-width: 0;
+  }
+
+  .avoid-flag {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 4px;
+    background: #FFEBE7; color: #B3240E;
+    flex-shrink: 0;
+  }
+
+  .chev {
+    color: #ADA1BE; font-size: 18px;
+    transition: transform 200ms ease;
+    flex-shrink: 0;
+  }
+  .ing-row.expanded .chev { transform: rotate(90deg); }
+
+  .ing-row .body {
+    display: none;
+    padding-top: 12px; margin-top: 14px;
+    padding-left: 114px; /* aligns with name start */
+    border-top: 1px dashed #E9E6ED;
+  }
+  .ing-row.expanded .body { display: block; }
+  .ing-row .reason {
+    font-size: 13.5px; line-height: 1.6; color: #6B4F8F;
+    margin: 0 0 8px;
+  }
+  .ing-row .meta {
+    font-family:'JetBrains Mono',monospace; font-size: 11px;
+    color: #ADA1BE; letter-spacing: 0.04em;
+  }
+
+  @media (max-width: 600px) {
+    .status { width: 80px; }
+    .ing-row .body { padding-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="option-bar">
+  <span class="label">Sketch</span>
+  <span class="title">D2 refined · Status pinned left, light hover, no surface, no chips</span>
+  <span class="desc">Status column fixed-width so names line up. Quiet hover, no shadow signature.</span>
+  <span class="switcher">
+    <a href="pdp-A-compact-cards.html">A</a>
+    <a href="pdp-B-fuller-pdp-accordion.html">B</a>
+    <a href="pdp-C-fuller-pdp-cards.html">C</a>
+    <a href="pdp-D-converged.html">D</a>
+    <a href="pdp-D2-refined.html" class="active">D2</a>
+  </span>
+</div>
+
+<main class="page">
+  <a href="#" class="back-link">← Back</a>
+
+  <!-- TOP: full retail PDP feel (no meta-row, no extra chrome) -->
+  <section class="top">
+    <figure class="hero-img" style="margin:0;">[ product image ]</figure>
+    <div class="info">
+      <div class="brand-eyebrow">CeraVe</div>
+      <h1 class="product-title">Hydrating Facial Cleanser</h1>
+      <p class="product-subtitle">For Normal to Dry Skin · 12 fl oz</p>
+
+      <div class="badge-row">
+        <span class="status-badge status-caution"><span class="dot"></span>Caution</span>
+        <span class="cat-tag">Facial Cleanser</span>
+      </div>
+
+      <p class="lede">A creamy, non-foaming face wash developed with dermatologists. Removes dirt and makeup without stripping the skin barrier — formulated with three essential ceramides plus hyaluronic acid for everyday use.</p>
+
+      <ul class="claims">
+        <li>Three essential ceramides (NP, AP, EOP) restore the skin barrier</li>
+        <li>Non-comedogenic, fragrance-free claim from brand (verify per batch)</li>
+        <li>MVE technology — controlled release of moisturizing ingredients</li>
+        <li>Suitable for sensitive skin per AAD-recognized dermatologist input</li>
+      </ul>
+
+      <div class="actions">
+        <button class="btn btn-primary">♡ Save to library</button>
+        <button class="btn btn-secondary">Compare</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- INGREDIENT SECTION — no outer surface, just header + rows -->
+  <section class="ing-section">
+    <div class="sec-head">
+      <h2 class="sec-title">Ingredients</h2>
+      <span class="sec-meta">14 total · click any row to learn more</span>
+    </div>
+
+    <div class="ing-rows">
+      <article class="ing-row tier-avoid expanded" onclick="this.classList.toggle('expanded')">
+        <div class="head">
+          <span class="status"><span class="dot"></span><span class="label">Avoid</span></span>
+          <span class="name">Fragrance</span>
+          <span class="avoid-flag">In your avoid list</span>
+          <span class="chev">›</span>
+        </div>
+        <div class="body">
+          <p class="reason">"Fragrance" can cover dozens of unlisted compounds, often including known allergens and endocrine disruptors. You marked this in your personal avoid list, which is why this product was downgraded from Clean to Caution overall.</p>
+          <span class="meta">EWG hazard score 8/10 · matches "fragrance" in your preferences</span>
+        </div>
+      </article>
+
+      <article class="ing-row tier-avoid" onclick="this.classList.toggle('expanded')">
+        <div class="head">
+          <span class="status"><span class="dot"></span><span class="label">Avoid</span></span>
+          <span class="name">Methylparaben</span>
+          <span class="avoid-flag">In your avoid list</span>
+          <span class="chev">›</span>
+        </div>
+        <div class="body">
+          <p class="reason">A preservative with mild estrogenic activity in lab studies. Banned in some EU contexts for leave-on products. You marked parabens in your avoid list.</p>
+          <span class="meta">EWG hazard score 7/10 · matches "parabens" in your preferences</span>
+        </div>
+      </article>
+
+      <article class="ing-row tier-caution" onclick="this.classList.toggle('expanded')">
+        <div class="head">
+          <span class="status"><span class="dot"></span><span class="label">Caution</span></span>
+          <span class="name">Phenoxyethanol</span>
+          <span class="chev">›</span>
+        </div>
+        <div class="body">
+          <p class="reason">A common preservative considered safer than parabens, but flagged for skin irritation at higher concentrations. Generally fine in rinse-off products like this cleanser.</p>
+          <span class="meta">EWG hazard score 4/10</span>
+        </div>
+      </article>
+
+      <article class="ing-row tier-caution" onclick="this.classList.toggle('expanded')">
+        <div class="head">
+          <span class="status"><span class="dot"></span><span class="label">Caution</span></span>
+          <span class="name">PEG-40 Stearate</span>
+          <span class="chev">›</span>
+        </div>
+        <div class="body">
+          <p class="reason">A surfactant whose safety depends on processing — can carry trace 1,4-dioxane contamination from manufacturing. Many brands now use cleaner alternatives.</p>
+          <span class="meta">EWG hazard score 3/10</span>
+        </div>
+      </article>
+
+      <article class="ing-row tier-caution" onclick="this.classList.toggle('expanded')">
+        <div class="head">
+          <span class="status"><span class="dot"></span><span class="label">Caution</span></span>
+          <span class="name">Behentrimonium Methosulfate</span>
+          <span class="chev">›</span>
+        </div>
+        <div class="body">
+          <p class="reason">A conditioning agent. Considered safer than older "quat" surfactants but still flagged by some clean databases for environmental persistence.</p>
+          <span class="meta">EWG hazard score 3/10</span>
+        </div>
+      </article>
+
+      <article class="ing-row tier-clean" onclick="this.classList.toggle('expanded')">
+        <div class="head"><span class="status"><span class="dot"></span><span class="label">Clean</span></span><span class="name">Glycerin</span><span class="chev">›</span></div>
+        <div class="body"><p class="reason">Plant-derived humectant that draws water into the skin. One of the most studied and reliably safe moisturizing ingredients in personal care.</p><span class="meta">EWG hazard score 1/10</span></div>
+      </article>
+      <article class="ing-row tier-clean" onclick="this.classList.toggle('expanded')">
+        <div class="head"><span class="status"><span class="dot"></span><span class="label">Clean</span></span><span class="name">Ceramide NP</span><span class="chev">›</span></div>
+        <div class="body"><p class="reason">A naturally occurring lipid that helps restore the skin barrier. Lab-synthesized to mimic human ceramides — well tolerated.</p><span class="meta">EWG hazard score 1/10</span></div>
+      </article>
+      <article class="ing-row tier-clean" onclick="this.classList.toggle('expanded')">
+        <div class="head"><span class="status"><span class="dot"></span><span class="label">Clean</span></span><span class="name">Hyaluronic Acid</span><span class="chev">›</span></div>
+        <div class="body"><p class="reason">A water-binding polysaccharide naturally present in skin. Holds up to 1,000× its weight in water; non-irritating across skin types.</p><span class="meta">EWG hazard score 1/10</span></div>
+      </article>
+      <article class="ing-row tier-clean" onclick="this.classList.toggle('expanded')">
+        <div class="head"><span class="status"><span class="dot"></span><span class="label">Clean</span></span><span class="name">Niacinamide</span><span class="chev">›</span></div>
+        <div class="body"><p class="reason">Vitamin B3 derivative that supports the skin barrier and helps regulate sebum. Strong safety data even at concentrations above what's typical here.</p><span class="meta">EWG hazard score 1/10</span></div>
+      </article>
+      <article class="ing-row tier-clean" onclick="this.classList.toggle('expanded')">
+        <div class="head"><span class="status"><span class="dot"></span><span class="label">Clean</span></span><span class="name">Panthenol</span><span class="chev">›</span></div>
+        <div class="body"><p class="reason">Pro-vitamin B5 — soothing, hydrating, low-allergen profile in clinical literature.</p><span class="meta">EWG hazard score 1/10</span></div>
+      </article>
+      <article class="ing-row tier-clean" onclick="this.classList.toggle('expanded')">
+        <div class="head"><span class="status"><span class="dot"></span><span class="label">Clean</span></span><span class="name">Cholesterol</span><span class="chev">›</span></div>
+        <div class="body"><p class="reason">A lipid component native to skin's outer layer. Pairs with ceramides and fatty acids to repair the barrier.</p><span class="meta">EWG hazard score 1/10</span></div>
+      </article>
+      <article class="ing-row tier-clean" onclick="this.classList.toggle('expanded')">
+        <div class="head"><span class="status"><span class="dot"></span><span class="label">Clean</span></span><span class="name">Ceramide AP</span><span class="chev">›</span></div>
+        <div class="body"><p class="reason">Another barrier-supporting ceramide variant. Same safety story as Ceramide NP — well studied, well tolerated.</p><span class="meta">EWG hazard score 1/10</span></div>
+      </article>
+      <article class="ing-row tier-clean" onclick="this.classList.toggle('expanded')">
+        <div class="head"><span class="status"><span class="dot"></span><span class="label">Clean</span></span><span class="name">Sodium Hyaluronate</span><span class="chev">›</span></div>
+        <div class="body"><p class="reason">The salt form of hyaluronic acid — smaller molecule, penetrates a bit better. Same safety profile as HA itself.</p><span class="meta">EWG hazard score 1/10</span></div>
+      </article>
+      <article class="ing-row tier-clean" onclick="this.classList.toggle('expanded')">
+        <div class="head"><span class="status"><span class="dot"></span><span class="label">Clean</span></span><span class="name">Water</span><span class="chev">›</span></div>
+        <div class="body"><p class="reason">The base solvent. Inert, ubiquitous, and not the part of the formula worth flagging.</p><span class="meta">EWG hazard score 1/10</span></div>
+      </article>
+    </div>
+  </section>
+
+  <footer class="note">
+    <span>clean-shopper · pdp sketch · D2 refined</span>
+    <span>v4 · amethyst apothecary</span>
+  </footer>
+</main>
+
+</body>
+</html>

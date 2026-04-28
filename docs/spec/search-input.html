@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SearchInput · Clean Shopper Spec</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_shell.css">
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
+<script>
+tailwind.config = {
+  theme: { extend: {
+    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] },
+    colors: {
+      amethyst: '#3F1F68', 'amethyst-110': '#2A1247', 'amethyst-80': '#6B4F8F', 'amethyst-40': '#ADA1BE', 'amethyst-20': '#DAD2E2', 'amethyst-5': '#F5F2F8',
+      slate: '#3B7080', 'slate-tint': '#E4EEF4',
+      lime: '#C9EC2D', 'lime-tint': '#F0F9C9',
+      cream: '#FCFBFA', paper: '#FFFFFF', 'surf-divider': '#E9E6ED',
+      'ink-primary': '#3F1F68', 'ink-secondary': '#6B4F8F', 'ink-tertiary': '#ADA1BE',
+    },
+  }}
+}
+</script>
+<style>
+  .mono { font-family:'JetBrains Mono',monospace; }
+  .code { font-family:'JetBrains Mono',monospace; font-size:11px; background:#F5F2F8; padding:2px 6px; border-radius:4px; color:#3F1F68; display:inline-block; }
+  .token-card { background:#FFFFFF; border:1.5px solid #E9E6ED; border-radius:16px; padding:20px; }
+
+  /* ══ SearchInput primitives ════════════════════════════════════ */
+  .si-wrap { position:relative; display:flex; align-items:center; width:100%; max-width:480px; }
+  .si {
+    width:100%; height:44px;
+    padding:8px 16px 8px 44px;
+    background:#FFFFFF;
+    border:none; outline:none;
+    border-radius:9999px;
+    box-shadow: inset 0 0 0 1.5px #E9E6ED;
+    font-family:'Plus Jakarta Sans',sans-serif;
+    font-size:14px; color:#3F1F68;
+    transition: box-shadow 160ms cubic-bezier(0.4,0,0.2,1);
+  }
+  .si.has-value { padding-right:44px; }
+  .si::placeholder { color:#ADA1BE; }
+  .si:focus-visible { outline:2px solid #3F1F68; outline-offset:2px; }
+  .si.is-disabled { opacity:0.5; cursor:not-allowed; }
+
+  .si-icon { position:absolute; left:16px; color:#ADA1BE; pointer-events:none; display:flex; }
+  .si-clear { position:absolute; right:4px;
+    width:28px; height:28px; display:inline-flex; align-items:center; justify-content:center;
+    background:transparent; border:none; cursor:pointer;
+    color:#ADA1BE; border-radius:9999px;
+    transition: background 160ms, color 160ms;
+  }
+  .si-clear:hover { background:#F5F2F8; color:#6B4F8F; }
+  .si-clear:focus-visible { outline:2px solid #3F1F68; outline-offset:2px; }
+
+  .force-focus .si { outline:2px solid #3F1F68 !important; outline-offset:2px !important; }
+
+  .frame { background:#FCFBFA; border:1px dashed #E9E6ED; border-radius:12px; padding:28px; }
+  .row { display:flex; align-items:center; gap:20px; padding:14px 0; }
+  .row-label { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; color:#ADA1BE; letter-spacing:0.12em; text-transform:uppercase; width:110px; flex-shrink:0; }
+  .swatch { display:inline-block; width:12px; height:12px; border-radius:3px; vertical-align:middle; margin-right:4px; border:1px solid rgba(0,0,0,0.05); }
+
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .si-spinner { width:16px; height:16px; border:2px solid #ADA1BE; border-right-color:transparent; border-radius:50%; animation:spin 700ms linear infinite; }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="mark">C</div>
+      <div><span class="name">Clean Shopper</span><span class="tag">spec</span></div>
+    </div>
+    <div class="nav-group">
+      <a href="design-system.html" class="nav-link"><span class="nav-dot"></span>Design System</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-label">Components</div>
+      <a href="product-card.html" class="nav-link"><span class="nav-dot"></span>Product Card</a>
+      <a href="badge.html" class="nav-link"><span class="nav-dot"></span>Badge</a>
+      <a href="button.html" class="nav-link"><span class="nav-dot"></span>Button</a>
+      <a href="icon-button.html" class="nav-link"><span class="nav-dot"></span>IconButton</a>
+      <a href="search-input.html" class="nav-link active"><span class="nav-dot"></span>SearchInput</a>
+      <a href="empty-state.html" class="nav-link"><span class="nav-dot"></span>EmptyState</a>
+      <a href="toast.html" class="nav-link"><span class="nav-dot"></span>Toast</a>
+      <a href="navbar.html" class="nav-link"><span class="nav-dot"></span>NavBar</a>
+      <a href="ingredient-list.html" class="nav-link"><span class="nav-dot"></span>IngredientList</a>
+      <a href="modal.html" class="nav-link"><span class="nav-dot"></span>Modal</a>
+      <div style="height:1px; background:#E9E6ED; margin:10px 4px;"></div>
+      <a href="http://localhost:5173/spec/search-input" class="nav-link" target="_blank" rel="noopener" style="color:#6B4F8F;"><span class="nav-dot" style="background:#3B7080;"></span>Open live in app →</a>
+    </div>
+    <div class="nav-group">
+      <a href="decisions.html" class="nav-link"><span class="nav-dot"></span>Decisions log</a>
+    </div>
+    <div class="sidebar-footer">v4 · amethyst apothecary</div>
+  </aside>
+
+  <main class="main">
+    <div class="main-inner">
+
+      <!-- ═══ HEADER ═══════════════════════════════════════════════ -->
+      <header class="mb-12">
+        <div class="mono text-[11px] text-ink-tertiary tracking-[0.16em] uppercase mb-3">Component · SearchInput</div>
+        <h1 class="text-5xl font-extrabold tracking-tighter leading-[0.95] mb-4 text-amethyst">SearchInput.</h1>
+        <p class="text-base text-ink-secondary max-w-[640px] leading-relaxed">
+          The text input the user lives in. Pill-shaped, leading magnifier, trailing clear that only shows when there's something to clear. The system's single focus convention applies — 2px amethyst outline, 2px offset, <span class="code">:focus-visible</span> only — no scale, no lift, no per-component flourish.
+        </p>
+        <div class="mt-6 flex items-center gap-3 text-xs">
+          <span class="mono text-ink-tertiary">Deep spec:</span>
+          <a href="../component-spec/search-input.md" class="code hover:underline">docs/component-spec/search-input.md</a>
+          <span class="mono text-ink-tertiary ml-4">Decisions:</span>
+          <a href="decisions.html" class="code hover:underline">SI-01 → SI-03</a>
+        </div>
+      </header>
+
+      <!-- ═══ LIVE ═══════════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Live — type, focus, clear</h2>
+        <div class="frame">
+          <div class="si-wrap">
+            <span class="si-icon"><i class="ph ph-magnifying-glass" style="font-size:18px;"></i></span>
+            <input class="si" type="text" placeholder="Search products or brands…" />
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ STATES ═════════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">States</h2>
+        <div class="frame">
+          <div class="row">
+            <span class="row-label">Empty</span>
+            <div class="si-wrap">
+              <span class="si-icon"><i class="ph ph-magnifying-glass" style="font-size:18px;"></i></span>
+              <input class="si" type="text" placeholder="Search products or brands…" />
+            </div>
+          </div>
+          <div class="row">
+            <span class="row-label">Filled</span>
+            <div class="si-wrap">
+              <span class="si-icon"><i class="ph ph-magnifying-glass" style="font-size:18px;"></i></span>
+              <input class="si has-value" type="text" value="cerave" />
+              <button class="si-clear" aria-label="Clear search"><i class="ph ph-x" style="font-size:14px;"></i></button>
+            </div>
+          </div>
+          <div class="row force-focus">
+            <span class="row-label">Focused</span>
+            <div class="si-wrap">
+              <span class="si-icon"><i class="ph ph-magnifying-glass" style="font-size:18px;"></i></span>
+              <input class="si has-value" type="text" value="vitamin C serum" />
+              <button class="si-clear" aria-label="Clear search"><i class="ph ph-x" style="font-size:14px;"></i></button>
+            </div>
+            <span class="mono text-[11px] text-ink-tertiary">2px amethyst · 2px offset · keyboard only</span>
+          </div>
+          <div class="row">
+            <span class="row-label">Loading</span>
+            <div class="si-wrap">
+              <span class="si-icon"><span class="si-spinner"></span></span>
+              <input class="si has-value" type="text" value="cerave" />
+              <button class="si-clear" aria-label="Clear search"><i class="ph ph-x" style="font-size:14px;"></i></button>
+            </div>
+            <span class="mono text-[11px] text-ink-tertiary">spinner replaces magnifier · input still typeable</span>
+          </div>
+          <div class="row">
+            <span class="row-label">Disabled</span>
+            <div class="si-wrap">
+              <span class="si-icon"><i class="ph ph-magnifying-glass" style="font-size:18px;"></i></span>
+              <input class="si is-disabled" type="text" placeholder="Search products or brands…" disabled />
+            </div>
+            <span class="mono text-[11px] text-ink-tertiary">opacity 0.5 · no clear · no keyboard interaction</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ ANATOMY ═══════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Anatomy</h2>
+        <div class="frame">
+          <div class="si-wrap" style="margin-bottom:36px;">
+            <span class="si-icon"><i class="ph ph-magnifying-glass" style="font-size:18px;"></i></span>
+            <input class="si has-value" type="text" value="cerave moisturizing cream" />
+            <button class="si-clear" aria-label="Clear search"><i class="ph ph-x" style="font-size:14px;"></i></button>
+          </div>
+          <div class="grid grid-cols-3 gap-4 text-xs text-ink-secondary mono">
+            <div><span class="code">left slot</span><br>magnifier · 16px · ink-tertiary · pl-44</div>
+            <div><span class="code">value</span><br>text-body · ink-primary · placeholder ink-placeholder</div>
+            <div><span class="code">right slot</span><br>IconButton ghost sm · only when value && !disabled</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ TOKENS ═════════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Tokens</h2>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="token-card">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-ink-secondary mb-2">Color</div>
+            <div class="text-[11px] mono text-ink-primary leading-relaxed">
+              <span class="swatch" style="background:#FFFFFF; border-color:#DAD2E2;"></span>surface-card — bg<br>
+              <span class="swatch" style="background:#E9E6ED;"></span>surface-divider — 1.5px inset border<br>
+              <span class="swatch" style="background:#ADA1BE;"></span>ink-tertiary — magnifier, placeholder<br>
+              <span class="swatch" style="background:#3F1F68;"></span>amethyst — focus ring, value text
+            </div>
+          </div>
+          <div class="token-card">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-ink-secondary mb-2">Shape · spacing · motion</div>
+            <div class="text-[11px] mono text-ink-primary leading-relaxed">
+              radius <span class="code">rounded-full</span><br>
+              height <span class="code">44px</span><br>
+              pad-x <span class="code">pl-44 · pr-44 (or pr-lg)</span><br>
+              border <span class="code">inset 1.5px shadow</span><br>
+              focus <span class="code">outline 2px · offset 2px</span><br>
+              transition <span class="code">shadow only</span><br>
+              motion <span class="code">no scale · no lift</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ A11Y ═══════════════════════════════════════════════════ -->
+      <section class="mb-16 token-card">
+        <div class="flex items-start gap-3">
+          <i class="ph ph-accessible text-xl text-slate flex-shrink-0 mt-0.5"></i>
+          <div class="flex-1">
+            <div class="font-bold text-sm mb-2">Accessibility</div>
+            <ul class="text-xs text-ink-secondary leading-relaxed space-y-1 list-disc pl-4">
+              <li>Native <span class="code">&lt;input type="text"&gt;</span> — standard keyboard behavior, IME-friendly</li>
+              <li>Focus ring uses <span class="code">:focus-visible</span> so a mouse click does not draw the ring; Tab navigation does</li>
+              <li>Clear control is an IconButton (ghost sm) — already carries <span class="code">aria-label="Clear search"</span> and Enter/Space activation</li>
+              <li>Placeholder is never the sole label — page-level label sits above the input where applicable</li>
+              <li>Loading spinner is decorative; use page-level <span class="code">aria-live</span> on the results region for the actual loading announcement</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <footer class="pt-6 border-t border-surf-divider flex items-center justify-between text-[11px] text-ink-tertiary mono">
+        <span>clean-shopper · search-input spec</span>
+        <span>v4 · amethyst apothecary</span>
+      </footer>
+
+    </div>
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IngredientList · Clean Shopper Spec</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_shell.css">
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
+<script>
+tailwind.config = {
+  theme: { extend: {
+    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] },
+    colors: {
+      amethyst: '#3F1F68', 'amethyst-110': '#2A1247', 'amethyst-80': '#6B4F8F', 'amethyst-40': '#ADA1BE', 'amethyst-20': '#DAD2E2', 'amethyst-5': '#F5F2F8',
+      slate: '#3B7080', 'slate-tint': '#E4EEF4',
+      lime: '#C9EC2D', 'lime-tint': '#F0F9C9',
+      cream: '#FCFBFA', paper: '#FFFFFF', 'surf-divider': '#E9E6ED',
+      'ink-primary': '#3F1F68', 'ink-secondary': '#6B4F8F', 'ink-tertiary': '#ADA1BE',
+    },
+  }}
+}
+</script>
+<style>
+  .mono { font-family:'JetBrains Mono',monospace; }
+  .code { font-family:'JetBrains Mono',monospace; font-size:11px; background:#F5F2F8; padding:2px 6px; border-radius:4px; color:#3F1F68; display:inline-block; }
+  .token-card { background:#FFFFFF; border:1.5px solid #E9E6ED; border-radius:16px; padding:20px; }
+  .frame { background:#FCFBFA; border:1px dashed #E9E6ED; border-radius:12px; padding:28px; }
+  .swatch { display:inline-block; width:12px; height:12px; border-radius:3px; vertical-align:middle; margin-right:4px; border:1px solid rgba(0,0,0,0.05); }
+
+  /* ══ IngredientList v4 — single-column expandable rows ════════ */
+  .ing-rows { display:flex; flex-direction:column; gap:8px; }
+  .ing-row {
+    background:#FFFFFF;
+    border:1.5px solid #E9E6ED;
+    border-radius:16px;
+    padding:16px 20px;
+    cursor:pointer;
+    transition: border-color 200ms ease, background-color 200ms ease;
+  }
+  /* Light-touch hover — no transform, no shadow */
+  .ing-row:hover { border-color:#ADA1BE; background:#FCFBFA; }
+  .ing-row .head { display:flex; align-items:center; gap:14px; }
+
+  /* Status column — FIXED 100px so names align across rows */
+  .status { display:inline-flex; align-items:center; gap:8px; width:100px; flex-shrink:0; }
+  .status .dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+  .status .label {
+    font-size:11px; font-weight:800; letter-spacing:0.14em;
+    text-transform:uppercase; white-space:nowrap;
+  }
+  .ing-row.tier-clean   .status .dot   { background:#7DBFA8; }
+  .ing-row.tier-clean   .status .label { color:#2B5F4E; }
+  .ing-row.tier-caution .status .dot   { background:#C9A227; }
+  .ing-row.tier-caution .status .label { color:#7A6115; }
+  .ing-row.tier-avoid   .status .dot   { background:#FF3A20; }
+  .ing-row.tier-avoid   .status .label { color:#B3240E; }
+
+  .ing-row .name {
+    font-size:16px; font-weight:700; color:#3F1F68;
+    flex:1; min-width:0;
+  }
+
+  .avoid-flag {
+    display:inline-flex; align-items:center;
+    font-size:10px; font-weight:800; letter-spacing:0.16em; text-transform:uppercase;
+    padding:3px 10px; border-radius:9999px;
+    background:#FFEBE7; color:#B3240E;
+    flex-shrink:0; white-space:nowrap;
+  }
+
+  .chev { color:#ADA1BE; font-size:18px; transition: transform 200ms ease; flex-shrink:0; }
+  .ing-row.expanded .chev { transform: rotate(90deg); }
+
+  .ing-row .body {
+    display:none; padding-top:12px; margin-top:14px;
+    padding-left:114px; border-top:1px dashed #E9E6ED;
+  }
+  .ing-row.expanded .body { display:block; }
+  .ing-row .reason { font-size:13.5px; line-height:1.6; color:#6B4F8F; margin:0 0 6px; }
+  .ing-row .meta {
+    font-family:'JetBrains Mono',monospace; font-size:11px;
+    color:#ADA1BE; letter-spacing:0.04em;
+  }
+
+  @media (max-width:600px) {
+    .status { width:80px; }
+    .ing-row .body { padding-left:0; }
+  }
+
+  /* skeleton */
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.5;} }
+  .il-skel { height:20px; background:#F5F2F8; border-radius:6px; animation:pulse 1.5s cubic-bezier(0.4,0,0.6,1) infinite; }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="mark">C</div>
+      <div><span class="name">Clean Shopper</span><span class="tag">spec</span></div>
+    </div>
+    <div class="nav-group">
+      <a href="design-system.html" class="nav-link"><span class="nav-dot"></span>Design System</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-label">Components</div>
+      <a href="product-card.html" class="nav-link"><span class="nav-dot"></span>Product Card</a>
+      <a href="badge.html" class="nav-link"><span class="nav-dot"></span>Badge</a>
+      <a href="button.html" class="nav-link"><span class="nav-dot"></span>Button</a>
+      <a href="icon-button.html" class="nav-link"><span class="nav-dot"></span>IconButton</a>
+      <a href="search-input.html" class="nav-link"><span class="nav-dot"></span>SearchInput</a>
+      <a href="empty-state.html" class="nav-link"><span class="nav-dot"></span>EmptyState</a>
+      <a href="toast.html" class="nav-link"><span class="nav-dot"></span>Toast</a>
+      <a href="navbar.html" class="nav-link"><span class="nav-dot"></span>NavBar</a>
+      <a href="ingredient-list.html" class="nav-link active"><span class="nav-dot"></span>IngredientList</a>
+      <a href="modal.html" class="nav-link"><span class="nav-dot"></span>Modal</a>
+      <div style="height:1px; background:#E9E6ED; margin:10px 4px;"></div>
+      <a href="http://localhost:5173/spec/ingredient-list" class="nav-link" target="_blank" rel="noopener" style="color:#6B4F8F;"><span class="nav-dot" style="background:#3B7080;"></span>Open live in app →</a>
+    </div>
+    <div class="nav-group">
+      <a href="decisions.html" class="nav-link"><span class="nav-dot"></span>Decisions log</a>
+    </div>
+    <div class="sidebar-footer">v4 · amethyst apothecary</div>
+  </aside>
+
+  <main class="main">
+    <div class="main-inner">
+
+      <!-- ═══ HEADER ═══════════════════════════════════════════════ -->
+      <header class="mb-12">
+        <div class="mono text-[11px] text-ink-tertiary tracking-[0.16em] uppercase mb-3">Component · IngredientList <span style="color:#3F1F68;">· v4</span></div>
+        <h1 class="text-5xl font-extrabold tracking-tighter leading-[0.95] mb-4 text-amethyst">IngredientList.</h1>
+        <p class="text-base text-ink-secondary max-w-[680px] leading-relaxed">
+          Single-column expandable rows. Status pinned in a fixed 100px column on the left so ingredient names line up vertically across the list. Click a row to reveal the safety reason. Personal-avoid items get an inline pill (<span class="code">In your avoid list</span>) — distinct from the safety rating itself.
+        </p>
+        <p class="text-xs text-ink-tertiary mt-3 italic">v4 — replaces both the old IngredientBar (deprecated) and the previous ingredient row pattern. The personal-avoid pill is inline markup pending a real PreferenceTag primitive.</p>
+        <div class="mt-6 flex items-center gap-3 text-xs">
+          <span class="mono text-ink-tertiary">Decisions:</span>
+          <a href="decisions.html#ingredient-list" class="code" style="text-decoration:underline;">IL-01</a>
+          <a href="decisions.html#design-system" class="code" style="text-decoration:underline;">DS-01</a>
+          <span class="mono text-ink-tertiary ml-4">Sketch:</span>
+          <a href="sketches/pdp-D2-refined.html" class="code" style="text-decoration:underline;">pdp-D2-refined</a>
+        </div>
+      </header>
+
+      <!-- ═══ LIVE ═══════════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Live — sample list (click a row)</h2>
+        <div class="frame">
+          <div class="ing-rows">
+            <article class="ing-row tier-avoid expanded" onclick="this.classList.toggle('expanded')">
+              <div class="head">
+                <span class="status"><span class="dot"></span><span class="label">Avoid</span></span>
+                <span class="name">Fragrance</span>
+                <span class="avoid-flag">In your avoid list</span>
+                <span class="chev">›</span>
+              </div>
+              <div class="body">
+                <p class="reason">"Fragrance" can cover dozens of unlisted compounds, often including known allergens and endocrine disruptors. You marked this in your personal avoid list, which is why this product was downgraded from Clean to Caution overall.</p>
+                <span class="meta">EWG hazard score 8/10 · matches "fragrance" in your preferences</span>
+              </div>
+            </article>
+            <article class="ing-row tier-avoid" onclick="this.classList.toggle('expanded')">
+              <div class="head">
+                <span class="status"><span class="dot"></span><span class="label">Avoid</span></span>
+                <span class="name">Methylparaben</span>
+                <span class="avoid-flag">In your avoid list</span>
+                <span class="chev">›</span>
+              </div>
+              <div class="body">
+                <p class="reason">A preservative with mild estrogenic activity in lab studies. Banned in some EU contexts for leave-on products.</p>
+                <span class="meta">EWG hazard score 7/10</span>
+              </div>
+            </article>
+            <article class="ing-row tier-caution" onclick="this.classList.toggle('expanded')">
+              <div class="head">
+                <span class="status"><span class="dot"></span><span class="label">Caution</span></span>
+                <span class="name">Phenoxyethanol</span>
+                <span class="chev">›</span>
+              </div>
+              <div class="body">
+                <p class="reason">A common preservative considered safer than parabens, but flagged for skin irritation at higher concentrations. Generally fine in rinse-off products.</p>
+                <span class="meta">EWG hazard score 4/10</span>
+              </div>
+            </article>
+            <article class="ing-row tier-clean" onclick="this.classList.toggle('expanded')">
+              <div class="head">
+                <span class="status"><span class="dot"></span><span class="label">Clean</span></span>
+                <span class="name">Glycerin</span>
+                <span class="chev">›</span>
+              </div>
+              <div class="body">
+                <p class="reason">Plant-derived humectant that draws water into the skin. One of the most studied and reliably safe moisturizing ingredients in personal care.</p>
+                <span class="meta">EWG hazard score 1/10</span>
+              </div>
+            </article>
+            <article class="ing-row tier-clean" onclick="this.classList.toggle('expanded')">
+              <div class="head">
+                <span class="status"><span class="dot"></span><span class="label">Clean</span></span>
+                <span class="name">Niacinamide</span>
+                <span class="chev">›</span>
+              </div>
+              <div class="body">
+                <p class="reason">Vitamin B3 derivative that supports the skin barrier and helps regulate sebum. Strong safety data even at concentrations above what's typical here.</p>
+                <span class="meta">EWG hazard score 1/10</span>
+              </div>
+            </article>
+          </div>
+        </div>
+        <p class="text-xs text-ink-tertiary mt-3">Names align vertically because the status column is a fixed-width 100px element pinned to the left. Hover is light-touch — border darkens, bg shifts to cream. No transform, no shadow.</p>
+      </section>
+
+      <!-- ═══ HOVER POLICY ═════════════════════════════════════════ -->
+      <section class="mb-16 token-card" style="background:#F5F2F8; border-color:#DAD2E2;">
+        <div class="flex items-start gap-3">
+          <i class="ph ph-info text-xl text-amethyst flex-shrink-0 mt-0.5"></i>
+          <div class="flex-1">
+            <div class="font-bold text-sm mb-2">Hover signature scope <span class="mono text-[10px] text-ink-tertiary">DS-01</span></div>
+            <p class="text-xs text-ink-secondary leading-relaxed mb-2">
+              Lift + colored shadow is reserved for <strong>destination cards</strong> — ProductCard, hero CTAs. Things you click to <em>go somewhere</em>.
+            </p>
+            <p class="text-xs text-ink-secondary leading-relaxed">
+              List rows like ingredients live <em>inside</em> a content surface and expand in place. They get a quiet hover only — border darken to <span class="code">amethyst-40</span>, bg shift to <span class="code">cream</span>. Anything stronger competes with the page.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ ANATOMY ═══════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Anatomy</h2>
+        <div class="frame">
+          <article class="ing-row tier-avoid expanded" style="cursor:default;">
+            <div class="head">
+              <span class="status"><span class="dot"></span><span class="label">Avoid</span></span>
+              <span class="name">Fragrance</span>
+              <span class="avoid-flag">In your avoid list</span>
+              <span class="chev">›</span>
+            </div>
+            <div class="body">
+              <p class="reason">Reason copy in body / ink-secondary. Optional EWG meta line below.</p>
+              <span class="meta">EWG hazard score 8/10</span>
+            </div>
+          </article>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs text-ink-secondary mono mt-6">
+            <div><span class="code">status</span><br>fixed 100px · dot + uppercase label · tier-color</div>
+            <div><span class="code">name</span><br>body · bold · ink-primary · flex-1 · truncate</div>
+            <div><span class="code">avoid-flag</span><br>personal pref · avoid-tint bg · only when isUserAvoided</div>
+            <div><span class="code">chev</span><br>rotates 90° on expand · decorative · aria-expanded carries semantic</div>
+            <div><span class="code">body</span><br>display:none until expanded · pl-114 aligns with name</div>
+            <div><span class="code">reason</span><br>small · ink-secondary · 1–2 sentences</div>
+            <div><span class="code">meta</span><br>mono · 11px · ink-tertiary · EWG / source</div>
+            <div><span class="code">divider</span><br>1px dashed · surface-divider · separates head from body</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ STATES ═══════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">States</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="frame">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-ink-secondary mb-3">Default</div>
+            <article class="ing-row tier-clean">
+              <div class="head"><span class="status"><span class="dot"></span><span class="label">Clean</span></span><span class="name">Glycerin</span><span class="chev">›</span></div>
+            </article>
+          </div>
+          <div class="frame">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-ink-secondary mb-3">Hover (light-touch)</div>
+            <article class="ing-row tier-clean" style="border-color:#ADA1BE; background:#FCFBFA;">
+              <div class="head"><span class="status"><span class="dot"></span><span class="label">Clean</span></span><span class="name">Glycerin</span><span class="chev">›</span></div>
+            </article>
+          </div>
+          <div class="frame">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-ink-secondary mb-3">Personal-avoid pill</div>
+            <article class="ing-row tier-avoid">
+              <div class="head"><span class="status"><span class="dot"></span><span class="label">Avoid</span></span><span class="name">Fragrance</span><span class="avoid-flag">In your avoid list</span><span class="chev">›</span></div>
+            </article>
+          </div>
+          <div class="frame">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-ink-secondary mb-3">Loading</div>
+            <div class="flex flex-col gap-2">
+              <div class="il-skel" style="width:100%;"></div>
+              <div class="il-skel" style="width:85%;"></div>
+              <div class="il-skel" style="width:90%;"></div>
+              <div class="il-skel" style="width:75%;"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ TOKENS ═════════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Tokens</h2>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="token-card">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-ink-secondary mb-2">Color</div>
+            <div class="text-[11px] mono text-ink-primary leading-relaxed">
+              <span class="swatch" style="background:#7DBFA8;"></span>clean-dot · <span class="swatch" style="background:#2B5F4E;"></span>clean (label)<br>
+              <span class="swatch" style="background:#C9A227;"></span>caution-dot · <span class="swatch" style="background:#7A6115;"></span>caution (label)<br>
+              <span class="swatch" style="background:#FF3A20;"></span>avoid-dot · <span class="swatch" style="background:#B3240E;"></span>avoid (label)<br>
+              <span class="swatch" style="background:#FFEBE7;"></span>avoid-tint — pref pill bg<br>
+              <span class="swatch" style="background:#FFFFFF; border-color:#E9E6ED;"></span>surface-card — row bg<br>
+              <span class="swatch" style="background:#FCFBFA;"></span>cream — hover bg<br>
+              <span class="swatch" style="background:#ADA1BE;"></span>amethyst-40 — hover border
+            </div>
+          </div>
+          <div class="token-card">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-ink-secondary mb-2">Spacing · radius · motion</div>
+            <div class="text-[11px] mono text-ink-primary leading-relaxed">
+              row pad <span class="code">px-lg py-md</span> (20 / 16)<br>
+              row gap <span class="code">gap-xs</span> (8)<br>
+              row radius <span class="code">rounded-card</span> (16)<br>
+              border <span class="code">1.5px solid</span><br>
+              status col <span class="code">w-[100px]</span> · gap 8<br>
+              body pad-left <span class="code">114px</span> (aligns with name)<br>
+              chevron rotate <span class="code">90°</span> · 200ms ease<br>
+              hover transition <span class="code">duration-fast ease-out-soft</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ A11Y ═══════════════════════════════════════════════════ -->
+      <section class="mb-16 token-card">
+        <div class="flex items-start gap-3">
+          <i class="ph ph-accessible text-xl text-slate flex-shrink-0 mt-0.5"></i>
+          <div class="flex-1">
+            <div class="font-bold text-sm mb-2">Accessibility</div>
+            <ul class="text-xs text-ink-secondary leading-relaxed space-y-1 list-disc pl-4">
+              <li>Each row is a <span class="code">&lt;button&gt;</span> inside a <span class="code">&lt;li&gt;</span>. List wrapped in <span class="code">&lt;ul role="list"&gt;</span></li>
+              <li><span class="code">aria-expanded</span> on the row reflects open state — chevron rotation is decorative</li>
+              <li>Tier signaled by dot color <em>and</em> the uppercase tier label text. Color is never the sole signal</li>
+              <li>Personal-avoid pill uses both <span class="code">avoid-tint</span> bg and uppercase label text — readable to AT</li>
+              <li>Focus ring: <span class="code">amethyst</span>, 2px, 2px offset</li>
+              <li>Loading skeletons are decorative — pair the parent region with <span class="code">aria-busy="true"</span> while loading</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <footer class="pt-6 border-t border-surf-divider flex items-center justify-between text-[11px] text-ink-tertiary mono">
+        <span>clean-shopper · ingredient-list spec</span>
+        <span>v4 · amethyst apothecary</span>
+      </footer>
+
+    </div>
+  </main>
+</div>
+</body>
+</html>

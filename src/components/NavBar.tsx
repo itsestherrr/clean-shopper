@@ -91,24 +91,24 @@ export default function NavBar({ user, onSignOut }: NavBarProps) {
 
   const textLinkClass = ({ isActive: _ }: { isActive: boolean }) =>
     [
-      'text-body text-ink-primary',
-      'hover:text-amethyst transition-colors duration-fast ease-out-soft',
-      'focus-visible:outline-2 focus-visible:outline-amethyst focus-visible:outline-offset-2 rounded-sm',
+      'text-body text-surface-card',
+      'hover:text-lime transition-colors duration-fast ease-out-soft',
+      'focus-visible:outline-2 focus-visible:outline-lime focus-visible:outline-offset-2 rounded-sm',
     ].join(' ')
 
   const utilityIconClass = [
-    'w-9 h-9 rounded-full',
+    'w-10 h-10 rounded-full',
     'flex items-center justify-center',
-    'text-ink-primary hover:text-amethyst hover:bg-surface-muted',
+    'text-surface-card hover:text-lime hover:bg-amethyst-90/40',
     'transition-colors duration-fast ease-out-soft',
-    'focus-visible:outline-2 focus-visible:outline-amethyst focus-visible:outline-offset-2',
+    'focus-visible:outline-2 focus-visible:outline-lime focus-visible:outline-offset-2',
     '[&_svg]:w-5 [&_svg]:h-5',
   ].join(' ')
 
   const Brand = (
     <NavLink
       to="/home"
-      className="text-h3 text-ink-primary hover:text-amethyst transition-colors duration-fast ease-out-soft focus-visible:outline-2 focus-visible:outline-amethyst focus-visible:outline-offset-2 rounded-sm"
+      className="text-h3 text-surface-card hover:text-lime transition-colors duration-fast ease-out-soft focus-visible:outline-2 focus-visible:outline-lime focus-visible:outline-offset-2 rounded-sm"
     >
       Clean Shopper
     </NavLink>
@@ -129,12 +129,13 @@ export default function NavBar({ user, onSignOut }: NavBarProps) {
         aria-expanded={accountOpen}
         aria-haspopup="menu"
         className="
-          w-9 h-9 rounded-full
-          bg-gradient-to-br from-amethyst to-amethyst-110
-          text-surface-card text-small font-bold
+          w-10 h-10 rounded-full
+          bg-lime
+          text-amethyst-110 text-small font-extrabold
           flex items-center justify-center
           cursor-pointer
-          focus-visible:outline-2 focus-visible:outline-amethyst focus-visible:outline-offset-2
+          hover:bg-lime-tint transition-colors duration-fast ease-out-soft
+          focus-visible:outline-2 focus-visible:outline-lime focus-visible:outline-offset-2
         "
       >
         {initials}
@@ -184,9 +185,9 @@ export default function NavBar({ user, onSignOut }: NavBarProps) {
   )
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-[200] bg-surface-card border-b border-surface-divider">
+    <header className="fixed top-0 left-0 right-0 z-[200] bg-amethyst-110 border-b-2 border-lime">
       {/* Desktop */}
-      <div className="hidden md:grid grid-cols-[auto_auto_1fr_auto] items-center gap-xl h-[64px] px-xl">
+      <div className="hidden md:grid grid-cols-[auto_auto_1fr_auto] items-center gap-xl h-[80px] px-xl">
         {Brand}
         <nav className="flex items-center gap-lg">
           <NavLink to="/home" className={textLinkClass}>
@@ -205,13 +206,13 @@ export default function NavBar({ user, onSignOut }: NavBarProps) {
 
       {/* Mobile */}
       <div className="md:hidden">
-        <div className="flex items-center px-md py-sm gap-sm">
+        <div className="flex items-center px-md py-md gap-sm">
           {Brand}
           <div className="flex-1" />
           {FavoritesLink}
           {AccountControl}
         </div>
-        <div className="px-md pb-sm">{search}</div>
+        <div className="px-md pb-md">{search}</div>
       </div>
     </header>
   )

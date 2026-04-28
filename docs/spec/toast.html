@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toast · Clean Shopper Spec</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_shell.css">
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
+<script>
+tailwind.config = {
+  theme: { extend: {
+    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] },
+    colors: {
+      amethyst: '#3F1F68', 'amethyst-110': '#2A1247', 'amethyst-80': '#6B4F8F', 'amethyst-40': '#ADA1BE', 'amethyst-20': '#DAD2E2', 'amethyst-5': '#F5F2F8',
+      slate: '#3B7080', 'slate-tint': '#E4EEF4',
+      lime: '#C9EC2D', 'lime-tint': '#F0F9C9',
+      cream: '#FCFBFA', paper: '#FFFFFF', 'surf-divider': '#E9E6ED',
+      'ink-primary': '#3F1F68', 'ink-secondary': '#6B4F8F', 'ink-tertiary': '#ADA1BE',
+    },
+  }}
+}
+</script>
+<style>
+  .mono { font-family:'JetBrains Mono',monospace; }
+  .code { font-family:'JetBrains Mono',monospace; font-size:11px; background:#F5F2F8; padding:2px 6px; border-radius:4px; color:#3F1F68; display:inline-block; }
+  .token-card { background:#FFFFFF; border:1.5px solid #E9E6ED; border-radius:16px; padding:20px; }
+
+  /* ══ Toast primitives ════════════════════════════════════════ */
+  .toast {
+    width:440px; max-width:calc(100vw - 48px);
+    border-radius:16px;
+    padding:12px 16px;
+    display:flex; align-items:center; gap:12px;
+    box-shadow: 0 10px 30px rgba(63,31,104,0.12), 0 4px 10px rgba(63,31,104,0.06);
+  }
+  .toast-icon {
+    width:20px; height:20px; border-radius:9999px;
+    display:inline-flex; align-items:center; justify-content:center;
+    font-size:11px; font-weight:700; line-height:1;
+    flex-shrink:0;
+  }
+  .toast-msg { flex:1; font-size:14px; }
+  .toast-x {
+    background:transparent; border:none; cursor:pointer;
+    opacity:0.4; font-size:18px; line-height:1; padding:4px;
+  }
+  .toast-x:hover { opacity:0.7; }
+
+  /* color buckets */
+  .t-success { background:#E7F1ED; color:#2B5F4E; }
+  .t-success .toast-icon { background:#2B5F4E; color:#E7F1ED; }
+  .t-info    { background:#E4EEF4; color:#1F4E5C; }
+  .t-info    .toast-icon { background:#3B7080; color:#E4EEF4; }
+  .t-warning { background:#FBEFD9; color:#996D33; }
+  .t-warning .toast-icon { background:#996D33; color:#FBEFD9; }
+  .t-error   { background:#F8E1DD; color:#A33B3B; }
+  .t-error   .toast-icon { background:#A33B3B; color:#F8E1DD; }
+
+  .frame { background:#FCFBFA; border:1px dashed #E9E6ED; border-radius:12px; padding:28px; }
+  .swatch { display:inline-block; width:12px; height:12px; border-radius:3px; vertical-align:middle; margin-right:4px; border:1px solid rgba(0,0,0,0.05); }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="mark">C</div>
+      <div><span class="name">Clean Shopper</span><span class="tag">spec</span></div>
+    </div>
+    <div class="nav-group">
+      <a href="design-system.html" class="nav-link"><span class="nav-dot"></span>Design System</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-label">Components</div>
+      <a href="product-card.html" class="nav-link"><span class="nav-dot"></span>Product Card</a>
+      <a href="badge.html" class="nav-link"><span class="nav-dot"></span>Badge</a>
+      <a href="button.html" class="nav-link"><span class="nav-dot"></span>Button</a>
+      <a href="icon-button.html" class="nav-link"><span class="nav-dot"></span>IconButton</a>
+      <a href="search-input.html" class="nav-link"><span class="nav-dot"></span>SearchInput</a>
+      <a href="empty-state.html" class="nav-link"><span class="nav-dot"></span>EmptyState</a>
+      <a href="toast.html" class="nav-link active"><span class="nav-dot"></span>Toast</a>
+      <a href="navbar.html" class="nav-link"><span class="nav-dot"></span>NavBar</a>
+      <a href="ingredient-list.html" class="nav-link"><span class="nav-dot"></span>IngredientList</a>
+      <a href="modal.html" class="nav-link"><span class="nav-dot"></span>Modal</a>
+      <div style="height:1px; background:#E9E6ED; margin:10px 4px;"></div>
+      <a href="http://localhost:5173/spec/toast" class="nav-link" target="_blank" rel="noopener" style="color:#6B4F8F;"><span class="nav-dot" style="background:#3B7080;"></span>Open live in app →</a>
+    </div>
+    <div class="nav-group">
+      <a href="decisions.html" class="nav-link"><span class="nav-dot"></span>Decisions log</a>
+    </div>
+    <div class="sidebar-footer">v4 · amethyst apothecary</div>
+  </aside>
+
+  <main class="main">
+    <div class="main-inner">
+
+      <!-- ═══ HEADER ═══════════════════════════════════════════════ -->
+      <header class="mb-12">
+        <div class="mono text-[11px] text-ink-tertiary tracking-[0.16em] uppercase mb-3">Component · Toast</div>
+        <h1 class="text-5xl font-extrabold tracking-tighter leading-[0.95] mb-4 text-amethyst">Toast.</h1>
+        <p class="text-base text-ink-secondary max-w-[640px] leading-relaxed">
+          The transient acknowledgment. Floating surface — symmetric 16px corners, soft amethyst-tinted drop shadow — sibling of Modal in the surface family. Status comes from color alone, sourced from the shared semantic palette. <strong>One at a time</strong>: queue, don't stack.
+        </p>
+        <div class="mt-6 flex items-center gap-3 text-xs">
+          <span class="mono text-ink-tertiary">Deep spec:</span>
+          <a href="../component-spec/toast.md" class="code hover:underline">docs/component-spec/toast.md</a>
+          <span class="mono text-ink-tertiary ml-4">Decisions:</span>
+          <a href="decisions.html" class="code hover:underline">TS-01 · TS-02</a>
+        </div>
+      </header>
+
+      <!-- ═══ LIVE ═══════════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Live — four types</h2>
+        <div class="frame flex flex-col gap-4 items-start">
+          <div class="toast t-success">
+            <span class="toast-icon">✓</span>
+            <span class="toast-msg">Added to library</span>
+            <button class="toast-x" aria-label="Dismiss">×</button>
+          </div>
+          <div class="toast t-info">
+            <span class="toast-icon">i</span>
+            <span class="toast-msg">Ingredient data refreshed from EWG</span>
+            <button class="toast-x" aria-label="Dismiss">×</button>
+          </div>
+          <div class="toast t-warning">
+            <span class="toast-icon">!</span>
+            <span class="toast-msg">Some ingredients couldn't be verified</span>
+            <button class="toast-x" aria-label="Dismiss">×</button>
+          </div>
+          <div class="toast t-error">
+            <span class="toast-icon">×</span>
+            <span class="toast-msg">Couldn't save product. Try again.</span>
+            <button class="toast-x" aria-label="Dismiss">×</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ TYPES ═════════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Types</h2>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="token-card">
+            <div class="toast t-success mb-4" style="width:auto;">
+              <span class="toast-icon">✓</span>
+              <span class="toast-msg">Added to library</span>
+            </div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-1">Success</div>
+            <p class="text-xs text-ink-secondary leading-relaxed">Product saved, list updated, action confirmed. Pulls from <span class="code">--color-clean*</span>.</p>
+          </div>
+          <div class="token-card">
+            <div class="toast t-info mb-4" style="width:auto;">
+              <span class="toast-icon">i</span>
+              <span class="toast-msg">Ingredient data refreshed from EWG</span>
+            </div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-1">Info</div>
+            <p class="text-xs text-ink-secondary leading-relaxed">Neutral announcements, background updates. Slate-sourced (<strong>TS-02</strong>) so info reads cool, not branded.</p>
+          </div>
+          <div class="token-card">
+            <div class="toast t-warning mb-4" style="width:auto;">
+              <span class="toast-icon">!</span>
+              <span class="toast-msg">Some ingredients couldn't be verified</span>
+            </div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-1">Warning</div>
+            <p class="text-xs text-ink-secondary leading-relaxed">Partial data, soft-fail states. Pulls from <span class="code">--color-caution*</span>.</p>
+          </div>
+          <div class="token-card">
+            <div class="toast t-error mb-4" style="width:auto;">
+              <span class="toast-icon">×</span>
+              <span class="toast-msg">Couldn't save product. Try again.</span>
+            </div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-1">Error</div>
+            <p class="text-xs text-ink-secondary leading-relaxed">Failed requests, blocked actions. Pulls from <span class="code">--color-avoid*</span>. Consider <span class="code">duration={0}</span>.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ ANATOMY ═══════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Anatomy</h2>
+        <div class="frame">
+          <div class="toast t-success" style="margin-bottom:24px;">
+            <span class="toast-icon">✓</span>
+            <span class="toast-msg">Removed from library</span>
+            <button class="toast-x" aria-label="Dismiss">×</button>
+          </div>
+          <div class="grid grid-cols-3 gap-4 text-xs text-ink-secondary mono">
+            <div><span class="code">icon</span><br>20×20 circle · status bg · status-tint glyph</div>
+            <div><span class="code">message</span><br>plain text body · flex 1 · no rich content</div>
+            <div><span class="code">dismiss</span><br>× at 40% opacity · hover 70% · aria-label</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ MOTION ═══════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Motion · placement · timing</h2>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="token-card">
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-2">Placement</div>
+            <p class="text-xs text-ink-secondary leading-relaxed">Bottom-center over the current screen. <strong>One at a time</strong> — if multiple messages arrive, queue them.</p>
+          </div>
+          <div class="token-card">
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-2">Timing</div>
+            <p class="text-xs text-ink-secondary leading-relaxed">Default <span class="code">duration: 4000</span>ms auto-dismiss. <span class="code">duration={0}</span> pins until the user clicks dismiss — use for critical errors.</p>
+          </div>
+          <div class="token-card">
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-2">Enter</div>
+            <p class="text-xs text-ink-secondary leading-relaxed">Slides up from bottom · <span class="code">duration-fast</span> · <span class="code">ease-out-soft</span>.</p>
+          </div>
+          <div class="token-card">
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-2">Exit</div>
+            <p class="text-xs text-ink-secondary leading-relaxed">Fades to opacity 0 · <span class="code">duration-fast</span> · onDismiss fires.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ TOKENS ═════════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Tokens</h2>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="token-card">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-ink-secondary mb-2">Semantic palette (shared)</div>
+            <div class="text-[11px] mono text-ink-primary leading-relaxed">
+              <span class="swatch" style="background:#2B5F4E;"></span>clean — success<br>
+              <span class="swatch" style="background:#3B7080;"></span>slate — info <span class="text-ink-tertiary">TS-02</span><br>
+              <span class="swatch" style="background:#996D33;"></span>caution — warning<br>
+              <span class="swatch" style="background:#A33B3B;"></span>avoid — error
+            </div>
+          </div>
+          <div class="token-card">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-ink-secondary mb-2">Shape · spacing</div>
+            <div class="text-[11px] mono text-ink-primary leading-relaxed">
+              radius <span class="code">rounded-card</span> (16 symmetric) <span class="text-ink-tertiary">TS-01</span><br>
+              shadow <span class="code">shadow-hover</span> (soft amethyst-tinted)<br>
+              width <span class="code">w-[440px]</span> · cap <span class="code">calc(100vw - 48px)</span><br>
+              padding <span class="code">px-md py-sm</span><br>
+              icon <span class="code">20 × 20 circle</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ A11Y ═══════════════════════════════════════════════════ -->
+      <section class="mb-16 token-card">
+        <div class="flex items-start gap-3">
+          <i class="ph ph-accessible text-xl text-slate flex-shrink-0 mt-0.5"></i>
+          <div class="flex-1">
+            <div class="font-bold text-sm mb-2">Accessibility</div>
+            <ul class="text-xs text-ink-secondary leading-relaxed space-y-1 list-disc pl-4">
+              <li>Container responsibility: <span class="code">role="status"</span> for success/info, <span class="code">role="alert"</span> for warning/error</li>
+              <li>Dismiss <span class="code">aria-label="Dismiss"</span> always present · Enter and Space activate</li>
+              <li>4000ms is enough for most readers — but escalate to <span class="code">duration={0}</span> when the message must be acknowledged</li>
+              <li>All four type palettes pass WCAG AA on their bg</li>
+              <li>Don't put links, buttons, or form inputs inside the toast — message only. Actionable feedback belongs in inline UI or a Modal</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <footer class="pt-6 border-t border-surf-divider flex items-center justify-between text-[11px] text-ink-tertiary mono">
+        <span>clean-shopper · toast spec</span>
+        <span>v4 · amethyst apothecary</span>
+      </footer>
+
+    </div>
+  </main>
+</div>
+</body>
+</html>

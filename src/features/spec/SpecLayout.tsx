@@ -3,7 +3,6 @@ import { Outlet, NavLink } from 'react-router-dom'
 const SPEC_PAGES = [
   { name: 'EmptyState', path: '/spec/empty-state' },
   { name: 'IconButton', path: '/spec/icon-button' },
-  { name: 'IngredientBar', path: '/spec/ingredient-bar' },
   { name: 'IngredientList', path: '/spec/ingredient-list' },
   { name: 'Modal', path: '/spec/modal' },
   { name: 'NavBar', path: '/spec/navbar' },

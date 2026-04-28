@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EmptyState · Clean Shopper Spec</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_shell.css">
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
+<script>
+tailwind.config = {
+  theme: { extend: {
+    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] },
+    colors: {
+      amethyst: '#3F1F68', 'amethyst-110': '#2A1247', 'amethyst-80': '#6B4F8F', 'amethyst-40': '#ADA1BE', 'amethyst-20': '#DAD2E2', 'amethyst-5': '#F5F2F8',
+      slate: '#3B7080', 'slate-tint': '#E4EEF4',
+      lime: '#C9EC2D', 'lime-tint': '#F0F9C9',
+      cream: '#FCFBFA', paper: '#FFFFFF', 'surf-divider': '#E9E6ED',
+      'ink-primary': '#3F1F68', 'ink-secondary': '#6B4F8F', 'ink-tertiary': '#ADA1BE',
+    },
+  }}
+}
+</script>
+<style>
+  .mono { font-family:'JetBrains Mono',monospace; }
+  .code { font-family:'JetBrains Mono',monospace; font-size:11px; background:#F5F2F8; padding:2px 6px; border-radius:4px; color:#3F1F68; display:inline-block; }
+  .token-card { background:#FFFFFF; border:1.5px solid #E9E6ED; border-radius:16px; padding:20px; }
+
+  /* ══ EmptyState primitives ════════════════════════════════════ */
+  .es {
+    background:#FFFFFF; border:1.5px solid #E9E6ED; border-radius:16px;
+    padding:64px 24px;
+    display:flex; flex-direction:column; align-items:center; text-align:center;
+  }
+  .es-icon {
+    width:56px; height:56px; color:#ADA1BE;
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom:20px;
+  }
+  .es-icon svg { width:32px; height:32px; }
+  .es-title { font-size:22px; font-weight:700; color:#3F1F68; margin-bottom:8px; letter-spacing:-0.01em; }
+  .es-desc  { font-size:14px; color:#6B4F8F; max-width:320px; line-height:1.55; }
+  .es-action { margin-top:20px; }
+
+  .btn-pill {
+    display:inline-flex; align-items:center; gap:8px;
+    padding:8px 24px; height:40px;
+    border-radius:9999px; background:#3F1F68; color:#FCFBFA;
+    border:none; cursor:pointer; font-weight:600; font-size:14px;
+  }
+  .btn-pill:hover { background:#2A1247; }
+
+  .frame { background:#FCFBFA; border:1px dashed #E9E6ED; border-radius:12px; padding:28px; }
+  .swatch { display:inline-block; width:12px; height:12px; border-radius:3px; vertical-align:middle; margin-right:4px; border:1px solid rgba(0,0,0,0.05); }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="mark">C</div>
+      <div><span class="name">Clean Shopper</span><span class="tag">spec</span></div>
+    </div>
+    <div class="nav-group">
+      <a href="design-system.html" class="nav-link"><span class="nav-dot"></span>Design System</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-label">Components</div>
+      <a href="product-card.html" class="nav-link"><span class="nav-dot"></span>Product Card</a>
+      <a href="badge.html" class="nav-link"><span class="nav-dot"></span>Badge</a>
+      <a href="button.html" class="nav-link"><span class="nav-dot"></span>Button</a>
+      <a href="icon-button.html" class="nav-link"><span class="nav-dot"></span>IconButton</a>
+      <a href="search-input.html" class="nav-link"><span class="nav-dot"></span>SearchInput</a>
+      <a href="empty-state.html" class="nav-link active"><span class="nav-dot"></span>EmptyState</a>
+      <a href="toast.html" class="nav-link"><span class="nav-dot"></span>Toast</a>
+      <a href="navbar.html" class="nav-link"><span class="nav-dot"></span>NavBar</a>
+      <a href="ingredient-list.html" class="nav-link"><span class="nav-dot"></span>IngredientList</a>
+      <a href="modal.html" class="nav-link"><span class="nav-dot"></span>Modal</a>
+      <div style="height:1px; background:#E9E6ED; margin:10px 4px;"></div>
+      <a href="http://localhost:5173/spec/empty-state" class="nav-link" target="_blank" rel="noopener" style="color:#6B4F8F;"><span class="nav-dot" style="background:#3B7080;"></span>Open live in app →</a>
+    </div>
+    <div class="nav-group">
+      <a href="decisions.html" class="nav-link"><span class="nav-dot"></span>Decisions log</a>
+    </div>
+    <div class="sidebar-footer">v4 · amethyst apothecary</div>
+  </aside>
+
+  <main class="main">
+    <div class="main-inner">
+
+      <!-- ═══ HEADER ═══════════════════════════════════════════════ -->
+      <header class="mb-12">
+        <div class="mono text-[11px] text-ink-tertiary tracking-[0.16em] uppercase mb-3">Component · EmptyState</div>
+        <h1 class="text-5xl font-extrabold tracking-tighter leading-[0.95] mb-4 text-amethyst">EmptyState.</h1>
+        <p class="text-base text-ink-secondary max-w-[640px] leading-relaxed">
+          Surface for "no content yet" moments. Stroke icon, title, optional description, optional action — wrapped in a soft white card with a divider border. Empty isn't where the brand should sing, so this surface stays unsigned: no asym shadow, no lime, no amethyst disc. The frame's job is to anchor the message inside a page that already has chrome around it.
+        </p>
+        <div class="mt-6 flex items-center gap-3 text-xs">
+          <span class="mono text-ink-tertiary">Deep spec:</span>
+          <a href="../component-spec/empty-state.md" class="code hover:underline">docs/component-spec/empty-state.md</a>
+          <span class="mono text-ink-tertiary ml-4">Decisions:</span>
+          <a href="decisions.html" class="code hover:underline">ES-01</a>
+        </div>
+      </header>
+
+      <!-- ═══ LIVE — REAL CONSUMERS ════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Live — real consumers</h2>
+        <div class="grid grid-cols-2 gap-6">
+          <div>
+            <div class="text-[10px] font-bold uppercase tracking-wider text-ink-tertiary mb-2 mono">Library page · empty</div>
+            <div class="es">
+              <div class="es-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 21s-7-4.5-9.5-9A5 5 0 0 1 12 6a5 5 0 0 1 9.5 6c-2.5 4.5-9.5 9-9.5 9z"/>
+                </svg>
+              </div>
+              <div class="es-title">No saved products yet</div>
+              <p class="es-desc">Tap the heart on any product to save it here.</p>
+            </div>
+          </div>
+          <div>
+            <div class="text-[10px] font-bold uppercase tracking-wider text-ink-tertiary mb-2 mono">Search page · no results</div>
+            <div class="es">
+              <div class="es-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="7"/>
+                  <line x1="21" y1="21" x2="16.5" y2="16.5"/>
+                  <line x1="8" y1="11" x2="14" y2="11"/>
+                </svg>
+              </div>
+              <div class="es-title">No products found</div>
+              <p class="es-desc">Try a different keyword or clear the active filters.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ WITH ACTION (FUTURE) ═══════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">With action — future</h2>
+        <div class="frame">
+          <div class="es">
+            <div class="es-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 21s-7-4.5-9.5-9A5 5 0 0 1 12 6a5 5 0 0 1 9.5 6c-2.5 4.5-9.5 9-9.5 9z"/>
+              </svg>
+            </div>
+            <div class="es-title">No saved products yet</div>
+            <p class="es-desc">Tap the heart on any product to save it here.</p>
+            <div class="es-action">
+              <button class="btn-pill"><i class="ph ph-magnifying-glass"></i>Browse products</button>
+            </div>
+          </div>
+        </div>
+        <p class="text-xs text-ink-tertiary mt-3">Both real consumers omit the action prop today. Action slot exists; surfacing a button is a future surface decision tracked outside ES-01.</p>
+      </section>
+
+      <!-- ═══ ANATOMY ═══════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Anatomy</h2>
+        <div class="frame">
+          <div class="grid grid-cols-2 gap-6">
+            <div class="es">
+              <div class="es-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 21s-7-4.5-9.5-9A5 5 0 0 1 12 6a5 5 0 0 1 9.5 6c-2.5 4.5-9.5 9-9.5 9z"/>
+                </svg>
+              </div>
+              <div class="es-title">No saved products yet</div>
+              <p class="es-desc">Tap the heart on any product to save it here.</p>
+            </div>
+            <div class="text-xs text-ink-secondary leading-relaxed mono space-y-3">
+              <div><span class="code">icon</span> · 56×56 wrapper · 32px SVG · stroke 1.6 · ink-tertiary</div>
+              <div><span class="code">title</span> · h3 · ink-primary · single line</div>
+              <div><span class="code">description</span> · body · ink-secondary · max-w 320px</div>
+              <div><span class="code">action</span> · usually a Button · mt-lg from description</div>
+              <div><span class="code">surface</span> · paper · 1.5px surface-divider · radius 16 · py-3xl px-lg</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ ICONS ═════════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Icon guidance</h2>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="token-card">
+            <div class="es-icon mb-3">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 21s-7-4.5-9.5-9A5 5 0 0 1 12 6a5 5 0 0 1 9.5 6c-2.5 4.5-9.5 9-9.5 9z"/>
+              </svg>
+            </div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-1">Heart · saved-products</div>
+            <p class="text-xs text-ink-secondary leading-relaxed">Outlined, single path. Library empty.</p>
+          </div>
+          <div class="token-card">
+            <div class="es-icon mb-3">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="7"/>
+                <line x1="21" y1="21" x2="16.5" y2="16.5"/>
+                <line x1="8" y1="11" x2="14" y2="11"/>
+              </svg>
+            </div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-1">Magnifier-slash · no-results</div>
+            <p class="text-xs text-ink-secondary leading-relaxed">Circle + handle + interior dash — "search came up empty."</p>
+          </div>
+        </div>
+        <p class="text-xs text-ink-tertiary mt-3">Stroke-style SVG with <span class="code">stroke="currentColor"</span> so the wrapper's color flows through. <strong>No emoji</strong> — they don't theme and their visual weight is unpredictable.</p>
+      </section>
+
+      <!-- ═══ TOKENS ═════════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Tokens</h2>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="token-card">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-ink-secondary mb-2">Color</div>
+            <div class="text-[11px] mono text-ink-primary leading-relaxed">
+              <span class="swatch" style="background:#FFFFFF; border-color:#DAD2E2;"></span>surface-card — bg<br>
+              <span class="swatch" style="background:#E9E6ED;"></span>surface-divider — 1.5px border<br>
+              <span class="swatch" style="background:#ADA1BE;"></span>ink-tertiary — icon<br>
+              <span class="swatch" style="background:#3F1F68;"></span>ink-primary — title<br>
+              <span class="swatch" style="background:#6B4F8F;"></span>ink-secondary — description
+            </div>
+          </div>
+          <div class="token-card">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-ink-secondary mb-2">Spacing · radius · motion</div>
+            <div class="text-[11px] mono text-ink-primary leading-relaxed">
+              radius <span class="code">rounded-card</span> (16 symmetric)<br>
+              padding <span class="code">py-3xl px-lg</span><br>
+              icon wrapper <span class="code">w-14 h-14</span> · svg 32<br>
+              desc width <span class="code">max-w-[320px]</span><br>
+              action gap <span class="code">mt-lg</span><br>
+              motion <span class="code">none</span> · shadow <span class="code">none</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ A11Y ═══════════════════════════════════════════════════ -->
+      <section class="mb-16 token-card">
+        <div class="flex items-start gap-3">
+          <i class="ph ph-accessible text-xl text-slate flex-shrink-0 mt-0.5"></i>
+          <div class="flex-1">
+            <div class="font-bold text-sm mb-2">Accessibility</div>
+            <ul class="text-xs text-ink-secondary leading-relaxed space-y-1 list-disc pl-4">
+              <li>Pure presentational. Keyboard interaction only via the optional action button</li>
+              <li>Title renders as <span class="code">&lt;h3&gt;</span> — parent page should not also place an h3 inside this surface</li>
+              <li>Icon is decorative — no <span class="code">aria-label</span>; the title carries the meaning</li>
+              <li>Don't substitute emoji for an SVG glyph — emoji do not pick up theme color and read inconsistently to AT</li>
+              <li>Don't reuse this surface for loading or error — those states need their own pattern + role</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <footer class="pt-6 border-t border-surf-divider flex items-center justify-between text-[11px] text-ink-tertiary mono">
+        <span>clean-shopper · empty-state spec</span>
+        <span>v4 · amethyst apothecary</span>
+      </footer>
+
+    </div>
+  </main>
+</div>
+</body>
+</html>

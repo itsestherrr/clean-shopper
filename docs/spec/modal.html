@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modal · Clean Shopper Spec</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_shell.css">
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
+<script>
+tailwind.config = {
+  theme: { extend: {
+    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] },
+    colors: {
+      amethyst: '#3F1F68', 'amethyst-110': '#2A1247', 'amethyst-80': '#6B4F8F', 'amethyst-40': '#ADA1BE', 'amethyst-20': '#DAD2E2', 'amethyst-5': '#F5F2F8',
+      slate: '#3B7080', 'slate-tint': '#E4EEF4',
+      lime: '#C9EC2D', 'lime-tint': '#F0F9C9',
+      cream: '#FCFBFA', paper: '#FFFFFF', 'surf-divider': '#E9E6ED',
+      'ink-primary': '#3F1F68', 'ink-secondary': '#6B4F8F', 'ink-tertiary': '#ADA1BE',
+    },
+  }}
+}
+</script>
+<style>
+  .mono { font-family:'JetBrains Mono',monospace; }
+  .code { font-family:'JetBrains Mono',monospace; font-size:11px; background:#F5F2F8; padding:2px 6px; border-radius:4px; color:#3F1F68; display:inline-block; }
+  .token-card { background:#FFFFFF; border:1.5px solid #E9E6ED; border-radius:16px; padding:20px; }
+
+  /* ══ Modal primitives ════════════════════════════════════════ */
+  .modal-stage {
+    position:relative;
+    background:#3F1F68; /* approximate backdrop tone */
+    border-radius:16px;
+    padding:48px 24px;
+    min-height:360px;
+    overflow:hidden;
+  }
+  .modal-stage::before {
+    content:""; position:absolute; inset:0;
+    background:rgba(63,31,104,0.55);
+  }
+  .modal-panel {
+    position:relative;
+    background:#FFFFFF;
+    border-radius:24px;
+    box-shadow: 0 24px 60px rgba(20,10,40,0.35), 0 8px 16px rgba(20,10,40,0.18);
+    margin:0 auto;
+    padding:24px;
+  }
+  .panel-sm { width:400px; max-width:100%; }
+  .panel-md { width:520px; max-width:100%; }
+  .panel-lg { width:660px; max-width:100%; }
+
+  .modal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+  .modal-title { font-size:22px; font-weight:700; color:#3F1F68; letter-spacing:-0.01em; }
+  .modal-close {
+    width:36px; height:36px; border-radius:9999px;
+    display:inline-flex; align-items:center; justify-content:center;
+    background:transparent; color:#ADA1BE; border:none; cursor:pointer; font-size:20px;
+  }
+  .modal-close:hover { background:#F5F2F8; color:#6B4F8F; }
+  .modal-body { font-size:14px; color:#6B4F8F; line-height:1.6; }
+
+  .frame { background:#FCFBFA; border:1px dashed #E9E6ED; border-radius:12px; padding:28px; }
+  .swatch { display:inline-block; width:12px; height:12px; border-radius:3px; vertical-align:middle; margin-right:4px; border:1px solid rgba(0,0,0,0.05); }
+
+  .btn-pill { display:inline-flex; align-items:center; gap:8px; padding:8px 24px; height:40px; border-radius:9999px; background:#3F1F68; color:#FCFBFA; border:none; cursor:pointer; font-weight:600; font-size:14px; }
+  .btn-pill:hover { background:#2A1247; }
+  .btn-ghost { display:inline-flex; align-items:center; gap:8px; padding:8px 24px; height:40px; border-radius:9999px; background:transparent; color:#3F1F68; border:none; cursor:pointer; font-weight:600; font-size:14px; }
+  .btn-ghost:hover { background:#DAD2E2; }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="mark">C</div>
+      <div><span class="name">Clean Shopper</span><span class="tag">spec</span></div>
+    </div>
+    <div class="nav-group">
+      <a href="design-system.html" class="nav-link"><span class="nav-dot"></span>Design System</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-label">Components</div>
+      <a href="product-card.html" class="nav-link"><span class="nav-dot"></span>Product Card</a>
+      <a href="badge.html" class="nav-link"><span class="nav-dot"></span>Badge</a>
+      <a href="button.html" class="nav-link"><span class="nav-dot"></span>Button</a>
+      <a href="icon-button.html" class="nav-link"><span class="nav-dot"></span>IconButton</a>
+      <a href="search-input.html" class="nav-link"><span class="nav-dot"></span>SearchInput</a>
+      <a href="empty-state.html" class="nav-link"><span class="nav-dot"></span>EmptyState</a>
+      <a href="toast.html" class="nav-link"><span class="nav-dot"></span>Toast</a>
+      <a href="navbar.html" class="nav-link"><span class="nav-dot"></span>NavBar</a>
+      <a href="ingredient-list.html" class="nav-link"><span class="nav-dot"></span>IngredientList</a>
+      <a href="modal.html" class="nav-link active"><span class="nav-dot"></span>Modal</a>
+      <div style="height:1px; background:#E9E6ED; margin:10px 4px;"></div>
+      <a href="http://localhost:5173/spec/modal" class="nav-link" target="_blank" rel="noopener" style="color:#6B4F8F;"><span class="nav-dot" style="background:#3B7080;"></span>Open live in app →</a>
+    </div>
+    <div class="nav-group">
+      <a href="decisions.html" class="nav-link"><span class="nav-dot"></span>Decisions log</a>
+    </div>
+    <div class="sidebar-footer">pre-v4</div>
+  </aside>
+
+  <main class="main">
+    <div class="main-inner">
+
+      <!-- ═══ HEADER ═══════════════════════════════════════════════ -->
+      <header class="mb-12">
+        <div class="mono text-[11px] text-ink-tertiary tracking-[0.16em] uppercase mb-3">Component · Modal <span style="color:#A33B3B;">· pre-v4</span></div>
+        <h1 class="text-5xl font-extrabold tracking-tighter leading-[0.95] mb-4 text-amethyst">Modal.</h1>
+        <p class="text-base text-ink-secondary max-w-[640px] leading-relaxed">
+          A centered surface card over a darkened backdrop. Symmetric 24px corners place it firmly in the surface family — sibling of EmptyState and the bigger relative of Toast. Closes on backdrop click, Escape, or the ghost <span class="code">×</span> in the header.
+        </p>
+        <p class="text-xs text-ink-tertiary mt-3 italic">Pre-v4 — visual treatment matches the working app and will be revisited in the next surface pass. No deep spec yet.</p>
+        <div class="mt-6 flex items-center gap-3 text-xs">
+          <span class="mono text-ink-tertiary">Deep spec:</span>
+          <span class="code">none yet</span>
+          <span class="mono text-ink-tertiary ml-4">Decisions:</span>
+          <span class="code">pre-v4</span>
+        </div>
+      </header>
+
+      <!-- ═══ LIVE ═══════════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Live — md size</h2>
+        <div class="modal-stage">
+          <div class="modal-panel panel-md">
+            <div class="modal-header">
+              <h2 class="modal-title">Add to Library</h2>
+              <button class="modal-close" aria-label="Close modal">×</button>
+            </div>
+            <p class="modal-body" style="margin-bottom:20px;">Save <strong style="color:#3F1F68;">CeraVe Moisturizing Cream</strong> to your personal library so you can find it later, compare ingredients, and add it to a shopping list.</p>
+            <div style="display:flex; justify-content:flex-end; gap:8px;">
+              <button class="btn-ghost">Cancel</button>
+              <button class="btn-pill">Save to library</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ SIZES ═════════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Sizes</h2>
+        <div class="frame space-y-6">
+
+          <div>
+            <div class="text-[10px] font-bold uppercase tracking-wider text-ink-tertiary mb-2 mono">sm · 400px — confirmations</div>
+            <div class="modal-panel panel-sm">
+              <div class="modal-header">
+                <h2 class="modal-title">Remove product?</h2>
+                <button class="modal-close" aria-label="Close modal">×</button>
+              </div>
+              <p class="modal-body">This will remove it from your library. You can always save it again later.</p>
+            </div>
+          </div>
+
+          <div>
+            <div class="text-[10px] font-bold uppercase tracking-wider text-ink-tertiary mb-2 mono">md · 560px — default</div>
+            <div class="modal-panel panel-md">
+              <div class="modal-header">
+                <h2 class="modal-title">Add to Library</h2>
+                <button class="modal-close" aria-label="Close modal">×</button>
+              </div>
+              <p class="modal-body">Save this product to your personal library so you can compare ingredients and build a shopping list.</p>
+            </div>
+          </div>
+
+          <div>
+            <div class="text-[10px] font-bold uppercase tracking-wider text-ink-tertiary mb-2 mono">lg · 720px — content-heavy</div>
+            <div class="modal-panel panel-lg">
+              <div class="modal-header">
+                <h2 class="modal-title">Manage avoid list</h2>
+                <button class="modal-close" aria-label="Close modal">×</button>
+              </div>
+              <p class="modal-body">Ingredients you've added to your personal avoid list will be flagged on every product page, regardless of their EWG safety rating.</p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ═══ ANATOMY ═══════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Anatomy</h2>
+        <div class="frame">
+          <div class="modal-panel panel-md" style="margin-bottom:24px;">
+            <div class="modal-header">
+              <h2 class="modal-title">Title</h2>
+              <button class="modal-close" aria-label="Close modal">×</button>
+            </div>
+            <p class="modal-body">Body content lives here. Plain text, lists, forms — whatever the action requires.</p>
+          </div>
+          <div class="grid grid-cols-3 gap-4 text-xs text-ink-secondary mono">
+            <div><span class="code">backdrop</span><br>fixed inset-0 · bg-backdrop · click closes</div>
+            <div><span class="code">panel</span><br>fixed center · paper · 24px radius · shadow-modal</div>
+            <div><span class="code">header</span><br>title h2 · close = IconButton ghost md</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ BEHAVIOR ═══════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Behavior</h2>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="token-card">
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-2">Dismissal</div>
+            <p class="text-xs text-ink-secondary leading-relaxed">Backdrop click · Escape key · ghost <span class="code">×</span> in the header. All three call <span class="code">onClose</span>.</p>
+          </div>
+          <div class="token-card">
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-2">Focus trap</div>
+            <p class="text-xs text-ink-secondary leading-relaxed">First focusable element gets focus on open. Tab cycles inside the panel — Shift+Tab from the first element wraps to the last, and vice versa.</p>
+          </div>
+          <div class="token-card">
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-2">Body scroll lock</div>
+            <p class="text-xs text-ink-secondary leading-relaxed">Sets <span class="code">document.body.style.overflow = 'hidden'</span> while open and restores on close.</p>
+          </div>
+          <div class="token-card">
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ink-secondary mb-2">Sizes</div>
+            <p class="text-xs text-ink-secondary leading-relaxed"><span class="code">sm</span> 400px confirmations · <span class="code">md</span> 560px default · <span class="code">lg</span> 720px content-heavy. Cap <span class="code">max-w-[calc(100vw-48px)]</span>.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ TOKENS ═════════════════════════════════════════════════ -->
+      <section class="mb-16">
+        <h2 class="text-xs font-extrabold tracking-[0.16em] uppercase text-ink-secondary mb-4">Tokens</h2>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="token-card">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-ink-secondary mb-2">Color</div>
+            <div class="text-[11px] mono text-ink-primary leading-relaxed">
+              <span class="swatch" style="background:#FFFFFF; border-color:#DAD2E2;"></span>surface-card — panel<br>
+              <span class="swatch" style="background:#3F1F68;"></span>backdrop — amethyst-tinted overlay<br>
+              <span class="swatch" style="background:#3F1F68;"></span>ink-primary — title<br>
+              <span class="swatch" style="background:#6B4F8F;"></span>ink-secondary — body<br>
+              <span class="swatch" style="background:#ADA1BE;"></span>ink-tertiary — close glyph
+            </div>
+          </div>
+          <div class="token-card">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-ink-secondary mb-2">Shape · spacing · z</div>
+            <div class="text-[11px] mono text-ink-primary leading-relaxed">
+              radius <span class="code">rounded-[24px]</span><br>
+              shadow <span class="code">shadow-modal</span><br>
+              padding <span class="code">p-lg</span><br>
+              max-h <span class="code">85vh</span> · scrollable body<br>
+              z-backdrop <span class="code">z-overlay</span> · z-panel <span class="code">z-modal</span><br>
+              motion <span class="code">duration-slow ease-out-soft</span> on backdrop opacity
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ A11Y ═══════════════════════════════════════════════════ -->
+      <section class="mb-16 token-card">
+        <div class="flex items-start gap-3">
+          <i class="ph ph-accessible text-xl text-slate flex-shrink-0 mt-0.5"></i>
+          <div class="flex-1">
+            <div class="font-bold text-sm mb-2">Accessibility</div>
+            <ul class="text-xs text-ink-secondary leading-relaxed space-y-1 list-disc pl-4">
+              <li>Panel has <span class="code">role="dialog"</span> and <span class="code">aria-modal="true"</span></li>
+              <li><span class="code">aria-label</span> mirrors the <span class="code">title</span> prop when present</li>
+              <li>Focus trap on open · first focusable element receives focus · Tab and Shift+Tab wrap inside the panel</li>
+              <li>Escape closes via document-level keydown listener; backdrop click closes via <span class="code">onClick</span> on the overlay</li>
+              <li>Close button is an IconButton ghost md with <span class="code">aria-label="Close modal"</span></li>
+              <li>Body scroll is locked while open so background content doesn't drift behind the dialog</li>
+              <li>Pre-v4 todo: restore focus to the trigger element on close (not yet implemented)</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <footer class="pt-6 border-t border-surf-divider flex items-center justify-between text-[11px] text-ink-tertiary mono">
+        <span>clean-shopper · modal spec</span>
+        <span>pre-v4</span>
+      </footer>
+
+    </div>
+  </main>
+</div>
+</body>
+</html>

@@ -1082,6 +1082,15 @@
       <a href="product-card.html" class="nav-link"><span class="nav-dot"></span>Product Card</a>
       <a href="badge.html" class="nav-link"><span class="nav-dot"></span>Badge</a>
       <a href="button.html" class="nav-link"><span class="nav-dot"></span>Button</a>
+      <a href="icon-button.html" class="nav-link"><span class="nav-dot"></span>IconButton</a>
+      <a href="search-input.html" class="nav-link"><span class="nav-dot"></span>SearchInput</a>
+      <a href="empty-state.html" class="nav-link"><span class="nav-dot"></span>EmptyState</a>
+      <a href="toast.html" class="nav-link"><span class="nav-dot"></span>Toast</a>
+      <a href="navbar.html" class="nav-link"><span class="nav-dot"></span>NavBar</a>
+      <a href="ingredient-list.html" class="nav-link"><span class="nav-dot"></span>IngredientList</a>
+      <a href="modal.html" class="nav-link"><span class="nav-dot"></span>Modal</a>
+      <div style="height:1px; background:#E9E6ED; margin:10px 4px;"></div>
+      <a href="http://localhost:5173/spec/empty-state" class="nav-link" target="_blank" rel="noopener" style="color:#6B4F8F;"><span class="nav-dot" style="background:#3B7080;"></span>Open live in app →</a>
     </div>
     <div class="nav-group">
       <a href="decisions.html" class="nav-link active"><span class="nav-dot"></span>Decisions log</a>
@@ -1110,6 +1119,8 @@
         <button class="tab" data-tab="search-input">Search Input <span class="tab-count">3</span></button>
         <button class="tab" data-tab="empty-state">Empty State <span class="tab-count">1</span></button>
         <button class="tab" data-tab="navbar">NavBar <span class="tab-count">6</span></button>
+        <button class="tab" data-tab="ingredient-list">Ingredient List <span class="tab-count">1</span></button>
+        <button class="tab" data-tab="design-system">Design System <span class="tab-count">1</span></button>
       </div>
 
       <!-- ================= BUTTON ================= -->
@@ -3715,6 +3726,62 @@
 
       </div><!-- /panel:navbar -->
 
+      <!-- ================= INGREDIENT LIST ================= -->
+      <div class="tab-panel" data-panel="ingredient-list" id="IL-01">
+      <div class="section-head">
+        <div class="section-title">Ingredient List</div>
+        <div class="section-count">1 decided · 0 open</div>
+      </div>
+
+      <p class="text-sm text-ink-secondary max-w-[760px] leading-relaxed mb-6">
+        The drill-down on PDP. v4 replaces both the old IngredientBar (deprecated, removed) and the old row pattern. The shape question for v4: how should rows present, where does status live, and how loud should hover be inside a content list. Sketch exploration lived in <a href="sketches/pdp-D2-refined.html" class="code" style="text-decoration:underline;">sketches/pdp-D2-refined.html</a>.
+      </p>
+
+      <!-- IL-01 -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">IL-01</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Row pattern — colored cards, accordion groups, or single-column expandable rows</div>
+        <div class="d-q">Three explored. (A) Compact tier-colored cards in a 3-up grid. (B) Accordion grouped by tier with Avoid+Caution open by default. (C) Single-column expandable rows with status pinned in a fixed-width left column so names align across the list. Reviewed as PDP sketches A / B / C / D / D2.</div>
+
+        <div class="d-note">
+          <strong>Picked C (single-column rows, status pinned left):</strong> Ingredients are a list, not a grid of equal-weight things. A flat list with a fixed-width status column makes the names line up vertically, which is how a cosmetics-aware reader actually scans. Status as dot + uppercase tier-color label reads first because the eye catches the colored cluster, but it never floats away from the row. Click expands in place — no separate detail surface to manage. <span class="why-not"><strong>Why not A:</strong> Tier-colored card grid pushed each ingredient to feel like a destination, and the card hover signature (lift + colored shadow) competed with the page. Wrong scope of attention for sub-content. <strong>Why not B:</strong> Accordion groups by tier hide the order the formula was actually written in (which sometimes matters — concentration descends down the list) and added a layer of chrome before any ingredient was visible.</span>
+          <span class="why-not" style="display:block;margin-top:8px;"><strong>Hover inside this list:</strong> light-touch only — border darkens to <code class="mono text-[14px]">amethyst-40</code>, bg shifts to <code class="mono text-[14px]">cream</code>. No transform, no shadow. Recorded as a system-wide call in <a href="#DS-01" style="text-decoration:underline;">DS-01</a>.</span>
+          <span class="why-not" style="display:block;margin-top:8px;"><strong>Sketch:</strong> <a href="sketches/pdp-D2-refined.html" class="code" style="text-decoration:underline;">pdp-D2-refined.html</a> (compare A / B / C / D for context).</span>
+        </div>
+      </div>
+
+      </div><!-- /panel:ingredient-list -->
+
+      <!-- ================= DESIGN SYSTEM ================= -->
+      <div class="tab-panel" data-panel="design-system" id="DS-01">
+      <div class="section-head">
+        <div class="section-title">Design System</div>
+        <div class="section-count">1 decided · 0 open</div>
+      </div>
+
+      <p class="text-sm text-ink-secondary max-w-[760px] leading-relaxed mb-6">
+        System-wide calls that don't belong to any single component. These constrain how individual components can behave — a component cannot violate a system call without re-opening the system decision.
+      </p>
+
+      <!-- DS-01 -->
+      <div class="decision">
+        <div class="d-head"><span class="d-num">DS-01</span><span class="d-status decided">Decided</span></div>
+        <div class="d-title">Hover signature scope — when to lift + cast a colored shadow, and when not to</div>
+        <div class="d-q">The lift + tier/brand-colored shadow is the system's strongest hover treatment. Started showing up everywhere clickable — including ingredient rows on the PDP, where it competed with the page and made sub-content feel like a destination. The question: where does the strong signature actually belong, and what do other interactive surfaces use instead?</div>
+
+        <div class="d-note">
+          <strong>Decision:</strong>
+          <ul class="list-disc pl-5 mt-2 space-y-1">
+            <li><strong>Destination cards</strong> use lift + colored shadow on hover. ProductCard, hero CTAs, anything you click to <em>go somewhere</em> or commit to a primary action. Treatment defined in <a href="#product-card" style="text-decoration:underline;">PC-02</a> for ProductCard, <a href="#button" style="text-decoration:underline;">B-12</a> for hero buttons.</li>
+            <li><strong>List rows inside content</strong> get a quiet hover only — border darken to <code class="mono text-[14px]">amethyst-40</code>, optional bg shift to <code class="mono text-[14px]">cream</code>. No transform, no shadow. Applies to IngredientList rows, future Library rows, future search-result rows in any "list inside a page" context.</li>
+            <li><strong>Inline controls</strong> (text links, icon buttons in chrome, dropdown items) follow their own component-level hover rules — neither this signature nor the row treatment.</li>
+          </ul>
+          <span class="why-not"><strong>Why this matters:</strong> The signature is a hierarchy signal. If everything uses it, nothing does. Reserving it for destinations keeps the page's actual focus visible — when the hand moves, the eye knows the difference between "I'm browsing inside a thing" and "I'm choosing where to go next."</span>
+        </div>
+      </div>
+
+      </div><!-- /panel:design-system -->
+
       <footer class="pt-6 mt-12 border-t border-surf-divider flex items-center justify-between text-[11px] text-ink-tertiary mono">
         <span>clean-shopper · decisions log</span>
         <span>v4 · amethyst apothecary</span>
@@ -3740,7 +3807,7 @@
     window.addEventListener('hashchange', () => {
       activate(location.hash.slice(1) || 'button');
     });
-    const valid = ['button', 'badge', 'product-card', 'icon-button', 'toast', 'search-input', 'empty-state', 'navbar'];
+    const valid = ['button', 'badge', 'product-card', 'icon-button', 'toast', 'search-input', 'empty-state', 'navbar', 'ingredient-list', 'design-system'];
     const initial = location.hash.slice(1);
     activate(valid.includes(initial) ? initial : 'button');
   })();

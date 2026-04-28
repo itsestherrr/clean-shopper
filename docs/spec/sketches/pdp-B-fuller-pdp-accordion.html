@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PDP Option B · Fuller PDP + accordion · Clean Shopper</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_pdp-shared.css">
+<style>
+  /* Option B specific: fuller retail-PDP top + accordion ingredients */
+  .top {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 56px;
+    align-items: start;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 800px) { .top { grid-template-columns: 1fr; gap: 32px; } }
+  .meta-row {
+    display: flex; gap: 16px; padding: 12px 0;
+    border-top: 1px solid #E9E6ED; border-bottom: 1px solid #E9E6ED;
+    margin-bottom: 24px;
+    font-size: 12px; color: #6B4F8F;
+  }
+  .meta-row .item { display: flex; flex-direction: column; }
+  .meta-row .item .k { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:#ADA1BE; }
+  .meta-row .item .v { font-size: 13px; font-weight: 600; color: #3F1F68; margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<div class="option-bar">
+  <span class="label">Sketch</span>
+  <span class="title">Option B · Fuller PDP + accordion ingredients</span>
+  <span class="desc">Retail-feeling top with description, claims, actions. Ingredients grouped by rating in collapsible sections.</span>
+  <span class="switcher">
+    <a href="pdp-A-compact-cards.html">A</a>
+    <a href="pdp-B-fuller-pdp-accordion.html" class="active">B</a>
+    <a href="pdp-C-fuller-pdp-cards.html">C</a>
+  </span>
+</div>
+
+<main class="page">
+  <a href="#" class="back-link">← Back</a>
+
+  <!-- TOP: full retail PDP feel -->
+  <section class="top">
+    <figure class="hero-img" style="margin:0;">[ product image ]</figure>
+    <div class="info">
+      <div class="brand-eyebrow">CeraVe</div>
+      <h1 class="product-title">Hydrating Facial Cleanser</h1>
+      <p class="product-subtitle">For Normal to Dry Skin · 12 fl oz</p>
+
+      <div class="badge-row">
+        <span class="status-badge status-caution"><span class="dot"></span>Caution</span>
+        <span class="cat-tag">Facial Cleanser</span>
+      </div>
+
+      <p class="lede">A creamy, non-foaming face wash developed with dermatologists. Removes dirt and makeup without stripping the skin barrier — formulated with three essential ceramides plus hyaluronic acid for everyday use.</p>
+
+      <ul class="claims">
+        <li>Three essential ceramides (NP, AP, EOP) restore the skin barrier</li>
+        <li>Non-comedogenic, fragrance-free claim from brand (verify per batch)</li>
+        <li>MVE technology — controlled release of moisturizing ingredients</li>
+        <li>Suitable for sensitive skin per AAD-recognized dermatologist input</li>
+      </ul>
+
+      <div class="actions">
+        <button class="btn btn-primary">♡ Save to library</button>
+        <button class="btn btn-secondary">Compare</button>
+      </div>
+
+      <div class="meta-row">
+        <div class="item"><span class="k">Why caution</span><span class="v">2 personal-avoid</span></div>
+        <div class="item"><span class="k">Total ingredients</span><span class="v">14</span></div>
+        <div class="item"><span class="k">Last updated</span><span class="v">Apr 22, 2026</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INGREDIENT SECTION -->
+  <section class="section-card">
+    <div class="sec-head">
+      <h2 class="sec-title">Ingredient Breakdown</h2>
+      <span class="sec-meta">14 total · grouped by safety rating</span>
+    </div>
+
+    <div class="summary-chips">
+      <span class="summary-chip tier-clean"><span class="num">9</span>Clean</span>
+      <span class="summary-chip tier-caution"><span class="num">3</span>Caution</span>
+      <span class="summary-chip tier-avoid"><span class="num">2</span>Avoid</span>
+    </div>
+
+    <!-- Avoid group: open by default -->
+    <div class="acc-group open">
+      <button class="acc-head">
+        <span class="dot" style="background:#FF3A20;"></span>
+        <span class="label">Avoid</span>
+        <span class="count">2 · both in your personal avoid list</span>
+        <span class="chev">›</span>
+      </button>
+      <div class="acc-body">
+        <div class="acc-row user-avoided">
+          <div class="flex-1">
+            <div class="name">Fragrance <span class="tier-pill tier-avoid" style="margin-left:8px;">In your avoid list</span></div>
+            <p class="reason">"Fragrance" can cover dozens of unlisted compounds, often including known allergens and endocrine disruptors. You marked this in your avoid list.</p>
+          </div>
+        </div>
+        <div class="acc-row user-avoided">
+          <div class="flex-1">
+            <div class="name">Methylparaben <span class="tier-pill tier-avoid" style="margin-left:8px;">In your avoid list</span></div>
+            <p class="reason">A preservative with mild estrogenic activity in lab studies. Banned in some EU contexts for leave-on products. You marked parabens in your avoid list.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Caution group: open by default -->
+    <div class="acc-group open">
+      <button class="acc-head">
+        <span class="dot" style="background:#C9A227;"></span>
+        <span class="label">Caution</span>
+        <span class="count">3</span>
+        <span class="chev">›</span>
+      </button>
+      <div class="acc-body">
+        <div class="acc-row">
+          <div class="flex-1">
+            <div class="name">Phenoxyethanol</div>
+            <p class="reason">A common preservative considered safer than parabens, but flagged for skin irritation at higher concentrations. Generally fine in rinse-off products.</p>
+          </div>
+        </div>
+        <div class="acc-row">
+          <div class="flex-1">
+            <div class="name">PEG-40 Stearate</div>
+            <p class="reason">A surfactant whose safety depends on processing — can carry trace 1,4-dioxane contamination from manufacturing. Many brands now use cleaner alternatives.</p>
+          </div>
+        </div>
+        <div class="acc-row">
+          <div class="flex-1">
+            <div class="name">Behentrimonium Methosulfate</div>
+            <p class="reason">A conditioning agent. Considered safer than older "quat" surfactants but still flagged by some clean databases for environmental persistence.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Clean group: collapsed by default -->
+    <div class="acc-group">
+      <button class="acc-head">
+        <span class="dot" style="background:#7DBFA8;"></span>
+        <span class="label">Clean</span>
+        <span class="count">9 · tap to view</span>
+        <span class="chev">›</span>
+      </button>
+      <div class="acc-body">
+        <div class="acc-row"><div class="flex-1"><div class="name">Glycerin</div><p class="reason">Plant-derived humectant that draws water into skin. One of the most studied and reliably safe moisturizing ingredients in personal care.</p></div></div>
+        <div class="acc-row"><div class="flex-1"><div class="name">Ceramide NP</div><p class="reason">A naturally occurring lipid that helps restore the skin barrier. Lab-synthesized to mimic human ceramides — well tolerated.</p></div></div>
+        <div class="acc-row"><div class="flex-1"><div class="name">Hyaluronic Acid</div><p class="reason">A water-binding polysaccharide naturally present in skin. Non-irritating across skin types.</p></div></div>
+        <div class="acc-row"><div class="flex-1"><div class="name">Niacinamide</div><p class="reason">Vitamin B3 derivative that supports the skin barrier and helps regulate sebum. Strong safety data.</p></div></div>
+        <div class="acc-row"><div class="flex-1"><div class="name">Panthenol</div><p class="reason">Pro-vitamin B5 — soothing, hydrating, low-allergen profile in clinical literature.</p></div></div>
+        <div class="acc-row"><div class="flex-1"><div class="name">Cholesterol</div><p class="reason">A lipid component native to skin's outer layer. Pairs with ceramides to repair the barrier.</p></div></div>
+        <div class="acc-row"><div class="flex-1"><div class="name">Ceramide AP</div><p class="reason">Another barrier-supporting ceramide variant. Same safety story as Ceramide NP.</p></div></div>
+        <div class="acc-row"><div class="flex-1"><div class="name">Sodium Hyaluronate</div><p class="reason">The salt form of hyaluronic acid — smaller molecule, penetrates a bit better.</p></div></div>
+        <div class="acc-row"><div class="flex-1"><div class="name">Water</div><p class="reason">The base solvent. Inert, ubiquitous, and not the part of the formula worth flagging.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="note">
+    <span>clean-shopper · pdp sketch · option B — fuller PDP + accordion</span>
+    <span>v4 · amethyst apothecary</span>
+  </footer>
+</main>
+
+<script>
+  // toggle open class on accordion heads
+  document.querySelectorAll('.acc-head').forEach(b => b.addEventListener('click', () => b.parentElement.classList.toggle('open')));
+</script>
+</body>
+</html>

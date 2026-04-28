@@ -12,7 +12,6 @@ import { useSession } from './lib/use-session'
 import ProductDetailPage from './features/product/ProductDetailPage'
 import SpecLayout from './features/spec/SpecLayout'
 import IconButtonSpecPage from './features/spec/IconButtonSpecPage'
-import IngredientBarSpecPage from './features/spec/IngredientBarSpecPage'
 import IngredientListSpecPage from './features/spec/IngredientListSpecPage'
 import ModalSpecPage from './features/spec/ModalSpecPage'
 import ProductCardSpecPage from './features/spec/ProductCardSpecPage'
@@ -43,8 +42,8 @@ function App() {
       {showNavBar && <NavBar user={{ email: userEmail }} onSignOut={handleSignOut} />}
 
       {/* Main content offset:
-          desktop NavBar = 64px, mobile NavBar (header + search row) ≈ 112px. */}
-      <main className={showNavBar ? 'pt-[112px] md:pt-[64px]' : ''}>
+          desktop NavBar = 80px, mobile NavBar (header + search row) ≈ 136px. */}
+      <main className={showNavBar ? 'pt-[136px] md:pt-[80px]' : ''}>
         <div className={showNavBar ? 'max-w-screen-xl mx-auto p-2xl' : ''}>
         <Routes>
           <Route path="/" element={<Navigate to="/home" replace />} />
@@ -93,7 +92,6 @@ function App() {
           <Route path="/spec" element={<SpecLayout />}>
             <Route index element={<Navigate to="/spec/product-card" replace />} />
             <Route path="icon-button" element={<IconButtonSpecPage />} />
-            <Route path="ingredient-bar" element={<IngredientBarSpecPage />} />
             <Route path="ingredient-list" element={<IngredientListSpecPage />} />
             <Route path="modal" element={<ModalSpecPage />} />
             <Route path="product-card" element={<ProductCardSpecPage />} />
